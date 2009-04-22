@@ -18,3 +18,9 @@ def waittillguinotexist(gui_name, timeout=5):
 def selectmenuitem(gui_name, heirarchy):
     return client._client.selectmenuitem(gui_name, heirarchy)
 
+def click(gui_name, obj_name):
+    return client._client.click(gui_name, obj_name)
+
+def getobjectlist(window_name):
+    return client._client.getobjectlist(window_name)
+

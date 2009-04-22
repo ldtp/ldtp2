@@ -80,5 +80,21 @@ class Ldtpd(xmlrpc.XMLRPC):
             return int(self._click_object(obj))
 
         return 0
+
+    def xmlrpc_click(self, window_name, obj_name):
+        obj = self._get_object(window_name, obj_name)
+        
+        if obj:
+            return int(self._click_object(obj))
+
+        return 0
     
+    def xmlrpc_getobjectlist(self, window_name):
+        obj_list = []
+        for gui in list_guis(self._desktop):
+            if match_name_to_acc(window_name, gui):
+                for name, obj in appmap_pairs(gui):
+                    obj_list.append(name)
+
+        return obj_list
 
