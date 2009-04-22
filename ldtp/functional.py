@@ -11,3 +11,10 @@ def guiexist(gui_name, object_name=''):
 
 def waittillguiexist(gui_name, object_name='', timeout=5):
     return client._client.waittillguiexist(gui_name, object_name, timeout)
+
+def waittillguinotexist(gui_name, timeout=5):
+    return client._client.waittillguinotexist(gui_name, timeout)
+
+def selectmenuitem(gui_name, heirarchy):
+    return client._client.selectmenuitem(gui_name, heirarchy)
+

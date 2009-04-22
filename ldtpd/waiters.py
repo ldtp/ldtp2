@@ -73,7 +73,7 @@ class GuiExistsWaiter(Waiter):
             self.top_level = event.source
             self.success = True
 
-class GuiNoExistsWaiter(Waiter):
+class GuiNotExistsWaiter(Waiter):
     events = ["window:destroy"]
     def __init__(self, frame_name, timeout):
         Waiter.__init__(self, timeout)
@@ -102,10 +102,10 @@ class ObjectExistsWaiter(GuiExistsWaiter):
             GuiExistsWaiter.poll(self)
             self.success = False
         else:
-            found = pyatspi.findDescendant(
-                self.top_level, lambda x: match_name_to_acc(self._obj_name, x))
-            if found:
-                self.success = True
+            for name, obj in appmap_pairs(self.top_level):
+                if name == self._obj_name:
+                    self.success = True
+                    break
 
     def event_cb(self, event):
         GuiExistsWaiter.event_cb(self, event)
