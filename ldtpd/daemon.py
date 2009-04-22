@@ -2,7 +2,8 @@ from twisted.web import xmlrpc, server
 from pyatspi import findDescendant, Registry
 import subprocess
 from time import sleep
-from utils import ldtpize_accessible, match_name_to_acc
+from utils import ldtpize_accessible, match_name_to_acc, list_guis
+from waiters import ObjectExistsWaiter, GuiExistsWaiter
 
 # waittillguiexist
 # waittillguinotexist
@@ -31,20 +32,20 @@ class Ldtpd(xmlrpc.XMLRPC):
         return self._process.pid
 
     def xmlrpc_guiexist(self, window_name, object_name):
-        for gui in self._list_guis():
-            if match_name_to_acc(window_name, gui):
-                if object_name is None:
-                    return 1
-                else:
-                    found = findDescendant(
-                        gui,
-                        lambda x: match_name_to_acc(object_name, x))
-                    if found:
-                        return 1
-        return 0
+        if object_name:
+            waiter = ObjectExistsWaiter(window_name, object_name, 0)
+        else:
+            waiter = GuiExistsWaiter(window_name, 0)
 
-    def xmlrpc_waittillguiexist(self, window_name, component, ):
-        return 1
+        return int(waiter.run())
+
+    def xmlrpc_waittillguiexist(self, window_name, object_name, timeout):
+        if object_name:
+            waiter = ObjectExistsWaiter(window_name, object_name, timeout)
+        else:
+            waiter = GuiExistsWaiter(window_name, timeout)
+
+        return int(waiter.run())
 
     def xmlrpc_waittillguinotexist(self, window_name):
         return 1
@@ -52,12 +53,4 @@ class Ldtpd(xmlrpc.XMLRPC):
     def xmlrpc_selectmenuitem(self, window_name):
         return 1
     
-    def _list_guis(self):
-        guis = []
-        for app in self._desktop:
-            if not app: continue
-            for gui in app:
-                if not gui: continue
-                guis.append(gui)
-        return guis
 

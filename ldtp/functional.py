@@ -6,5 +6,8 @@ def whoismyhost():
 def launchapp(cmdline):
     return client._client.launchapp(cmdline)
 
-def guiexist(gui_name, object_name=None):
+def guiexist(gui_name, object_name=''):
     return client._client.guiexist(gui_name, object_name)
+
+def waittillguiexist(gui_name, object_name='', timeout=5):
+    return client._client.waittillguiexist(gui_name, object_name, timeout)

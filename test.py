@@ -1,3 +1,3 @@
 import ldtp
-print ldtp.whoismyhost()
-print ldtp.guiexist('frmCalculator', 'mnuEdit')
+print ldtp.launchapp('gcalctool')
+print ldtp.waittillguiexist('frmCalculator', 'mnuEdit', 20)

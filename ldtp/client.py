@@ -11,11 +11,10 @@ class LdtpClient(xmlrpclib.ServerProxy):
 
 class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):
-        print 'spawning'
         self._daemon = subprocess.Popen(
             ['python', '-c', 'import ldtpd; ldtpd.main()'],
             stderr=sys.stderr)
-        sleep(1)
+        sleep(2)
 
     def request(self, host, handler, request_body, verbose=0):
         try:
