@@ -1,7 +1,5 @@
-from twisted.web import xmlrpc, server
 from pyatspi import findDescendant, Registry
 import subprocess
-from time import sleep
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
 from constants import abbreviated_roles
@@ -38,7 +36,7 @@ class Ldtpd:
         os.environ['NO_AT_BRIDGE'] = '1'
         return self._process.pid
 
-    def guiexist(self, window_name, object_name):
+    def guiexist(self, window_name, object_name=''):
         if object_name:
             waiter = ObjectExistsWaiter(window_name, object_name, 0)
         else:
@@ -46,7 +44,7 @@ class Ldtpd:
 
         return int(waiter.run())
 
-    def waittillguiexist(self, window_name, object_name, timeout):
+    def waittillguiexist(self, window_name, object_name='', timeout=5):
         if object_name:
             waiter = ObjectExistsWaiter(window_name, object_name, timeout)
         else:
@@ -54,7 +52,7 @@ class Ldtpd:
 
         return int(waiter.run())
 
-    def waittillguinotexist(self, window_name, timeout):
+    def waittillguinotexist(self, window_name, timeout=5):
         waiter = GuiNotExistsWaiter(window_name, timeout)
 
         return int(waiter.run())

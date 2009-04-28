@@ -1,4 +1,4 @@
-from daemon import Ldtpd
+from core import Ldtpd
 from twisted.web import xmlrpc
 
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
@@ -15,4 +15,8 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __init__(self):
         xmlrpc.XMLRPC.__init__(self)
         Ldtpd.__init__(self)
+
+    def _listFunctions(self):
+        return [a[7:] for a in \
+                  filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
 
