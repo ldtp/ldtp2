@@ -12,15 +12,13 @@ class WidgetTestCase(unittest.TestCase):
         ldtp.waittillguinotexist('frmCalculator*')
 
     def testViews(self):
-        ldtp.selectmenuitem('frmCalculator*', 'mnuAdvanced')
-        sleep(1)
-        ldtp.selectmenuitem('frmCalculator*', 'mnuFinancial')
-        sleep(1)
-        ldtp.selectmenuitem('frmCalculator*', 'mnuScientific')
-        sleep(1)
-        ldtp.selectmenuitem('frmCalculator*', 'mnuProgramming')
-        sleep(1)
-        ldtp.selectmenuitem('frmCalculator*', 'mnuBasic')
+        for menu_item in ('mnuAdvanced',
+                          'mnuFinancial',
+                          'mnuScientific',
+                          'mnuProgramming',
+                          'mnuBasic'):
+            ldtp.selectmenuitem('frmCalculator*', menu_item)
+            sleep(1)
 
     def testInteraction(self):
         ldtp.click('frmCalculator*', 'btnNumeric1')
