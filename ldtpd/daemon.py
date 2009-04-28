@@ -4,6 +4,7 @@ import subprocess
 from time import sleep
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
+from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, GuiNotExistsWaiter
 from server_exception import LdtpServerException
 import os
@@ -113,3 +114,47 @@ class Ldtpd(xmlrpc.XMLRPC):
 
         # TODO: label and label_by, what else am I missing?
         return props
+
+    def xmlrpc_getobjectproperty(self, window_name, obj_name, prop):
+
+        if prop == 'child_index':
+            obj = self._get_object(window_name, obj_name)
+            return obj.getIndexInParent()
+        elif prop == 'key':
+            obj = self._get_object(window_name, obj_name) # A sanity check.
+            return obj_name # For now, we only match exact names anyway.
+        elif prop == 'obj_index':
+            role_count = {}
+            for gui in list_guis(self._desktop):
+                if match_name_to_acc(window_name, gui):
+                    for name, obj in appmap_pairs(gui):
+                        role = obj.getRole()
+                        role_count[role] = role_count.get(role, 0) + 1
+                        if name == obj_name:
+                            return '%s#%d' % (
+                                abbreviated_roles.get(role, 'ukn'),
+                                role_count.get(role, 1) - 1)
+
+            raise LdtpServerException(
+                'Unable to find object name in application map')
+        elif prop == 'parent':
+            cached_list = []
+            for gui in list_guis(self._desktop):
+                if match_name_to_acc(window_name, gui):
+                    for name, obj in appmap_pairs(gui):
+                        if name == obj_name:
+                            for pname, pobj in cached_list:
+                                if obj in pobj: # avoid double link issues
+                                    return pname
+                            return ldtpize_accessible(obj.parent)
+                        cached_list.insert(0, (name, obj))
+
+            raise LdtpServerException(
+                'Unable to find object name in application map')
+        elif prop == 'class':
+            obj = self._get_object(window_name, obj_name)
+            return obj.getRoleName()
+
+        raise LdtpServerException('Unknown property "%s" in %s' % \
+                                      (prop, obj_name))
+

@@ -26,3 +26,6 @@ def getobjectlist(window_name):
 
 def getobjectinfo(gui_name, obj_name):
     return client._client.getobjectinfo(gui_name, obj_name)
+
+def getobjectproperty(gui_name, obj_name, prop):
+    return client._client.getobjectproperty(gui_name, obj_name, prop)
