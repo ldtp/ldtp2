@@ -63,13 +63,15 @@ class Ldtpd(xmlrpc.XMLRPC):
         try:
             iaction = obj.queryAction()
         except NotImplementedError:
-            pass
+            raise LdtpServerException(
+                'Object does not have an Action interface')
         else:
             for i in xrange(iaction.nActions):
                 if iaction.getName(i) == 'click':
                     iaction.doAction(i)
-                    return True
-        return False
+                    return
+            raise LdtpServerException('Object does not have a "click" action')
+        
 
     def _get_object(self, window_name, obj_name):
         for gui in list_guis(self._desktop):
@@ -77,23 +79,22 @@ class Ldtpd(xmlrpc.XMLRPC):
                 for name, obj in appmap_pairs(gui):
                     if name == obj_name:
                         return obj
-        return None
+        raise LdtpServerException(
+            'Unable to find object name in application map')
 
     def xmlrpc_selectmenuitem(self, window_name, heirarchy):
         obj = self._get_object(window_name, heirarchy)
 
-        if obj:
-            return int(self._click_object(obj))
+        self._click_object(obj)
 
-        return 0
+        return 1
 
     def xmlrpc_click(self, window_name, obj_name):
         obj = self._get_object(window_name, obj_name)
-        
-        if obj:
-            return int(self._click_object(obj))
 
-        return 0
+        self._click_object(obj)
+
+        return 1
     
     def xmlrpc_getobjectlist(self, window_name):
         obj_list = []
@@ -101,6 +102,7 @@ class Ldtpd(xmlrpc.XMLRPC):
             if match_name_to_acc(window_name, gui):
                 for name, obj in appmap_pairs(gui):
                     obj_list.append(name)
+                return obj_list
 
-        return obj_list
+        raise LdtpServerException('Window does not exist')
 
