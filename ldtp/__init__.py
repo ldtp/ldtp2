@@ -11,5 +11,6 @@ def _populateNamespace(d):
         if method.startswith('system.'):
             continue
         d[method] = getattr(client._client, method)
+        d[method].__doc__ = client._client.system.methodHelp(method)
 
 _populateNamespace(globals())
