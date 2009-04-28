@@ -5,6 +5,7 @@ from time import sleep
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, GuiNotExistsWaiter
+from server_exception import LdtpServerException
 import os
 
 # waittillguiexist
@@ -32,7 +33,7 @@ class Ldtpd(xmlrpc.XMLRPC):
         try:
             self._process = subprocess.Popen(cmdline.split(' '))
         except Exception, e:
-            raise xmlrpc.Fault(123, str(e))
+            raise LdtpServerException(str(e))
         os.environ['NO_GAIL'] = '1'
         os.environ['NO_AT_BRIDGE'] = '1'
         return self._process.pid
