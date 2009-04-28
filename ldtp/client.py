@@ -3,6 +3,7 @@ from socket import error as SocketError
 from time import sleep
 import subprocess
 import sys
+from client_exception import LdtpExecutionError, ERROR_CODE
 
 class LdtpClient(xmlrpclib.ServerProxy):
     def __init__(self, uri, encoding=None, verbose=0, use_datetime=0):
@@ -26,6 +27,11 @@ class Transport(xmlrpclib.Transport):
                 return xmlrpclib.Transport.request(
                     self, host, handler, request_body, verbose=0)
             raise
+        except xmlrpclib.Fault, e:
+            if e.faultCode == ERROR_CODE:
+                raise LdtpExecutionError(e.faultString)
+            else:
+                raise e
 
     def __del__(self):
         try:
