@@ -4,8 +4,12 @@ import unittest
 
 class WidgetTestCase(unittest.TestCase):
     def setUp(self):
-        ldtp.launchapp('gcalctool')
-        ldtp.waittillguiexist('frmCalculator*')
+        try:
+            ldtp.launchapp('gcalctool')
+            ldtp.waittillguiexist('frmCalculator*')
+        except:
+            self.tearDown()
+            raise
 
     def tearDown(self):
         ldtp.selectmenuitem('frmCalculator*', 'mnuQuit')
