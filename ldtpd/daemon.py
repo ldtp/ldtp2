@@ -106,3 +106,10 @@ class Ldtpd(xmlrpc.XMLRPC):
 
         raise LdtpServerException('Window does not exist')
 
+    def xmlrpc_getobjectinfo(self, window_name, obj_name):
+        obj = self._get_object(window_name, obj_name)
+
+        props = ['child_index', 'key', 'obj_index', 'parent', 'class']
+
+        # TODO: label and label_by, what else am I missing?
+        return props

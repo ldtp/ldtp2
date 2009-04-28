@@ -24,3 +24,5 @@ def click(gui_name, obj_name):
 def getobjectlist(window_name):
     return client._client.getobjectlist(window_name)
 
+def getobjectinfo(gui_name, obj_name):
+    return client._client.getobjectinfo(gui_name, obj_name)
