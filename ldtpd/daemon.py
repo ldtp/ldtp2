@@ -5,6 +5,7 @@ from time import sleep
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, GuiNotExistsWaiter
+import os
 
 # waittillguiexist
 # waittillguinotexist
@@ -26,10 +27,14 @@ class Ldtpd(xmlrpc.XMLRPC):
         return True
 
     def xmlrpc_launchapp(self, cmdline):
+        os.environ['NO_GAIL'] = '0'
+        os.environ['NO_AT_BRIDGE'] = '0'
         try:
             self._process = subprocess.Popen(cmdline.split(' '))
         except Exception, e:
             raise xmlrpc.Fault(123, str(e))
+        os.environ['NO_GAIL'] = '1'
+        os.environ['NO_AT_BRIDGE'] = '1'
         return self._process.pid
 
     def xmlrpc_guiexist(self, window_name, object_name):
