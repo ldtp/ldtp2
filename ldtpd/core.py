@@ -270,3 +270,34 @@ class Ldtpd:
         raise LdtpServerException('Unknown property "%s" in %s' % \
                                       (prop, object_name))
 
+    def getchild(self, window_name, child_name='', role=''):
+        '''
+        Gets the list of object available in the window, which matches 
+        component name or role name or both.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param child_name: Child name to search for.
+        @type child_name: string
+        @param role: role name to search for, or an empty string for wildcard.
+        @type role: string
+
+        @return: list of matched children names
+        @rtype: list
+        '''
+        matches = []
+        for gui in list_guis(self._desktop):
+            if match_name_to_acc(window_name, gui):
+                for name, obj in appmap_pairs(gui):
+                    if child_name and role:
+                        if obj.getRoleName() == role and \
+                                match_name_to_acc(child_name, obj):
+                            matches.append(name)
+                    elif role:
+                        if obj.getRoleName() == role:
+                            matches.append(name)
+                    elif child_name:
+                        if match_name_to_acc(child_name, obj):
+                            matches.append(name)
+        return matches

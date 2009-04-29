@@ -8,8 +8,11 @@ class _Wrapper(object):
             cls._wrapped_methods =[]
             for attr in d:
                 if cls._isRemoteMethod(d[attr]) and cls._isRelevant(d[attr]):
-                    cls._wrapped_methods.append(attr)
-                    setattr(cls, attr, d[attr])
+                    setted = attr
+                    if hasattr(cls, attr):
+                        setted = "_remote_"+setted
+                    cls._wrapped_methods.append(setted)
+                    setattr(cls, setted, d[attr])
         return object.__new__(cls)
 
     def __getattribute__(self, name):
@@ -43,6 +46,13 @@ class Context(_Wrapper):
         args = cls._listArgs(obj)
         return args and 'window_name' == args[0]
     _isRelevant = classmethod(_isRelevant)
+
+    def getchild(self, child_name, role=''):
+        matches = self._remote_getchild(child_name, role)
+        if len(matches) == 1:
+            return Component(self._window_name, matches[0])
+        else:
+            return [Component(self._window_name, x) for x in matches]
     
 class _ContextFuncWrapper:
     def __init__(self, window_name, func):
