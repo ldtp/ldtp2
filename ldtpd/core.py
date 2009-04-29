@@ -293,8 +293,6 @@ class Ldtpd:
         for gui in list_guis(self._desktop):
             if match_name_to_acc(window_name, gui):
                 for name, obj in appmap_pairs(gui):
-                    if child_name == 'txtName' and (name.startswith('txt') or 'Name' in name):
-                        print name, child_name
                     if child_name and role:
                         if obj.getRoleName() == role and \
                                 (child_name == name or \
@@ -414,3 +412,4 @@ class Ldtpd:
         '''
         locale.setlocale(locale.LC_ALL, locale_str)
         return 1
+
