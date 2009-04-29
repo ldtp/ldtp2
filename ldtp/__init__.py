@@ -1,4 +1,5 @@
 import client
+from client_exception import LdtpExecutionError
 
 def setHost(uri):
     client._client = client.LdtpClient(uri)

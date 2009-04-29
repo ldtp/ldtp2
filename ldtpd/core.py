@@ -3,7 +3,9 @@ import subprocess
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
 from constants import abbreviated_roles
-from waiters import ObjectExistsWaiter, GuiExistsWaiter, GuiNotExistsWaiter
+from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
+    GuiNotExistsWaiter, NullWaiter
+from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
 
@@ -292,12 +294,76 @@ class Ldtpd:
                 for name, obj in appmap_pairs(gui):
                     if child_name and role:
                         if obj.getRoleName() == role and \
-                                match_name_to_acc(child_name, obj):
+                                (child_name == name or \
+                                     match_name_to_acc(child_name, obj)):
                             matches.append(name)
                     elif role:
                         if obj.getRoleName() == role:
                             matches.append(name)
                     elif child_name:
-                        if match_name_to_acc(child_name, obj):
+                        if child_name == name or \
+                                match_name_to_acc(child_name, obj):
                             matches.append(name)
         return matches
+
+    def remap(self, window_name):
+        '''
+        For backwards compatability, does not do anything since we are entirely
+        dynamic.
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1
+        @rtype: integer
+        '''
+        return 1
+
+    def wait(self, timeout=5):
+        '''
+        Wait a given amount of seconds.
+
+        @param timeout: Wait timeout in seconds
+        @type timeout: integer
+
+        @return: 1
+        @rtype: integer
+        '''
+        return NullWaiter(1, timeout)
+
+    def _grab_focus(self, obj):
+        try:
+            componenti = obj.queryComponent()
+        except:
+            raise LdtpServerException('Failed to grab focus for %s' % obj)
+        componenti.grabFocus()
+
+    def enterstring(self, window_name, object_name='', data=''):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to focus on, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to focus on, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if data and object_name:
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
+        if data:
+            for gui in list_guis(self._desktop):
+                if match_name_to_acc(window_name, gui):
+                    self._grab_focus(gui)
+
+        type_action = TypeAction(data)
+        type_action()
+
+        return 1

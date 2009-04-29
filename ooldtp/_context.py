@@ -39,6 +39,9 @@ class Context(_Wrapper):
     def __init__(self, window_name):
         self._window_name = window_name
 
+    def __repr__(self):
+        return 'Context of "%s"' % self._window_name
+
     def _wrapMethod(self, obj):
         return _ContextFuncWrapper(self._window_name, obj)
 
@@ -68,6 +71,10 @@ class Component(_Wrapper):
     def __init__(self, window_name, object_name):
         self._window_name = window_name
         self._object_name = object_name
+
+    def __repr__(self):
+        return 'Component "%s" in "%s"' % \
+            (self._object_name, self._window_name)
 
     def _wrapMethod(self, func):
         return _ComponentFuncWrapper(
