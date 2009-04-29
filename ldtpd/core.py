@@ -73,7 +73,7 @@ class Ldtpd:
 
         return int(waiter.run())
 
-    def waittillguiexist(self, window_name, object_name='', timeout=5):
+    def waittillguiexist(self, window_name, object_name='', guiTimeOut=5):
         '''
         Wait till a window or component exists.
         
@@ -83,33 +83,33 @@ class Ldtpd:
         @param object_name: Object name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type object_name: string
-        @param timeout: Wait timeout in seconds
-        @type timeout: integer
+        @param guiTimeOut: Wait timeout in seconds
+        @type guiTimeOut: integer
 
         @return: 1 if GUI was found, 0 if not.
         @rtype: integer
         '''
         if object_name:
-            waiter = ObjectExistsWaiter(window_name, object_name, timeout)
+            waiter = ObjectExistsWaiter(window_name, object_name, guiTimeOut)
         else:
-            waiter = GuiExistsWaiter(window_name, timeout)
+            waiter = GuiExistsWaiter(window_name, guiTimeOut)
 
         return int(waiter.run())
 
-    def waittillguinotexist(self, window_name, timeout=5):
+    def waittillguinotexist(self, window_name, guiTimeOut=5):
         '''
         Wait till a window does not exist.
         
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
-        @param timeout: Wait timeout in seconds
-        @type timeout: integer
+        @param guiTimeOut: Wait timeout in seconds
+        @type guiTimeOut: integer
 
         @return: 1 if GUI has gone away, 0 if not.
         @rtype: integer
         '''
-        waiter = GuiNotExistsWaiter(window_name, timeout)
+        waiter = GuiNotExistsWaiter(window_name, guiTimeOut)
 
         return int(waiter.run())
 

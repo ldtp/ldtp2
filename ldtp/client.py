@@ -5,10 +5,19 @@ import subprocess
 import sys
 from client_exception import LdtpExecutionError, ERROR_CODE
 
+class _Method(xmlrpclib._Method):
+    def __call__(self, *args, **kwargs):
+        args += (kwargs,)
+        return self.__send(self.__name, args)
+
 class LdtpClient(xmlrpclib.ServerProxy):
     def __init__(self, uri, encoding=None, verbose=0, use_datetime=0):
         xmlrpclib.ServerProxy.__init__(
             self, uri, Transport(), encoding, verbose, 1, use_datetime)
+
+    def __getattr__(self, name):
+        # magic method dispatcher
+        return _Method(self._ServerProxy__request, name)
 
 class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):

@@ -1,5 +1,6 @@
 from core import Ldtpd
 from twisted.web import xmlrpc
+import xmlrpclib
 
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __new__(cls, *args, **kwargs):
@@ -20,3 +21,28 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         return [a[7:] for a in \
                   filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
 
+
+    def render_POST(self, request):
+        request.content.seek(0, 0)
+        request.setHeader("content-type", "text/xml")
+        try:
+            args, functionPath = xmlrpclib.loads(request.content.read())
+            if args and isinstance(args[-1], dict):
+                kwargs = args[-1]
+                args = args[:-1]
+            else:
+                kwargs = {}
+        except Exception, e:
+            f = xmlrpc.Fault(
+                self.FAILURE, "Can't deserialize input: %s" % (e,))
+            self._cbRender(f, request)
+        else:
+            try:
+                function = self._getFunction(functionPath)
+            except xmlrpc.Fault, f:
+                self._cbRender(f, request)
+            else:
+                xmlrpc.defer.maybeDeferred(function, *args, **kwargs).\
+                    addErrback(self._ebRender).\
+                    addCallback(self._cbRender, request)
+        return xmlrpc.server.NOT_DONE_YET
