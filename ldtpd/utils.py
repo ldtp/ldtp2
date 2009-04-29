@@ -12,8 +12,15 @@ def list_guis(desktop):
             yield gui
 
 def ldtpize_accessible(acc):
+    label_acc = None
+    if not acc.name:
+        rel_set = acc.getRelationSet()
+        for i, rel in enumerate(rel_set):
+            if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY:
+                label_acc = rel.getTarget(i)
+                break
     return '%s%s' % (abbreviated_roles.get(acc.getRole(), 'ukn'), 
-                     acc.name.replace(' ', ''))
+                     (label_acc or acc).name.replace(' ', '').rstrip(':'))
 
 def glob_match(pattern, string):
     return bool(re_match(glob_trans(pattern), string))

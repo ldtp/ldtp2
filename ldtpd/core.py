@@ -1,4 +1,5 @@
 from pyatspi import findDescendant, Registry
+import locale
 import subprocess
 from utils import ldtpize_accessible, \
     match_name_to_acc, list_guis, appmap_pairs
@@ -292,6 +293,8 @@ class Ldtpd:
         for gui in list_guis(self._desktop):
             if match_name_to_acc(window_name, gui):
                 for name, obj in appmap_pairs(gui):
+                    if child_name == 'txtName' and (name.startswith('txt') or 'Name' in name):
+                        print name, child_name
                     if child_name and role:
                         if obj.getRoleName() == role and \
                                 (child_name == name or \
@@ -304,6 +307,10 @@ class Ldtpd:
                         if child_name == name or \
                                 match_name_to_acc(child_name, obj):
                             matches.append(name)
+                
+        if not matches:
+            raise LdtpServerException('Could not find a child.')
+
         return matches
 
     def remap(self, window_name):
@@ -330,7 +337,9 @@ class Ldtpd:
         @return: 1
         @rtype: integer
         '''
-        return NullWaiter(1, timeout)
+        waiter = NullWaiter(1, timeout)
+
+        return waiter.run()
 
     def _grab_focus(self, obj):
         try:
@@ -366,4 +375,42 @@ class Ldtpd:
         type_action = TypeAction(data)
         type_action()
 
+        return 1
+
+    def settextvalue(self, window_name, object_name, data=''):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            texti = obj.queryEditableText()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return int(texti.setTextContents(data.encode('utf-8')))
+
+    def setlocale(self, locale_str):
+        '''
+        Set the locale to the given value.
+
+        @param locale_str: locale to set to.
+        @type locale_str: string
+
+        @return: 1
+        @rtype: integer
+        '''
+        locale.setlocale(locale.LC_ALL, locale_str)
         return 1
