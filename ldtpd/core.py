@@ -166,7 +166,7 @@ class Ldtpd:
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, obj_name)
+        obj = self._get_object(window_name, object_name)
 
         self._click_object(obj)
 
