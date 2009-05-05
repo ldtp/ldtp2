@@ -30,7 +30,7 @@ class Ldtpd:
     def isalive(self):
         return True
 
-    def launchapp(self, cmdline):
+    def launchapp(self, cmd, args=[]):
         '''
         Launch application.
 
@@ -45,7 +45,7 @@ class Ldtpd:
         os.environ['NO_GAIL'] = '0'
         os.environ['NO_AT_BRIDGE'] = '0'
         try:
-            process = subprocess.Popen(cmdline.split(' '))
+            process = subprocess.Popen([cmd]+args)
         except Exception, e:
             raise LdtpServerException(str(e))
         os.environ['NO_GAIL'] = '1'
@@ -412,4 +412,3 @@ class Ldtpd:
         '''
         locale.setlocale(locale.LC_ALL, locale_str)
         return 1
-
