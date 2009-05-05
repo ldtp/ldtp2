@@ -1,4 +1,5 @@
 import client
+import atexit
 from client_exception import LdtpExecutionError
 
 def setHost(uri):
@@ -15,3 +16,5 @@ def _populateNamespace(d):
         d[method].__doc__ = client._client.system.methodHelp(method)
 
 _populateNamespace(globals())
+
+atexit.register(client._client.kill_daemon)

@@ -19,6 +19,9 @@ class LdtpClient(xmlrpclib.ServerProxy):
         # magic method dispatcher
         return _Method(self._ServerProxy__request, name)
 
+    def kill_daemon(self):
+        self._ServerProxy__transport.kill_daemon()
+        
 class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):
         self._daemon = subprocess.Popen(
@@ -43,6 +46,9 @@ class Transport(xmlrpclib.Transport):
                 raise e
 
     def __del__(self):
+        self.kill_daemon()
+
+    def kill_daemon(self):
         try:
             self._daemon.kill()
         except AttributeError:
