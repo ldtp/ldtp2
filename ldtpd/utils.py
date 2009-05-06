@@ -19,21 +19,22 @@ def ldtpize_accessible(acc):
             if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY:
                 label_acc = rel.getTarget(i)
                 break
-    return '%s%s' % (abbreviated_roles.get(acc.getRole(), 'ukn'), 
-                     (label_acc or acc).name.replace(' ', '').rstrip(':'))
+    return abbreviated_roles.get(acc.getRole(), 'ukn'), \
+        (label_acc or acc).name.replace(' ', '').rstrip(':')
 
 def glob_match(pattern, string):
     return bool(re_match(glob_trans(pattern), string))
 
-
 def match_name_to_acc(name, acc):
     if acc.name == name:
         return 1
-    if ldtpize_accessible(acc) == name:
+    _object_name = ldtpize_accessible(acc)
+    _object_name = '%s%s' % (_object_name[0],_object_name[1])
+    if _object_name  == name:
         return 1
     if glob_match(name, acc.name):
         return 1
-    if glob_match(name, ldtpize_accessible(acc)):
+    if glob_match(name, _object_name):
         return 1
     return 0
 
@@ -48,7 +49,13 @@ def appmap_pairs(gui):
     ldtpized_list = []
     for obj in list_objects(gui):
         ldtpized_name_base = ldtpize_accessible(obj)
-        ldtpized_name = ldtpized_name_base
+        if ldtpized_name_base [1] == '':
+            ldtpized_name_base = ldtpized_name_base[0]
+            ldtpized_name = '%s0' % ldtpized_name_base
+        else:
+            ldtpized_name_base = '%s%s' % (ldtpized_name_base[0],
+                                           ldtpized_name_base[1])
+            ldtpized_name = ldtpized_name_base
         i = 1
         while ldtpized_name in ldtpized_list:
             ldtpized_name = '%s%d' % (ldtpized_name_base, i)
