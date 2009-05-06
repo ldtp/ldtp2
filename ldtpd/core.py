@@ -1,33 +1,24 @@
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
-from utils import ldtpize_accessible, \
-    match_name_to_acc, list_guis, appmap_pairs
+from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
     GuiNotExistsWaiter, NullWaiter
 from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
+import re
+import pyatspi
 
 from table import Table
 
-# waittillguiexist
-# waittillguinotexist
-# context (?)
-# guiexist
-# getobjectproperty
-# click
-# selectmenuitem
-# settextvalue
-# enterstring
-
-class Ldtpd:
+class Ldtpd(Utils):
     '''
     Core LDTP class.
     '''
     def __init__(self):
-        self._desktop = Registry.getDesktop(0)
+        Utils.__init__(self)
 
     def isalive(self):
         return True
@@ -115,7 +106,7 @@ class Ldtpd:
 
         return int(waiter.run())
 
-    def _click_object(self, obj):
+    def _click_object(self, obj, action = 'click'):
         try:
             iaction = obj.queryAction()
         except NotImplementedError:
@@ -123,20 +114,38 @@ class Ldtpd:
                 'Object does not have an Action interface')
         else:
             for i in xrange(iaction.nActions):
-                if iaction.getName(i) == 'click':
+                if iaction.getName(i) == action:
                     iaction.doAction(i)
                     return
             raise LdtpServerException('Object does not have a "click" action')
-        
 
     def _get_object(self, window_name, obj_name):
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
-                    if name == obj_name:
+        for gui in self._list_guis():
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
+                    if self._match_name_to_acc (obj_name, obj):
                         return obj
         raise LdtpServerException(
             'Unable to find object name in application map')
+
+    def _get_menu_hierarchy(self, window_name, object_name):
+        _menu_hierarchy = re.split(';', object_name)
+        obj = self._get_object(window_name, _menu_hierarchy [0])
+        for _menu in _menu_hierarchy[1:]:
+            _flag = False
+            for _child in self._list_objects(obj):
+                if obj == _child:
+                    # if the given object and child object matches
+                    continue
+                if self._match_name_to_acc(_menu, _child):
+                    _flag = True
+                    break
+            if not _flag:
+                raise LdtpServerException (
+                    "Menu item %s doesn't exist in hierarchy" % _menu)
+            obj = self._get_object(window_name, _menu)
+        return obj
+
     def selectmenuitem(self, window_name, object_name):
         '''
         Select (click) a menu item.
@@ -151,9 +160,115 @@ class Ldtpd:
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        if re.search(';', object_name):
+            obj = self._get_menu_hierarchy(window_name, object_name)
+        else:
+            obj = self._get_object(window_name, object_name)
 
         self._click_object(obj)
+
+        return 1
+
+    def doesmenuitemexist(self, window_name, object_name):
+        '''
+        Check a menu item exist.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        try:
+            if re.search(';', object_name):
+                obj = self._get_menu_hierarchy(window_name, object_name)
+            else:
+                obj = self._get_object(window_name, object_name)
+            return 1
+        except:
+            return 0
+
+    def listsubmenus(self, window_name, object_name):
+        '''
+        List children of menu item
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: menu item in ';' separated format on success.
+        @rtype: string
+        '''
+        if re.search(';', object_name):
+            obj = self._get_menu_hierarchy(window_name, object_name)
+        else:
+            obj = self._get_object(window_name, object_name)
+        _children = ''
+        for _child in self._list_objects (obj):
+            if _child.name == '' or _child.name == 'Empty' or \
+                    obj == _child:
+                # If empty string don't add it to the list or
+                # if the given object and child object matches
+                continue
+            if _children == '':
+                _children += _child.name
+            else:
+                _children += ';%s' % _child.name
+        return _children
+
+    def menucheck(self, window_name, object_name):
+        '''
+        Check (click) a menu item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if re.search(';', object_name):
+            obj = self._get_menu_hierarchy(window_name, object_name)
+        else:
+            obj = self._get_object(window_name, object_name)
+
+        if self._check_state(window_name, obj,
+                             pyatspi.STATE_CHECKED) == False:
+            self._click_object(obj)
+
+        return 1
+
+    def menuuncheck(self, window_name, object_name):
+        '''
+        Check (click) a menu item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if re.search(';', object_name):
+            obj = self._get_menu_hierarchy(window_name, object_name)
+        else:
+            obj = self._get_object(window_name, object_name)
+
+        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+            self._click_object(obj)
 
         return 1
 
@@ -177,6 +292,169 @@ class Ldtpd:
 
         return 1
     
+    def press(self, window_name, object_name):
+        '''
+        Press item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._click_object(obj, 'press')
+
+        return 1
+    
+    def invokemenu(self, window_name, object_name):
+        '''
+        Invoke menu item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        return self.press (window_name, object_name)
+
+    def _check_state (self, window_name, obj, object_state):
+        _state = obj.getState()
+        _current_state = _state.getStates()
+
+        _status = False
+        if object_state in _current_state:
+            _status = True
+
+        _state.unref()
+        return _status
+
+    def check(self, window_name, object_name):
+        '''
+        Check item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(window_name, obj,
+                             pyatspi.STATE_CHECKED) == False:
+            self._click_object(obj)
+
+        return 1
+
+    def uncheck(self, window_name, object_name):
+        '''
+        Uncheck item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+            self._click_object(obj)
+
+        return 1
+    
+    def verifytoggled(self, window_name, object_name):
+        '''
+        Verify toggle item toggled.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        '''
+        return self.verifycheck(window_name, object_name)
+
+    def verifycheck(self, window_name, object_name):
+        '''
+        Verify check item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        return int(self._check_state(window_name, obj,
+                                     pyatspi.STATE_CHECKED))
+
+    def verifyuncheck(self, window_name, object_name):
+        '''
+        Verify uncheck item.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        return int(not self._check_state(window_name, obj,
+                                         pyatspi.STATE_CHECKED))
+
+    def stateenabled(self, window_name, object_name):
+        '''
+        Check whether an object state is enabled or not
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        return int(self._check_state(window_name, obj,
+                                     pyatspi.STATE_ENABLED))
+
     def getobjectlist(self, window_name):
         '''
         Get list of items in given GUI.
@@ -189,9 +467,9 @@ class Ldtpd:
         @rtype: list
         '''
         obj_list = []
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
+        for gui in self._list_guis():
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
                     obj_list.append(name)
                 return obj_list
 
@@ -242,9 +520,9 @@ class Ldtpd:
             return object_name # For now, we only match exact names anyway.
         elif prop == 'obj_index':
             role_count = {}
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
-                    for name, obj in appmap_pairs(gui):
+            for gui in self._list_guis():
+                if self._match_name_to_acc(window_name, gui):
+                    for name, obj in self._appmap_pairs(gui):
                         role = obj.getRole()
                         role_count[role] = role_count.get(role, 0) + 1
                         if name == object_name:
@@ -256,21 +534,22 @@ class Ldtpd:
                 'Unable to find object name in application map')
         elif prop == 'parent':
             cached_list = []
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
-                    for name, obj in appmap_pairs(gui):
+            for gui in self._list_guis():
+                if self._match_name_to_acc(window_name, gui):
+                    for name, obj in self._appmap_pairs(gui):
                         if name == object_name:
                             for pname, pobj in cached_list:
                                 if obj in pobj: # avoid double link issues
                                     return pname
-                            return ldtpize_accessible(obj.parent)
+                            _parent = self._ldtpize_accessible(obj.parent)
+                            return '%s%s' % (_parent[0], _parent[1])
                         cached_list.insert(0, (name, obj))
 
             raise LdtpServerException(
                 'Unable to find object name in application map')
         elif prop == 'class':
             obj = self._get_object(window_name, object_name)
-            return obj.getRoleName()
+            return obj.getRoleName().replace(' ', '_')
 
         raise LdtpServerException('Unknown property "%s" in %s' % \
                                       (prop, object_name))
@@ -292,20 +571,20 @@ class Ldtpd:
         @rtype: list
         '''
         matches = []
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
+        for gui in self._list_guis():
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
                     if child_name and role:
                         if obj.getRoleName() == role and \
                                 (child_name == name or \
-                                     match_name_to_acc(child_name, obj)):
+                                     self._match_name_to_acc(child_name, obj)):
                             matches.append(name)
                     elif role:
                         if obj.getRoleName() == role:
                             matches.append(name)
                     elif child_name:
                         if child_name == name or \
-                                match_name_to_acc(child_name, obj):
+                                self._match_name_to_acc(child_name, obj):
                             matches.append(name)
                 
         if not matches:
@@ -368,8 +647,8 @@ class Ldtpd:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
         if data:
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
+            for gui in self._list_guis():
+                if self._match_name_to_acc(window_name, gui):
                     self._grab_focus(gui)
 
         type_action = TypeAction(data)
