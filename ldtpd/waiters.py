@@ -64,7 +64,7 @@ class GuiExistsWaiter(Waiter):
         self.top_level = None # Useful in subclasses
 
     def poll(self):
-        for gui in self._list_guis(self._desktop):
+        for gui in self._list_guis():
             if self._match_name_to_acc(self._frame_name, gui):
                 self.top_level = gui
                 self.success = True
@@ -79,11 +79,10 @@ class GuiNotExistsWaiter(Waiter):
     def __init__(self, frame_name, timeout):
         Waiter.__init__(self, timeout)
         self._frame_name = frame_name
-        self._desktop = pyatspi.Registry.getDesktop(0)
 
     def poll(self):
         found = False
-        for gui in self._list_guis(self._desktop):
+        for gui in self._list_guis():
             if self._match_name_to_acc(self._frame_name, gui):
                 found = True
 

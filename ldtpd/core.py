@@ -118,7 +118,7 @@ class Ldtpd(Utils):
             raise LdtpServerException('Object does not have a "click" action')
 
     def _get_object(self, window_name, obj_name):
-        for gui in self._list_guis(self._desktop):
+        for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
                 for name, obj in self._appmap_pairs(gui):
                     if self._match_name_to_acc (obj_name, obj):
@@ -465,7 +465,7 @@ class Ldtpd(Utils):
         @rtype: list
         '''
         obj_list = []
-        for gui in self._list_guis(self._desktop):
+        for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
                 for name, obj in self._appmap_pairs(gui):
                     obj_list.append(name)
@@ -518,7 +518,7 @@ class Ldtpd(Utils):
             return object_name # For now, we only match exact names anyway.
         elif prop == 'obj_index':
             role_count = {}
-            for gui in self._list_guis(self._desktop):
+            for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
                     for name, obj in self._appmap_pairs(gui):
                         role = obj.getRole()
@@ -532,7 +532,7 @@ class Ldtpd(Utils):
                 'Unable to find object name in application map')
         elif prop == 'parent':
             cached_list = []
-            for gui in self._list_guis(self._desktop):
+            for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
                     for name, obj in self._appmap_pairs(gui):
                         if name == object_name:
@@ -569,7 +569,7 @@ class Ldtpd(Utils):
         @rtype: list
         '''
         matches = []
-        for gui in self._list_guis(self._desktop):
+        for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
                 for name, obj in self._appmap_pairs(gui):
                     if child_name and role:
@@ -645,7 +645,7 @@ class Ldtpd(Utils):
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
         if data:
-            for gui in self._list_guis(self._desktop):
+            for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
                     self._grab_focus(gui)
 

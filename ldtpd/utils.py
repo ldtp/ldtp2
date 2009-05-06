@@ -8,8 +8,8 @@ class Utils:
     def __init__(self):
         self._desktop = pyatspi.Registry.getDesktop(0)
 
-    def _list_guis(self, desktop):
-        for app in desktop:
+    def _list_guis(self):
+        for app in self._desktop:
             if not app: continue
             for gui in app:
                 if not gui: continue
