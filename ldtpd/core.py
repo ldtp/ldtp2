@@ -104,27 +104,6 @@ class Ldtpd(Utils):
 
         return int(waiter.run())
 
-    def _click_object(self, obj, action = 'click'):
-        try:
-            iaction = obj.queryAction()
-        except NotImplementedError:
-            raise LdtpServerException(
-                'Object does not have an Action interface')
-        else:
-            for i in xrange(iaction.nActions):
-                if iaction.getName(i) == action:
-                    iaction.doAction(i)
-                    return
-            raise LdtpServerException('Object does not have a "click" action')
-
-    def _get_object(self, window_name, obj_name):
-        for gui in self._list_guis():
-            if self._match_name_to_acc(window_name, gui):
-                for name, obj in self._appmap_pairs(gui):
-                    if self._match_name_to_acc (obj_name, obj):
-                        return obj
-        raise LdtpServerException(
-            'Unable to find object name in application map')
 
     def _get_menu_hierarchy(self, window_name, object_name):
         _menu_hierarchy = re.split(';', object_name)
@@ -326,16 +305,6 @@ class Ldtpd(Utils):
         '''
         return self.press (window_name, object_name)
 
-    def _check_state (self, window_name, obj, object_state):
-        _state = obj.getState()
-        _current_state = _state.getStates()
-
-        _status = False
-        if object_state in _current_state:
-            _status = True
-
-        _state.unref()
-        return _status
 
     def check(self, window_name, object_name):
         '''
@@ -617,13 +586,6 @@ class Ldtpd(Utils):
         waiter = NullWaiter(1, timeout)
 
         return waiter.run()
-
-    def _grab_focus(self, obj):
-        try:
-            componenti = obj.queryComponent()
-        except:
-            raise LdtpServerException('Failed to grab focus for %s' % obj)
-        componenti.grabFocus()
 
     def enterstring(self, window_name, object_name='', data=''):
         '''
