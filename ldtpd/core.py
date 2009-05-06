@@ -104,7 +104,6 @@ class Ldtpd(Utils):
 
         return int(waiter.run())
 
-
     def _get_menu_hierarchy(self, window_name, object_name):
         _menu_hierarchy = re.split(';', object_name)
         obj = self._get_object(window_name, _menu_hierarchy [0])
@@ -304,7 +303,6 @@ class Ldtpd(Utils):
         @rtype: integer
         '''
         return self.press (window_name, object_name)
-
 
     def check(self, window_name, object_name):
         '''
