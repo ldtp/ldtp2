@@ -1,8 +1,7 @@
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
-from utils import ldtpize_accessible, \
-    match_name_to_acc, list_guis, appmap_pairs, list_objects
+from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
     GuiNotExistsWaiter, NullWaiter
@@ -12,22 +11,12 @@ import os
 import re
 import pyatspi
 
-# waittillguiexist
-# waittillguinotexist
-# context (?)
-# guiexist
-# getobjectproperty
-# click
-# selectmenuitem
-# settextvalue
-# enterstring
-
-class Ldtpd:
+class Ldtpd(Utils):
     '''
     Core LDTP class.
     '''
     def __init__(self):
-        self._desktop = Registry.getDesktop(0)
+        Utils.__init__(self)
 
     def isalive(self):
         return True
@@ -129,10 +118,10 @@ class Ldtpd:
             raise LdtpServerException('Object does not have a "click" action')
 
     def _get_object(self, window_name, obj_name):
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
-                    if match_name_to_acc (obj_name, obj):
+        for gui in self._list_guis(self._desktop):
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
+                    if self._match_name_to_acc (obj_name, obj):
                         return obj
         raise LdtpServerException(
             'Unable to find object name in application map')
@@ -142,11 +131,11 @@ class Ldtpd:
         obj = self._get_object(window_name, _menu_hierarchy [0])
         for _menu in _menu_hierarchy[1:]:
             _flag = False
-            for _child in list_objects(obj):
+            for _child in self._list_objects(obj):
                 if obj == _child:
                     # if the given object and child object matches
                     continue
-                if match_name_to_acc(_menu, _child):
+                if self._match_name_to_acc(_menu, _child):
                     _flag = True
                     break
             if not _flag:
@@ -220,7 +209,7 @@ class Ldtpd:
         else:
             obj = self._get_object(window_name, object_name)
         _children = ''
-        for _child in list_objects (obj):
+        for _child in self._list_objects (obj):
             if _child.name == '' or _child.name == 'Empty' or \
                     obj == _child:
                 # If empty string don't add it to the list or
@@ -476,9 +465,9 @@ class Ldtpd:
         @rtype: list
         '''
         obj_list = []
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
+        for gui in self._list_guis(self._desktop):
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
                     obj_list.append(name)
                 return obj_list
 
@@ -529,9 +518,9 @@ class Ldtpd:
             return object_name # For now, we only match exact names anyway.
         elif prop == 'obj_index':
             role_count = {}
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
-                    for name, obj in appmap_pairs(gui):
+            for gui in self._list_guis(self._desktop):
+                if self._match_name_to_acc(window_name, gui):
+                    for name, obj in self._appmap_pairs(gui):
                         role = obj.getRole()
                         role_count[role] = role_count.get(role, 0) + 1
                         if name == object_name:
@@ -543,14 +532,14 @@ class Ldtpd:
                 'Unable to find object name in application map')
         elif prop == 'parent':
             cached_list = []
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
-                    for name, obj in appmap_pairs(gui):
+            for gui in self._list_guis(self._desktop):
+                if self._match_name_to_acc(window_name, gui):
+                    for name, obj in self._appmap_pairs(gui):
                         if name == object_name:
                             for pname, pobj in cached_list:
                                 if obj in pobj: # avoid double link issues
                                     return pname
-                            _parent = ldtpize_accessible(obj.parent)
+                            _parent = self._ldtpize_accessible(obj.parent)
                             return '%s%s' % (_parent[0], _parent[1])
                         cached_list.insert(0, (name, obj))
 
@@ -580,20 +569,20 @@ class Ldtpd:
         @rtype: list
         '''
         matches = []
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(window_name, gui):
-                for name, obj in appmap_pairs(gui):
+        for gui in self._list_guis(self._desktop):
+            if self._match_name_to_acc(window_name, gui):
+                for name, obj in self._appmap_pairs(gui):
                     if child_name and role:
                         if obj.getRoleName() == role and \
                                 (child_name == name or \
-                                     match_name_to_acc(child_name, obj)):
+                                     self._match_name_to_acc(child_name, obj)):
                             matches.append(name)
                     elif role:
                         if obj.getRoleName() == role:
                             matches.append(name)
                     elif child_name:
                         if child_name == name or \
-                                match_name_to_acc(child_name, obj):
+                                self._match_name_to_acc(child_name, obj):
                             matches.append(name)
                 
         if not matches:
@@ -656,8 +645,8 @@ class Ldtpd:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
         if data:
-            for gui in list_guis(self._desktop):
-                if match_name_to_acc(window_name, gui):
+            for gui in self._list_guis(self._desktop):
+                if self._match_name_to_acc(window_name, gui):
                     self._grab_focus(gui)
 
         type_action = TypeAction(data)

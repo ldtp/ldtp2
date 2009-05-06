@@ -1,8 +1,10 @@
-from utils import *
+from utils import Utils
+import gobject, pyatspi
 
-class Waiter:
+class Waiter(Utils):
     events = []
     def __init__(self, timeout):
+        Utils.__init__(self)
         self.timeout = timeout
         self._loop = gobject.MainLoop()
 
@@ -59,17 +61,16 @@ class GuiExistsWaiter(Waiter):
     def __init__(self, frame_name, timeout):
         Waiter.__init__(self, timeout)
         self._frame_name = frame_name
-        self._desktop = pyatspi.Registry.getDesktop(0)
         self.top_level = None # Useful in subclasses
 
     def poll(self):
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(self._frame_name, gui):
+        for gui in self._list_guis(self._desktop):
+            if self._match_name_to_acc(self._frame_name, gui):
                 self.top_level = gui
                 self.success = True
 
     def event_cb(self, event):
-        if match_name_to_acc(self._frame_name, event.source):
+        if self._match_name_to_acc(self._frame_name, event.source):
             self.top_level = event.source
             self.success = True
 
@@ -82,14 +83,14 @@ class GuiNotExistsWaiter(Waiter):
 
     def poll(self):
         found = False
-        for gui in list_guis(self._desktop):
-            if match_name_to_acc(self._frame_name, gui):
+        for gui in self._list_guis(self._desktop):
+            if self._match_name_to_acc(self._frame_name, gui):
                 found = True
 
         self.success = not found
 
     def event_cb(self, event):
-        if match_name_to_acc(self._frame_name, event.source):
+        if self._match_name_to_acc(self._frame_name, event.source):
             self.success = True
 
 class ObjectExistsWaiter(GuiExistsWaiter):
