@@ -10,6 +10,8 @@ from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
 
+from table import Table
+
 # waittillguiexist
 # waittillguinotexist
 # context (?)
