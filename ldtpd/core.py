@@ -104,23 +104,87 @@ class Ldtpd(Utils):
 
         return int(waiter.run())
 
-    def _get_menu_hierarchy(self, window_name, object_name):
-        _menu_hierarchy = re.split(';', object_name)
-        obj = self._get_object(window_name, _menu_hierarchy [0])
-        for _menu in _menu_hierarchy[1:]:
-            _flag = False
-            for _child in self._list_objects(obj):
-                if obj == _child:
-                    # if the given object and child object matches
-                    continue
-                if self._match_name_to_acc(_menu, _child):
-                    _flag = True
-                    break
-            if not _flag:
-                raise LdtpServerException (
-                    "Menu item %s doesn't exist in hierarchy" % _menu)
-            obj = self._get_object(window_name, _menu)
-        return obj
+    def getobjectsize(self, window_name, object_name):
+        '''
+        Get object size
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: x, y, width, height on success.
+        @rtype: list
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        _coordinates = self._get_size(obj)
+        return [_coordinates.x, _coordinates.y, \
+                    _coordinates.width, _coordinates.height]
+
+    def generatemouseevent(self, x, y, eventType = 'b1c'):
+        '''
+        Generate mouse event on x, y co-ordinates.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        return self._mouse_event(x, y, eventType)
+
+    def mouseleftclick(self, window_name, object_name):
+        '''
+        Mouse left click on an object.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._grab_focus(obj)
+
+        _coordinates = self._get_size(obj)
+        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
+                                 _coordinates.y + _coordinates.height / 2,
+                                 'b1c')
+
+    def mouserightclick(self, window_name, object_name):
+        '''
+        Mouse right click on an object.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._grab_focus(obj)
+
+        _coordinates = self._get_size(obj)
+        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
+                                 _coordinates.y + _coordinates.height / 2,
+                                 'b3c')
 
     def selectmenuitem(self, window_name, object_name):
         '''
@@ -638,6 +702,191 @@ class Ldtpd(Utils):
             raise LdtpServerException('Text cannot be entered into object.')
 
         return int(texti.setTextContents(data.encode('utf-8')))
+
+    def gettextvalue(self, window_name, object_name):
+        '''
+        Get text value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: text on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            texti = obj.queryText()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return texti.getText(0, texti.characterCount)
+
+    def getstatusbartext(self, window_name, object_name):
+        '''
+        Get text value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: text on success.
+        @rtype: string
+        '''
+        return self.gettextvalue(window_name, object_name)
+
+    def setvalue(self, window_name, object_name, data):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to type.
+        @type data: double
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        valuei.currentValue = float (data)
+        return 1
+
+    def getvalue(self, window_name, object_name):
+        '''
+        Get object value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.currentValue
+
+    def verifysetvalue(self, window_name, object_name, data):
+        '''
+        Get object value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to verify.
+        @type data: double
+
+        @return: 1 on success 0 on failure.
+        @rtype: 1
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        if valuei.currentValue == data:
+            return 1
+        else:
+            return 0
+
+    def getminvalue(self, window_name, object_name):
+        '''
+        Get object min value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.minimumValue
+
+    def getminincrement(self, window_name, object_name):
+        '''
+        Get object min increment value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.minimumIncrement
+
+    def getmaxvalue(self, window_name, object_name):
+        '''
+        Get object max value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.maximumValue
 
     def setlocale(self, locale_str):
         '''
