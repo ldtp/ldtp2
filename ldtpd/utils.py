@@ -62,13 +62,12 @@ class Utils:
     def _appmap_pairs(self, gui):
         ldtpized_list = []
         for obj in list_objects(gui):
-            ldtpized_name_base = self._ldtpize_accessible(obj)
-            if ldtpized_name_base [1] == '':
-                ldtpized_name_base = ldtpized_name_base[0]
+            abbrev_role, abbrev_name = self._ldtpize_accessible(obj)
+            if abbrev_name == '':
+                ldtpized_name_base = abbrev_role
                 ldtpized_name = '%s0' % ldtpized_name_base
             else:
-                ldtpized_name_base = '%s%s' % (ldtpized_name_base[0],
-                                               ldtpized_name_base[1])
+                ldtpized_name_base = '%s%s' % (abbrev_role,abbrev_name)
                 ldtpized_name = ldtpized_name_base
             i = 1
             while ldtpized_name in ldtpized_list:
