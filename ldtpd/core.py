@@ -282,8 +282,7 @@ class Ldtpd(Utils):
         else:
             obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj,
-                             pyatspi.STATE_CHECKED) == False:
+        if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
             self._click_object(obj)
 
         return 1
@@ -307,7 +306,7 @@ class Ldtpd(Utils):
         else:
             obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+        if self._check_state(obj, pyatspi.STATE_CHECKED):
             self._click_object(obj)
 
         return 1
@@ -384,8 +383,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj,
-                             pyatspi.STATE_CHECKED) == False:
+        if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
             self._click_object(obj)
 
         return 1
@@ -406,7 +404,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+        if self._check_state(obj, pyatspi.STATE_CHECKED):
             self._click_object(obj)
 
         return 1
@@ -443,8 +441,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(window_name, obj,
-                                     pyatspi.STATE_CHECKED))
+        return int(self._check_state(obj, pyatspi.STATE_CHECKED))
 
     def verifyuncheck(self, window_name, object_name):
         '''
@@ -462,8 +459,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(not self._check_state(window_name, obj,
-                                         pyatspi.STATE_CHECKED))
+        return int(not self._check_state(obj, pyatspi.STATE_CHECKED))
 
     def stateenabled(self, window_name, object_name):
         '''
@@ -481,8 +477,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(window_name, obj,
-                                     pyatspi.STATE_ENABLED))
+        return int(self._check_state(obj, pyatspi.STATE_ENABLED))
 
     def getobjectlist(self, window_name):
         '''
@@ -725,6 +720,74 @@ class Ldtpd(Utils):
             raise LdtpServerException('Text cannot be entered into object.')
 
         return texti.getText(0, texti.characterCount)
+
+    def selecttab(self, window_name, object_name, tab_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_name: tab to select
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            index = 0
+            for child in obj:
+                if not child:
+                    index += 1
+                    continue
+                if self._match_name_to_acc(tab_name, child):
+                    if self._check_state(child, pyatspi.STATE_SELECTED):
+                        # Pag tab already selected
+                        return 1
+                    else:
+                        self._grab_focus(child)
+                        selectioni = obj.querySelection()
+                        selectioni.selectChild(index)
+                        return 1
+                index += 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+    def gettabname(self, window_name, object_name, tabIndex):
+        '''
+        Get tab name
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tabIndex: Index of tab (zero based index)
+        @type object_name: int
+
+        @return: text on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+        if tabIndex < 0 or tabIndex > obj.childCount:
+            raise LdtpServerException('Unable to get page tab name,' \
+                                          ' invalid index')
+        name = None
+
+        try:
+            child = obj.getChildAtIndex(int (tabIndex))
+            name = child.name
+            child.unref()
+        except NotImplementedError:
+            raise LdtpServerException('Not selectable object.')
+
+        return name
 
     def getstatusbartext(self, window_name, object_name):
         '''
