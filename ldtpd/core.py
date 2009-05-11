@@ -690,6 +690,7 @@ class Ldtpd(Utils):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         try:
             texti = obj.queryEditableText()
@@ -713,6 +714,7 @@ class Ldtpd(Utils):
         @rtype: string
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         try:
             texti = obj.queryText()
@@ -738,6 +740,7 @@ class Ldtpd(Utils):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         try:
             index = 0
@@ -750,7 +753,6 @@ class Ldtpd(Utils):
                         # Pag tab already selected
                         return 1
                     else:
-                        self._grab_focus(child)
                         selectioni = obj.querySelection()
                         selectioni.selectChild(index)
                         return 1
@@ -758,7 +760,89 @@ class Ldtpd(Utils):
         except NotImplementedError:
             raise LdtpServerException('Unable to select page tab object.')
 
-    def gettabname(self, window_name, object_name, tabIndex):
+        raise LdtpServerException('Page tab name does not exist')
+
+    def selecttabindex(self, window_name, object_name, tab_index):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_index: tab to select
+        @type data: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        if tab_index < 0 or tab_index > obj.childCount:
+            raise LdtpServerException('Unable to get page tab name,' \
+                                          ' invalid index')
+
+        try:
+            selectioni = obj.querySelection()
+            selectioni.selectChild(tab_index)
+            return 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+        raise LdtpServerException('Page tab index does not exist')
+
+    def verifytabname(self, window_name, object_name, tab_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_name: tab to select
+        @type data: string
+
+        @return: 1 on success 0 on failure
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            for child in obj:
+                if not child:
+                    continue
+                if self._match_name_to_acc(tab_name, child) and \
+                        self._check_state(child, pyatspi.STATE_SELECTED):
+                    return 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+        return 0
+
+    def gettabcount(self, window_name, object_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: tab count on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        return obj.childCount
+
+    def gettabname(self, window_name, object_name, tab_index):
         '''
         Get tab name
         
@@ -768,20 +852,21 @@ class Ldtpd(Utils):
         @param object_name: Object name to type in, either full name,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
-        @param tabIndex: Index of tab (zero based index)
+        @param tab_index: Index of tab (zero based index)
         @type object_name: int
 
         @return: text on success.
         @rtype: string
         '''
         obj = self._get_object(window_name, object_name)
-        if tabIndex < 0 or tabIndex > obj.childCount:
+        self._grab_focus(obj)
+        if tab_index < 0 or tab_index > obj.childCount:
             raise LdtpServerException('Unable to get page tab name,' \
                                           ' invalid index')
         name = None
 
         try:
-            child = obj.getChildAtIndex(int (tabIndex))
+            child = obj.getChildAtIndex(int (tab_index))
             name = child.name
             child.unref()
         except NotImplementedError:
