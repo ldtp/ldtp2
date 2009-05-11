@@ -1,5 +1,6 @@
 import pyatspi
 from constants import abbreviated_roles
+from server_exception import LdtpServerException
 import gobject
 from fnmatch import translate as glob_trans
 from re import match as re_match
@@ -61,7 +62,7 @@ class Utils:
 
     def _appmap_pairs(self, gui):
         ldtpized_list = []
-        for obj in list_objects(gui):
+        for obj in self._list_objects(gui):
             abbrev_role, abbrev_name = self._ldtpize_accessible(obj)
             if abbrev_name == '':
                 ldtpized_name_base = abbrev_role
@@ -124,7 +125,7 @@ class Utils:
             raise LdtpServerException('Failed to grab focus for %s' % obj)
         componenti.grabFocus()
 
-    def _check_state (self, window_name, obj, object_state):
+    def _check_state (self, obj, object_state):
         _state = obj.getState()
         _current_state = _state.getStates()
 
