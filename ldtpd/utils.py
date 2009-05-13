@@ -1,3 +1,24 @@
+'''
+LDTP v2 utils.
+
+@author: Eitan Isaacson <eitan@ascender.com>
+@author: Nagappan Alagappan <nagappan@gmail.com>
+@copyright: Copyright (c) 2009 Eitan Isaacson
+@copyright: Copyright (c) 2009 Nagappan Alagappan
+@license: LGPL
+
+http://ldtp.freedesktop.org
+
+This file may be distributed and/or modified under the terms of the GNU General
+Public License version 2 as published by the Free Software Foundation. This file
+is distributed without any warranty; without even the implied warranty of 
+merchantability or fitness for a particular purpose.
+
+See "COPYING" in the source distribution for more information.
+
+Headers in this file shall remain intact.
+'''
+
 import pyatspi
 from constants import abbreviated_roles
 from server_exception import LdtpServerException
@@ -125,7 +146,26 @@ class Utils:
             raise LdtpServerException('Failed to grab focus for %s' % obj)
         componenti.grabFocus()
 
-    def _check_state (self, obj, object_state):
+    def _get_accessible_at_row_column(self, obj, row_index, column_index):
+        try:
+            tablei = obj.queryTable()
+        except NotImplementedError:
+            raise LdtpServerException('Object not table type.')
+
+        if row_index < 0 or row_index > tablei.nRows:
+            raise LdtpServerException('Row index out of range: %d' % row_index)
+
+        if column_index < 0 or column_index > tablei.nColumns:
+            raise LdtpServerException('Column index out of range: %d' % \
+                                          column_index)
+
+        cell = tablei.getAccessibleAt(row_index, column_index)
+        if not cell:
+            raise LdtpServerException('Unable to access table cell on ' \
+                                          'the given row and column index')
+        return cell
+
+    def _check_state(self, obj, object_state):
         _state = obj.getState()
         _current_state = _state.getStates()
 
@@ -145,4 +185,4 @@ class Utils:
             componenti = obj.queryComponent()
         except:
             raise LdtpServerException('Failed to grab focus for %s' % obj)
-        return componenti.getExtents (pyatspi.DESKTOP_COORDS)
+        return componenti.getExtents(pyatspi.DESKTOP_COORDS)
