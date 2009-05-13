@@ -2,8 +2,10 @@
 Keypress actions.
 
 @author: Eitan Isaacson
-@copyright: Copyright (c) 2007 Eitan Isaacson
+@copyright: Copyright (c) 2007 - 2009 Eitan Isaacson
 @license: LGPL
+
+http://ldtp.freedesktop.org
 
 This file may be distributed and/or modified under the terms of the GNU General
 Public License version 2 as published by the Free Software Foundation. This file

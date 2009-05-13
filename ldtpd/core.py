@@ -1,3 +1,24 @@
+'''
+LDTP v2 Core.
+
+@author: Eitan Isaacson <eitan@ascender.com>
+@author: Nagappan Alagappan <nagappan@gmail.com>
+@copyright: Copyright (c) 2009 Eitan Isaacson
+@copyright: Copyright (c) 2009 Nagappan Alagappan
+@license: LGPL
+
+http://ldtp.freedesktop.org
+
+This file may be distributed and/or modified under the terms of the GNU General
+Public License version 2 as published by the Free Software Foundation. This file
+is distributed without any warranty; without even the implied warranty of 
+merchantability or fitness for a particular purpose.
+
+See "COPYING" in the source distribution for more information.
+
+Headers in this file shall remain intact.
+'''
+
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
@@ -508,6 +529,22 @@ class Ldtpd(Utils, Table, Menu, PageTabList, Text):
         waiter = NullWaiter(1, timeout)
 
         return waiter.run()
+
+    def getstatusbartext(self, window_name, object_name):
+        '''
+        Get text value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: text on success.
+        @rtype: string
+        '''
+        return self.gettextvalue(window_name, object_name)
 
     def setlocale(self, locale_str):
         '''
