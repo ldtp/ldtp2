@@ -106,45 +106,87 @@ class Ldtpd(Utils):
 
         return int(waiter.run())
 
-    def _click_object(self, obj, action = 'click'):
-        try:
-            iaction = obj.queryAction()
-        except NotImplementedError:
-            raise LdtpServerException(
-                'Object does not have an Action interface')
-        else:
-            for i in xrange(iaction.nActions):
-                if iaction.getName(i) == action:
-                    iaction.doAction(i)
-                    return
-            raise LdtpServerException('Object does not have a "click" action')
+    def getobjectsize(self, window_name, object_name):
+        '''
+        Get object size
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
 
-    def _get_object(self, window_name, obj_name):
-        for gui in self._list_guis():
-            if self._match_name_to_acc(window_name, gui):
-                for name, obj in self._appmap_pairs(gui):
-                    if self._match_name_to_acc (obj_name, obj):
-                        return obj
-        raise LdtpServerException(
-            'Unable to find object name in application map')
+        @return: x, y, width, height on success.
+        @rtype: list
+        '''
+        obj = self._get_object(window_name, object_name)
 
-    def _get_menu_hierarchy(self, window_name, object_name):
-        _menu_hierarchy = re.split(';', object_name)
-        obj = self._get_object(window_name, _menu_hierarchy [0])
-        for _menu in _menu_hierarchy[1:]:
-            _flag = False
-            for _child in self._list_objects(obj):
-                if obj == _child:
-                    # if the given object and child object matches
-                    continue
-                if self._match_name_to_acc(_menu, _child):
-                    _flag = True
-                    break
-            if not _flag:
-                raise LdtpServerException (
-                    "Menu item %s doesn't exist in hierarchy" % _menu)
-            obj = self._get_object(window_name, _menu)
-        return obj
+        _coordinates = self._get_size(obj)
+        return [_coordinates.x, _coordinates.y, \
+                    _coordinates.width, _coordinates.height]
+
+    def generatemouseevent(self, x, y, eventType = 'b1c'):
+        '''
+        Generate mouse event on x, y co-ordinates.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        return self._mouse_event(x, y, eventType)
+
+    def mouseleftclick(self, window_name, object_name):
+        '''
+        Mouse left click on an object.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._grab_focus(obj)
+
+        _coordinates = self._get_size(obj)
+        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
+                                 _coordinates.y + _coordinates.height / 2,
+                                 'b1c')
+
+    def mouserightclick(self, window_name, object_name):
+        '''
+        Mouse right click on an object.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._grab_focus(obj)
+
+        _coordinates = self._get_size(obj)
+        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
+                                 _coordinates.y + _coordinates.height / 2,
+                                 'b3c')
 
     def selectmenuitem(self, window_name, object_name):
         '''
@@ -242,8 +284,7 @@ class Ldtpd(Utils):
         else:
             obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj,
-                             pyatspi.STATE_CHECKED) == False:
+        if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
             self._click_object(obj)
 
         return 1
@@ -267,7 +308,7 @@ class Ldtpd(Utils):
         else:
             obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+        if self._check_state(obj, pyatspi.STATE_CHECKED):
             self._click_object(obj)
 
         return 1
@@ -328,17 +369,6 @@ class Ldtpd(Utils):
         '''
         return self.press (window_name, object_name)
 
-    def _check_state (self, window_name, obj, object_state):
-        _state = obj.getState()
-        _current_state = _state.getStates()
-
-        _status = False
-        if object_state in _current_state:
-            _status = True
-
-        _state.unref()
-        return _status
-
     def check(self, window_name, object_name):
         '''
         Check item.
@@ -355,8 +385,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj,
-                             pyatspi.STATE_CHECKED) == False:
+        if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
             self._click_object(obj)
 
         return 1
@@ -377,7 +406,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        if self._check_state(window_name, obj, pyatspi.STATE_CHECKED):
+        if self._check_state(obj, pyatspi.STATE_CHECKED):
             self._click_object(obj)
 
         return 1
@@ -414,8 +443,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(window_name, obj,
-                                     pyatspi.STATE_CHECKED))
+        return int(self._check_state(obj, pyatspi.STATE_CHECKED))
 
     def verifyuncheck(self, window_name, object_name):
         '''
@@ -433,8 +461,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(not self._check_state(window_name, obj,
-                                         pyatspi.STATE_CHECKED))
+        return int(not self._check_state(obj, pyatspi.STATE_CHECKED))
 
     def stateenabled(self, window_name, object_name):
         '''
@@ -452,8 +479,7 @@ class Ldtpd(Utils):
         '''
         obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(window_name, obj,
-                                     pyatspi.STATE_ENABLED))
+        return int(self._check_state(obj, pyatspi.STATE_ENABLED))
 
     def getobjectlist(self, window_name):
         '''
@@ -620,13 +646,6 @@ class Ldtpd(Utils):
 
         return waiter.run()
 
-    def _grab_focus(self, obj):
-        try:
-            componenti = obj.queryComponent()
-        except:
-            raise LdtpServerException('Failed to grab focus for %s' % obj)
-        componenti.grabFocus()
-
     def enterstring(self, window_name, object_name='', data=''):
         '''
         Type string sequence.
@@ -673,6 +692,7 @@ class Ldtpd(Utils):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         try:
             texti = obj.queryEditableText()
@@ -680,6 +700,343 @@ class Ldtpd(Utils):
             raise LdtpServerException('Text cannot be entered into object.')
 
         return int(texti.setTextContents(data.encode('utf-8')))
+
+    def gettextvalue(self, window_name, object_name):
+        '''
+        Get text value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: text on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            texti = obj.queryText()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return texti.getText(0, texti.characterCount)
+
+    def selecttab(self, window_name, object_name, tab_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_name: tab to select
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            index = 0
+            for child in obj:
+                if not child:
+                    index += 1
+                    continue
+                if self._match_name_to_acc(tab_name, child):
+                    if self._check_state(child, pyatspi.STATE_SELECTED):
+                        # Pag tab already selected
+                        return 1
+                    else:
+                        selectioni = obj.querySelection()
+                        selectioni.selectChild(index)
+                        return 1
+                index += 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+        raise LdtpServerException('Page tab name does not exist')
+
+    def selecttabindex(self, window_name, object_name, tab_index):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_index: tab to select
+        @type data: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        if tab_index < 0 or tab_index > obj.childCount:
+            raise LdtpServerException('Unable to get page tab name,' \
+                                          ' invalid index')
+
+        try:
+            selectioni = obj.querySelection()
+            selectioni.selectChild(tab_index)
+            return 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+        raise LdtpServerException('Page tab index does not exist')
+
+    def verifytabname(self, window_name, object_name, tab_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_name: tab to select
+        @type data: string
+
+        @return: 1 on success 0 on failure
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            for child in obj:
+                if not child:
+                    continue
+                if self._match_name_to_acc(tab_name, child) and \
+                        self._check_state(child, pyatspi.STATE_SELECTED):
+                    return 1
+        except NotImplementedError:
+            raise LdtpServerException('Unable to select page tab object.')
+
+        return 0
+
+    def gettabcount(self, window_name, object_name):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: tab count on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        return obj.childCount
+
+    def gettabname(self, window_name, object_name, tab_index):
+        '''
+        Get tab name
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param tab_index: Index of tab (zero based index)
+        @type object_name: int
+
+        @return: text on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        if tab_index < 0 or tab_index > obj.childCount:
+            raise LdtpServerException('Unable to get page tab name,' \
+                                          ' invalid index')
+        name = None
+
+        try:
+            child = obj.getChildAtIndex(int (tab_index))
+            name = child.name
+            child.unref()
+        except NotImplementedError:
+            raise LdtpServerException('Not selectable object.')
+
+        return name
+
+    def getstatusbartext(self, window_name, object_name):
+        '''
+        Get text value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: text on success.
+        @rtype: string
+        '''
+        return self.gettextvalue(window_name, object_name)
+
+    def setvalue(self, window_name, object_name, data):
+        '''
+        Type string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to type.
+        @type data: double
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        valuei.currentValue = float (data)
+        return 1
+
+    def getvalue(self, window_name, object_name):
+        '''
+        Get object value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.currentValue
+
+    def verifysetvalue(self, window_name, object_name, data):
+        '''
+        Get object value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to verify.
+        @type data: double
+
+        @return: 1 on success 0 on failure.
+        @rtype: 1
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        if valuei.currentValue == data:
+            return 1
+        else:
+            return 0
+
+    def getminvalue(self, window_name, object_name):
+        '''
+        Get object min value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.minimumValue
+
+    def getminincrement(self, window_name, object_name):
+        '''
+        Get object min increment value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.minimumIncrement
+
+    def getmaxvalue(self, window_name, object_name):
+        '''
+        Get object max value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: float value on success.
+        @rtype: float
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        return valuei.maximumValue
 
     def setlocale(self, locale_str):
         '''
