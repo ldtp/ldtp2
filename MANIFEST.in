@@ -1,0 +1,4 @@
+include examples/*.py
+include ldtpd.sh
+include AUTHORS
+include COPYING
