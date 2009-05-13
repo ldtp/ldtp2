@@ -1,6 +1,7 @@
 import pyatspi 
+from utils import Utils
 
-class Table:
+class Table(Utils):
     def getrowcount(self, window_name, object_name):
         '''
         Get count of rows in table object.
