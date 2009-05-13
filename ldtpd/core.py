@@ -897,29 +897,15 @@ class Ldtpd(Utils):
         @type object_name: string
         @param row_index: Row index to get
         @type row_index: index
-        @param column_index: Column index to get, default value 0
-        @type column_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
 
         @return: cell value on success.
         @rtype: string
         '''
         obj = self._get_object(window_name, object_name)
 
-        try:
-            tablei = obj.queryTable()
-        except NotImplementedError:
-            raise LdtpServerException('Object not table type.')
-
-        if row_index < 0 or row_index > tablei.nRows:
-            raise LdtpServerException('Row index out of range: %d' % row_index)
-
-        if column < 0 or column > tablei.nColumns:
-            raise LdtpServerException('Column index out of range: %d' % column)
-
-        cell = tablei.getAccessibleAt(row_index, column)
-        if not cell:
-            raise LdtpServerException('Unable to access table cell on ' \
-                                          'the given row and column index')
+        cell = self._get_accessible_at_row_column(obj, row_index, column)
         name = None
         if cell.childCount > 0:
             children = self._list_objects(cell)
@@ -938,6 +924,148 @@ class Ldtpd(Utils):
         if not name:
             raise LdtpServerException('Unable to get row text')
         return name
+
+    def checkrow(self, window_name, object_name, row_index, column = 0):
+        '''
+        Check row
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+
+        @return: cell value on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        cell = self._get_accessible_at_row_column(obj, row_index, column)
+        flag = None
+        if cell.childCount > 0:
+            children = self._list_objects(cell)
+            for child in children:
+                try:
+                    actioni = child.queryAction()
+                    flag = True
+                    if not self._check_state(child, pyatspi.STATE_CHECKED):
+                        self._click_object(child, 'toggle')
+                except NotImplementedError:
+                    continue
+                self._grab_focus(cell)
+                break
+        else:
+            try:
+                actioni = cell.queryAction()
+                flag = True
+                if not self._check_state(cell, pyatspi.STATE_CHECKED):
+                    self._click_object(cell, 'toggle')
+            except NotImplementedError:
+                raise LdtpServerException('Unable to check row')
+            self._grab_focus(cell)
+        cell.unref()
+        if not flag:
+            raise LdtpServerException('Unable to check row')
+        return 1
+
+    def expandtablecell(self, window_name, object_name, row_index, column = 0):
+        '''
+        Expand or contract table cell
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+
+        @return: cell value on success.
+        @rtype: string
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        cell = self._get_accessible_at_row_column(obj, row_index, column)
+        flag = None
+        if cell.childCount > 0:
+            children = self._list_objects(cell)
+            for child in children:
+                try:
+                    actioni = child.queryAction()
+                    flag = True
+                    self._click_object(child, 'expand or contract')
+                    self._grab_focus(cell)
+                    break
+                except NotImplementedError:
+                    continue
+        else:
+            try:
+                actioni = cell.queryAction()
+                flag = True
+                self._click_object(cell, 'expand or contract')
+            except NotImplementedError:
+                raise LdtpServerException('Unable to check row')
+            self._grab_focus(cell)
+        cell.unref()
+        if not flag:
+            raise LdtpServerException('Unable to check row')
+        return 1
+
+    def uncheckrow(self, window_name, object_name, row_index, column = 0):
+        '''
+        Check row
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        cell = self._get_accessible_at_row_column(obj, row_index, column)
+        flag = None
+        if cell.childCount > 0:
+            children = self._list_objects(cell)
+            for child in children:
+                try:
+                    actioni = child.queryAction()
+                    flag = True
+                    if self._check_state(child, pyatspi.STATE_CHECKED):
+                        self._click_object(child, 'toggle')
+                except NotImplementedError:
+                    continue
+                self._grab_focus(cell)
+                break
+        else:
+            try:
+                actioni = cell.queryAction()
+                flag = True
+                if self._check_state(cell, pyatspi.STATE_CHECKED):
+                    self._click_object(cell, 'toggle')
+            except NotImplementedError:
+                raise LdtpServerException('Unable to check row')
+            self._grab_focus(cell)
+        cell.unref()
+        if not flag:
+            raise LdtpServerException('Unable to check row')
+        return 1
 
     def getaccessible(self, window_name, object_name):
         '''
@@ -991,9 +1119,9 @@ class Ldtpd(Utils):
                             cell.unref()
                             return i
                 elif self._match_name_to_acc(row_text, cell):
-                        self._grab_focus(cell)
-                        cell.unref()
-                        return i
+                    self._grab_focus(cell)
+                    cell.unref()
+                    return i
                 cell.unref()
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
@@ -1020,6 +1148,107 @@ class Ldtpd(Utils):
 
         return tablei.nRows
 
+    def singleclickrow(self, window_name, object_name, row_text):
+        '''
+        Single click row matching given text
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_text: Row text to select
+        @type row_text: string
+
+        @return: row index matching the text on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            tablei = obj.queryTable()
+        except NotImplementedError:
+            raise LdtpServerException('Object not table type.')
+
+        for i in range(0, tablei.nRows):
+            for j in range(0, tablei.nColumns):
+                cell = tablei.getAccessibleAt(i, j)
+                if not cell:
+                    continue
+                if cell.childCount > 0:
+                    children = self._list_objects(cell)
+                    for child in children:
+                        if self._match_name_to_acc(row_text, child):
+                            self._grab_focus(child)
+                            size = self._get_size(cell)
+                            self._mouse_event(size.x + size.width / 2,
+                                              size.y + size.height / 2,
+                                              'b1c')
+                            cell.unref()
+                            return i
+                elif self._match_name_to_acc(row_text, cell):
+                    self._grab_focus(cell)
+                    size = self._get_size(cell)
+                    self._mouse_event(size.x + size.width / 2,
+                                      size.y + size.height / 2,
+                                      'b1c')
+                    cell.unref()
+                    return i
+                cell.unref()
+        raise LdtpServerException('Unable to get row index: %s' % row_text)
+
+
+    def doubleclickrow(self, window_name, object_name, row_text):
+        '''
+        Single click row matching given text
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_text: Row text to select
+        @type row_text: string
+
+        @return: row index matching the text on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            tablei = obj.queryTable()
+        except NotImplementedError:
+            raise LdtpServerException('Object not table type.')
+
+        for i in range(0, tablei.nRows):
+            for j in range(0, tablei.nColumns):
+                cell = tablei.getAccessibleAt(i, j)
+                if not cell:
+                    continue
+                if cell.childCount > 0:
+                    children = self._list_objects(cell)
+                    for child in children:
+                        if self._match_name_to_acc(row_text, child):
+                            self._grab_focus(child)
+                            size = self._get_size(cell)
+                            self._mouse_event(size.x + size.width / 2,
+                                              size.y + size.height / 2,
+                                              'b1d')
+                            cell.unref()
+                            return i
+                elif self._match_name_to_acc(row_text, cell):
+                    self._grab_focus(cell)
+                    size = self._get_size(cell)
+                    self._mouse_event(size.x + size.width / 2,
+                                      size.y + size.height / 2,
+                                      'b1d')
+                    cell.unref()
+                    return i
+                cell.unref()
+        raise LdtpServerException('Unable to get row index: %s' % row_text)
+
     def verifytablecell(self, window_name, object_name, row_index,
                         column_index, row_text):
         '''
@@ -1043,6 +1272,30 @@ class Ldtpd(Utils):
          '''
         text = self.getcellvalue(window_name, object_name, row_index, column)
         return int(self._glob_match(row_text, text))
+
+    def doesrowexist(self, window_name, object_name, row_index,
+                        column_index, row_text):
+        '''
+        Verify table cell value with given text
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column_index: Column index to get, default value 0
+        @type column_index: index
+        @param row_text: Row text to match
+        @type string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+         '''
+        return verifytablecell(window_name, object_name, row_index,
+                               column, row_text)
 
     def verifypartialtablecell(self, window_name, object_name, row_index,
                                column_index, row_text):
