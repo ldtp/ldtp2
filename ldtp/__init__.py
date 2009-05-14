@@ -19,6 +19,8 @@ Headers in this file shall remain intact.
 
 import client
 import atexit
+import tempfile
+from base64 import b64decode
 from client_exception import LdtpExecutionError
 
 def setHost(uri):
@@ -31,9 +33,24 @@ def _populateNamespace(d):
     for method in client._client.system.listMethods():
         if method.startswith('system.'):
             continue
-        d[method] = getattr(client._client, method)
-        d[method].__doc__ = client._client.system.methodHelp(method)
+        if d.has_key(method):
+            local_name = '_remote_' + method
+        else:
+            local_name = method
+        d[local_name] = getattr(client._client, method)
+        d[local_name].__doc__ = client._client.system.methodHelp(method)
 
+def imagecapture(winName = None, outFile = None, resolution1 = None,
+                 resolution2 = None, x = 0, y = 0):
+    if not outFile:
+        outFile = tempfile.mktemp('.png', 'ldtp_')
+        
+    data = _remote_imagecapture(winName, resolution1, resolution2, x, y)
+    f = open(outFile, 'w')
+    f.write(b64decode(data))
+    f.close()
+
+    return outFile
 _populateNamespace(globals())
 
 atexit.register(client._client.kill_daemon)

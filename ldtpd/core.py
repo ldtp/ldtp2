@@ -36,8 +36,9 @@ from table import Table
 from menu import Menu
 from page_tab_list import PageTabList
 from text import Text
+from generic import Generic
 
-class Ldtpd(Utils, Table, Menu, PageTabList, Text):
+class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic):
     '''
     Core LDTP class.
     '''
