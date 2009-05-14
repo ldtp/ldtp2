@@ -1,5 +1,6 @@
 import pyatspi 
 from utils import Utils
+import re
 
 class Menu(Utils):
     def selectmenuitem(self, window_name, object_name):
