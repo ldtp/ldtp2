@@ -46,19 +46,20 @@ class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic, Value):
     '''
     def __init__(self):
         Utils.__init__(self)
+        self._states = {}
+        self._get_all_state_names()
 
     def isalive(self):
         return True
 
-    def get_all_state_names(self):
+    def _get_all_state_names(self):
         """
         This is used by client internally to populate all states
-        Create a dictionary and send the value across to client
+        Create a dictionary
         """
-        _states = {}
         for state in pyatspi.STATE_INVALID.__enum_values__:
-            _states[state.__repr__()] = state.real
-        return _states
+            self._states[state.__repr__()] = state
+        return self._states
 
     def launchapp(self, cmd, args=[]):
         '''
@@ -290,15 +291,10 @@ class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic, Value):
 
         _state = obj.getState()
         _obj_state = _state.getStates()
-        for _currentstate in pyatspi.STATE_INVALID.__enum_values__:
-            if _currentstate.real == state:
-                if _currentstate in _obj_state:
-                    _state.unref()
-                    return 1
-                else:
-                    _state.unref()
-                    return 0
-        _state.unref()
+        state = 'STATE_%s' % state.upper()
+        if state in self._states and \
+                self._states[state] in _obj_state:
+            return 1
         return 0
 
     def click(self, window_name, object_name):
