@@ -26,10 +26,11 @@ import os
 from base64 import b64encode
 
 from utils import Utils
+from server_exception import LdtpServerException
 
 class Generic(Utils):
-    def imagecapture (self, winName = None, resolution1 = None,
-                      resolution2 = None, x = 0, y = 0):
+    def imagecapture(self, winName = None, resolution1 = None,
+                     resolution2 = None, x = 0, y = 0):
         if winName:
             acc = None
             for gui in self._list_guis():
