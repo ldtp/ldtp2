@@ -40,7 +40,6 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         return [a[7:] for a in \
                   filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
 
-
     def render_POST(self, request):
         request.content.seek(0, 0)
         request.setHeader("content-type", "text/xml")
