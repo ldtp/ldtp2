@@ -19,12 +19,13 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
-import pyatspi
-from constants import abbreviated_roles
-from server_exception import LdtpServerException
+import re
 import gobject
-from fnmatch import translate as glob_trans
+import pyatspi
 from re import match as re_match
+from constants import abbreviated_roles
+from fnmatch import translate as glob_trans
+from server_exception import LdtpServerException
 
 class Utils:
     def __init__(self):
