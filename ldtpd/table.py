@@ -20,6 +20,7 @@ Headers in this file shall remain intact.
 '''
 import pyatspi 
 from utils import Utils
+from server_exception import LdtpServerException
 
 class Table(Utils):
     def getrowcount(self, window_name, object_name):
@@ -368,23 +369,6 @@ class Table(Utils):
             raise LdtpServerException('Unable to check row')
         return 1
 
-
-    def getaccessible(self, window_name, object_name):
-        '''
-        Get table row index matching given text
-        
-        @param window_name: Window name to type in, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to type in, either full name,
-        LDTP's name convention, or a Unix glob. 
-        @type object_name: string
-
-        @return: accessible handle on success.
-        @rtype: Accessible handle
-        '''
-        return self._get_object(window_name, object_name)
-
     def gettablerowindex(self, window_name, object_name, row_text):
         '''
         Get table row index matching given text
@@ -499,7 +483,6 @@ class Table(Utils):
                     return i
                 cell.unref()
         raise LdtpServerException('Unable to get row index: %s' % row_text)
-
 
     def doubleclickrow(self, window_name, object_name, row_text):
         '''
