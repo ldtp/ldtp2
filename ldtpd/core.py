@@ -31,14 +31,16 @@ from server_exception import LdtpServerException
 import os
 import re
 import pyatspi
+import traceback
 
 from table import Table
 from menu import Menu
 from page_tab_list import PageTabList
 from text import Text
+from value import Value
 from generic import Generic
 
-class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic):
+class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic, Value):
     '''
     Core LDTP class.
     '''
@@ -47,6 +49,16 @@ class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic):
 
     def isalive(self):
         return True
+
+    def get_all_state_names(self):
+        """
+        This is used by client internally to populate all states
+        Create a dictionary and send the value across to client
+        """
+        _states = {}
+        for state in pyatspi.STATE_INVALID.__enum_values__:
+            _states[state.__repr__()] = state.real
+        return _states
 
     def launchapp(self, cmd, args=[]):
         '''
@@ -213,6 +225,81 @@ class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic):
                                  _coordinates.y + _coordinates.height / 2,
                                  'b3c')
 
+    def doubleclick(self, window_name, object_name):
+        '''
+        Double click on the object
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        self._grab_focus(obj)
+
+        _coordinates = self._get_size(obj)
+        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
+                                 _coordinates.y + _coordinates.height / 2,
+                                 'b1d')
+
+    def getallstates(self, window_name, object_name):
+        '''
+        Get all states of given object
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        _state = obj.getState()
+        _current_state = _state.getStates()
+        _obj_states = []
+        for state in _current_state:
+            _obj_states.append(state.real)
+        _state.unref()
+        return _obj_states
+
+    def hasstate(self, window_name, object_name, state):
+        '''
+        has state
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        _state = obj.getState()
+        _obj_state = _state.getStates()
+        for _currentstate in pyatspi.STATE_INVALID.__enum_values__:
+            if _currentstate.real == state:
+                if _currentstate in _obj_state:
+                    _state.unref()
+                    return 1
+                else:
+                    _state.unref()
+                    return 0
+        _state.unref()
+        return 0
 
     def click(self, window_name, object_name):
         '''
