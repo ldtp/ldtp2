@@ -18,8 +18,10 @@ See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
 '''
+import time
 import pyatspi 
 from utils import Utils
+from server_exception import LdtpServerException
 
 class Value(Utils):
     def setvalue(self, window_name, object_name, data):
@@ -43,7 +45,7 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         valuei.currentValue = float (data)
         return 1
@@ -67,9 +69,25 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         return valuei.currentValue
+
+    def getslidervalue(self, window_name, object_name):
+        '''
+        Get slider value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: value on success.
+        @rtype: float
+        '''
+        return self.getvalue(window_name, object_name)
 
     def verifysetvalue(self, window_name, object_name, data):
         '''
@@ -92,7 +110,7 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         if valuei.currentValue == data:
             return 1
@@ -118,7 +136,7 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         return valuei.minimumValue
 
@@ -141,7 +159,7 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         return valuei.minimumIncrement
 
@@ -164,6 +182,448 @@ class Value(Utils):
         try:
             valuei = obj.queryValue()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Value cannot be entered into object.')
 
         return valuei.maximumValue
+
+    def verifyslidervertical(self, window_name, object_name):
+        '''
+        Verify slider is vertical
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(obj, pyatspi.STATE_VERTICAL):
+            return 1
+        else:
+            return 0
+
+    def verifysliderhorizontal(self, window_name, object_name):
+        '''
+        Verify slider is horizontal
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
+            return 1
+        else:
+            return 0
+
+    def verifyscrollbarvertical(self, window_name, object_name):
+        '''
+        Verify scrollbar is vertical
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(obj, pyatspi.STATE_VERTICAL):
+            return 1
+        else:
+            return 0
+
+    def verifyscrollbarhorizontal(self, window_name, object_name):
+        '''
+        Verify scrollbar is horizontal
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
+            return 1
+        else:
+            return 0
+
+    def scrollup(self, window_name, object_name):
+        '''
+        Scroll up
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarvertical(window_name, object_name):
+            raise LdtpServerException('Object not vertical scrollbar')
+        return self.setmin(window_name, object_name)
+
+    def scrolldown(self, window_name, object_name):
+        '''
+        Scroll down
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarvertical(window_name, object_name):
+            raise LdtpServerException('Object not vertical scrollbar')
+        return self.setmax(window_name, object_name)
+
+    def scrollleft(self, window_name, object_name):
+        '''
+        Scroll left
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarhorizontal(window_name, object_name):
+            raise LdtpServerException('Object not horizontal scrollbar')
+        return self.setmin(window_name, object_name)
+
+    def scrollright(self, window_name, object_name):
+        '''
+        Scroll right
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarhorizontal(window_name, object_name):
+            raise LdtpServerException('Object not horizontal scrollbar')
+        return self.setmax(window_name, object_name)
+
+    def setmax(self, window_name, object_name):
+        '''
+        Set max value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        valuei.currentValue = valuei.maximumValue
+        return 1
+
+    def setmin(self, window_name, object_name):
+        '''
+        Set min value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        valuei.currentValue = valuei.minimumValue
+        return 1
+
+    def increase(self, window_name, object_name, iterations):
+        '''
+        Increase slider with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider increase
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        flag = False
+        while i < iterations:
+            if valuei.currentValue >= valuei.maximumValue:
+                raise LdtpServerException('Maximum limit reached')
+            valuei.currentValue += 1.0
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to increase slider value')
+
+    def decrease(self, window_name, object_name, iterations):
+        '''
+        Decrease slider with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider decrease
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        flag = False
+        while i < iterations:
+            if valuei.currentValue >= valuei.minimumValue:
+                raise LdtpServerException('Maximum limit reached')
+            valuei.currentValue -= 1.0
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to decrease slider value')
+
+    def onedown(self, window_name, object_name, iterations):
+        '''
+        Press scrollbar down with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider increase
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarvertical(window_name, object_name):
+            raise LdtpServerException('Object not vertical scrollbar')
+
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        max = valuei.maximumValue / 8;
+        flag = False
+        while i < iterations:
+            if valuei.currentValue >= valuei.maximumValue:
+                raise LdtpServerException('Maximum limit reached')
+            valuei.currentValue += max
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to increase scrollbar')
+
+    def oneup(self, window_name, object_name, iterations):
+        '''
+        Press scrollbar up with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider increase
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarvertical(window_name, object_name):
+            raise LdtpServerException('Object not vertical scrollbar')
+
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        min = valuei.maximumValue / 8;
+        flag = False
+        while i < iterations:
+            if valuei.currentValue < valuei.minimumValue:
+                raise LdtpServerException('Minimum limit reached')
+            valuei.currentValue -= min
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to decrease scrollbar')
+
+    def oneright(self, window_name, object_name, iterations):
+        '''
+        Press scrollbar right with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider increase
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarhorizontal(window_name, object_name):
+            raise LdtpServerException('Object not horizontal scrollbar')
+
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        max = valuei.maximumValue / 8;
+        flag = False
+        while i < iterations:
+            if valuei.currentValue >= valuei.maximumValue:
+                raise LdtpServerException('Maximum limit reached')
+            valuei.currentValue += max
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to increase scrollbar')
+
+    def oneleft(self, window_name, object_name, iterations):
+        '''
+        Press scrollbar left with number of iterations
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param object_name: iterations to perform on slider increase
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        if not self.verifyscrollbarhorizontal(window_name, object_name):
+            raise LdtpServerException('Object not horizontal scrollbar')
+
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            valuei = obj.queryValue()
+        except NotImplementedError:
+            raise LdtpServerException('Value cannot be entered into object.')
+
+        i = 0
+        min = valuei.maximumValue / 8;
+        flag = False
+        while i < iterations:
+            if valuei.currentValue < valuei.minimumValue:
+                raise LdtpServerException('Minimum limit reached')
+            valuei.currentValue -= min
+            time.sleep(1.0/100)
+            flag = True
+            i += 1
+        if flag:
+            return 1
+        else:
+            raise LdtpServerException('Unable to decrease scrollbar')
