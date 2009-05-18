@@ -23,6 +23,11 @@ import tempfile
 from base64 import b64decode
 from client_exception import LdtpExecutionError
 
+class AccessibilityState:
+    pass
+
+state = AccessibilityState()
+
 def setHost(uri):
     client._client = client.LdtpClient(uri)
 
@@ -51,6 +56,26 @@ def imagecapture(winName = None, outFile = None, resolution1 = None,
     f.close()
 
     return outFile
+
+def get_all_state_names():
+    """
+    Just a local function to replicate the key / value of state class
+    """
+    _all_states = _remote_get_all_state_names()
+    # Based on
+    # http://rosettacode.org/wiki/Adding_variables_to_a_class_instance_at_runtime#Python
+    for _current_state in _all_states:
+        # From dictionary, populate the state class members at run-time
+        # pyatspi convention - state.STATE_INVALID
+        setattr(state, _current_state, _all_states[_current_state])
+        # LDTP convention - state.INVALID
+        setattr(state, _current_state[_current_state.find('_')+1:],
+                _all_states[_current_state])
+
 _populateNamespace(globals())
+get_all_state_names()
+
+# Remove this function, as we don't use it later, once the data is populated
+del globals()['get_all_state_names']
 
 atexit.register(client._client.kill_daemon)
