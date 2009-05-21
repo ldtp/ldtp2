@@ -40,8 +40,8 @@ class Utils:
 
     def _ldtpize_accessible(self, acc):
         label_acc = None
-        if not acc.name:
-            rel_set = acc.getRelationSet()
+        rel_set = acc.getRelationSet()
+        if rel_set:
             for i, rel in enumerate(rel_set):
                 if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY:
                     label_acc = rel.getTarget(i)
@@ -81,6 +81,24 @@ class Utils:
             for child in obj:
                 for c in self._list_objects(child):
                     yield c
+
+    def _get_combo_child_object_type(self, obj):
+        """
+        This function will check for all levels and returns the first
+        matching LIST / MENU type
+        """
+        if obj:
+            for child in obj:
+                if not child:
+                    continue
+                if child.childCount > 0:
+                    child_obj = self._get_combo_child_object_type(child)
+                    if child_obj:
+                        return child_obj
+                if child.getRole() == pyatspi.ROLE_LIST:
+                    return child
+                elif child.getRole() == pyatspi.ROLE_MENU:
+                    return child
 
     def _appmap_pairs(self, gui):
         ldtpized_list = []
