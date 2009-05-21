@@ -89,7 +89,7 @@ class Menu(Utils):
         else:
             obj = self._get_object(window_name, object_name)
         _children = ''
-        for _child in self._list_objects (obj):
+        for _child in self._list_objects(obj):
             if _child.name == '' or _child.name == 'Empty' or \
                     obj == _child:
                 # If empty string don't add it to the list or
