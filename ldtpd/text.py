@@ -18,8 +18,10 @@ See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
 '''
+
 import pyatspi 
 from utils import Utils
+from server_exception import LdtpServerException
 
 class Text(Utils):
     def enterstring(self, window_name, object_name='', data=''):
@@ -100,7 +102,6 @@ class Text(Utils):
             raise LdtpServerException('Text cannot be entered into object.')
 
         return texti.getText(0, texti.characterCount)
-
 
     def getstatusbartext(self, window_name, object_name):
         '''
