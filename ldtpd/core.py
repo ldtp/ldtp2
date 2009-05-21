@@ -33,14 +33,15 @@ import re
 import pyatspi
 import traceback
 
-from table import Table
 from menu import Menu
-from page_tab_list import PageTabList
 from text import Text
+from table import Table
 from value import Value
 from generic import Generic
+from combo_box import ComboBox
+from page_tab_list import PageTabList
 
-class Ldtpd(Utils, Table, Menu, PageTabList, Text, Generic, Value):
+class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
     '''
     Core LDTP class.
     '''

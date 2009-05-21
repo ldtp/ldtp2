@@ -26,7 +26,7 @@ from server_exception import LdtpServerException
 class ComboBox(Utils):
     def selectitem(self, window_name, object_name, item_name):
         '''
-        Get text value
+        Select combo box item
         
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
@@ -81,3 +81,55 @@ class ComboBox(Utils):
                     self._click_object(child)
                     return 1
         raise LdtpServerException('Unable to select item')
+
+    def showlist(self, window_name, object_name):
+        '''
+        Show combo box list / menu
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        child_obj = self._get_combo_child_object_type(obj)
+        if not child_obj:
+            raise LdtpServerException('Unable to get combo box children')
+
+        if not self._check_state(obj, pyatspi.STATE_VISIBLE):
+            self._click_object(obj, 'press')
+
+        return 1
+
+    def hidelist(self, window_name, object_name):
+        '''
+        Hide combo box list / menu
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        child_obj = self._get_combo_child_object_type(obj)
+        if not child_obj:
+            raise LdtpServerException('Unable to get combo box children')
+
+        if self._check_state(obj, pyatspi.STATE_VISIBLE):
+            self._click_object(obj, 'press')
+
+        return 1
