@@ -100,6 +100,22 @@ class Utils:
                 elif child.getRole() == pyatspi.ROLE_MENU:
                     return child
 
+    def _get_child_object_type(self, obj, role_type):
+        """
+        This function will check for all levels and returns the first
+        matching role_type
+        """
+        if obj and role_type:
+            for child in obj:
+                if not child:
+                    continue
+                if child.childCount > 0:
+                    child_obj = self._get_child_object_type(child, role_type)
+                    if child_obj:
+                        return child_obj
+                if child.getRole() == role_type:
+                    return child
+
     def _appmap_pairs(self, gui):
         ldtpized_list = []
         for obj in self._list_objects(gui):
