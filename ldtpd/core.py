@@ -261,8 +261,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
 
-        @return: 1 on success.
-        @rtype: integer
+        @return: list of integers on success.
+        @rtype: list
         '''
         obj = self._get_object(window_name, object_name)
 
