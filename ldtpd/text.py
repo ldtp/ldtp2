@@ -71,6 +71,10 @@ class Text(Utils):
         '''
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
+        if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
+            obj = self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
+            if not obj:
+                raise LdtpServerException('Unable to get combo box children')
 
         try:
             texti = obj.queryEditableText()
