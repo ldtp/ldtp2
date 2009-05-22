@@ -82,6 +82,91 @@ class ComboBox(Utils):
                     return 1
         raise LdtpServerException('Unable to select item')
 
+    def selectindex(self, window_name, object_name, item_index):
+        '''
+        Select combo box item based on index
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param item_index: Item index to select
+        @type object_name: integer
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        child_obj = self._get_combo_child_object_type(obj)
+        if not child_obj:
+            raise LdtpServerException('Unable to get combo box children')
+        if child_obj.getRole() == pyatspi.ROLE_LIST:
+            selectioni = child_obj.querySelection()
+            selectioni.selectChild(item_index)
+            return 1
+        elif child_obj.getRole() == pyatspi.ROLE_MENU:
+            index = 0
+            for child in self._list_objects (child_obj):
+                if child == child_obj:
+                    # As the _list_objects gives the current object as well
+                    # ignore it
+                    continue
+                if index == item_index:
+                    self._click_object(child)
+                    return 1
+                index += 1
+        raise LdtpServerException('Unable to select item index')
+
+    def getallitem(self, window_name, object_name):
+        '''
+        Select combo box item
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: list of string on success.
+        @rtype: list
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        child_obj = self._get_combo_child_object_type(obj)
+        if not child_obj:
+            raise LdtpServerException('Unable to get combo box children')
+        item_list = []
+        if child_obj.getRole() == pyatspi.ROLE_LIST:
+            for child in self._list_objects (child_obj):
+                if child == child_obj:
+                    # As the _list_objects gives the current object as well
+                    # ignore it
+                    continue
+                try:
+                    texti = child.queryText()
+                    text = texti.getText(0, texti.characterCount)
+                except NotImplementedError:
+                    text = child.name
+
+                item_list.append(text)
+            return item_list
+        elif child_obj.getRole() == pyatspi.ROLE_MENU:
+            for child in self._list_objects (child_obj):
+                if child == child_obj:
+                    # As the _list_objects gives the current object as well
+                    # ignore it
+                    continue
+                if child.name and child.name != '':
+                    item_list.append(child.name)
+            return item_list
+        raise LdtpServerException('Unable to select item')
+
     def showlist(self, window_name, object_name):
         '''
         Show combo box list / menu
