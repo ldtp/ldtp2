@@ -25,7 +25,7 @@ import subprocess
 from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
-    GuiNotExistsWaiter, NullWaiter
+    GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter
 from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
@@ -130,20 +130,27 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def waittillguinotexist(self, window_name, guiTimeOut=5):
+    def waittillguinotexist(self, window_name, object_name='', guiTimeOut=5):
         '''
         Wait till a window does not exist.
         
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type object_name: string
         @param guiTimeOut: Wait timeout in seconds
         @type guiTimeOut: integer
 
         @return: 1 if GUI has gone away, 0 if not.
         @rtype: integer
         '''
-        waiter = GuiNotExistsWaiter(window_name, guiTimeOut)
+        if object_name:
+            waiter = \
+                ObjectNotExistsWaiter(window_name, object_name, guiTimeOut)
+        else:
+            waiter = GuiNotExistsWaiter(window_name, guiTimeOut)
 
         return int(waiter.run())
 

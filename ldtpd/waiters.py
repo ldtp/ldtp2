@@ -97,12 +97,14 @@ class GuiNotExistsWaiter(Waiter):
     events = ["window:destroy"]
     def __init__(self, frame_name, timeout):
         Waiter.__init__(self, timeout)
+        self.top_level = None
         self._frame_name = frame_name
 
     def poll(self):
         found = False
         for gui in self._list_guis():
             if self._match_name_to_acc(self._frame_name, gui):
+                self.top_level = gui
                 found = True
 
         self.success = not found
@@ -121,7 +123,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
             GuiExistsWaiter.poll(self)
             self.success = False
         else:
-            for name, obj in appmap_pairs(self.top_level):
+            for name, obj in self._appmap_pairs(self.top_level):
                 if name == self._obj_name:
                     self.success = True
                     break
@@ -129,6 +131,23 @@ class ObjectExistsWaiter(GuiExistsWaiter):
     def event_cb(self, event):
         GuiExistsWaiter.event_cb(self, event)
         self.success = False
+
+class ObjectNotExistsWaiter(GuiNotExistsWaiter):
+    def __init__(self, frame_name, obj_name, timeout):
+        GuiNotExistsWaiter.__init__(self, frame_name, timeout)
+        self._obj_name = obj_name
+
+    def poll(self):
+        GuiNotExistsWaiter.poll(self)
+        if self.success:
+            return
+        
+        for name, obj in self._appmap_pairs(self.top_level):
+            if name == self._obj_name:
+                self.success = False
+                return
+
+        self.success = True
 
 if __name__ == "__main__":
     waiter = ObjectExistsWaiter('frmCalculator', 'mnuEitanIsaacsonFoo', 0)
