@@ -22,6 +22,7 @@ Headers in this file shall remain intact.
 import pyatspi 
 from utils import Utils
 from server_exception import LdtpServerException
+from keypress_actions import TypeAction
 
 class Text(Utils):
     def enterstring(self, window_name, object_name='', data=''):
