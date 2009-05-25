@@ -25,7 +25,7 @@ import subprocess
 from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
-    GuiNotExistsWaiter, NullWaiter
+    GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter
 from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
