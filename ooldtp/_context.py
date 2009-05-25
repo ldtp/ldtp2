@@ -69,9 +69,11 @@ class Context(_Wrapper):
         return args and 'window_name' == args[0]
     _isRelevant = classmethod(_isRelevant)
 
-    def getchild(self, child_name, role=''):
+    def getchild(self, child_name='', role=''):
+        # TODO: Bad API choice. Inconsistent, should return object or list,
+        # not both.
         matches = self._remote_getchild(child_name, role)
-        if len(matches) == 1:
+        if len(matches) == 1 and role == '': 
             return Component(self._window_name, matches[0])
         else:
             return [Component(self._window_name, x) for x in matches]
