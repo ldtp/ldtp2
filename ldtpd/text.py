@@ -116,6 +116,44 @@ class Text(Utils):
 
         return texti.getText(0, texti.characterCount)
 
+    def verifypartialmatch(self, window_name, object_name, partial_text):
+        '''
+        Verify partial text
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param partial_text: Partial text to match
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        return int(self._glob_match(partial_text,
+                                    self.gettextvalue(window_name,
+                                                      object_name)))
+
+    def verifysettext(self, window_name, object_name, text):
+        '''
+        Verify text is set correctly
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param text: text to match
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        return verifypartialmatch(window_name, object_name, text)
+
     def activatetext(self, window_name, object_name):
         '''
         Activate text
@@ -131,10 +169,136 @@ class Text(Utils):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
-        # self._grab_focus(obj)
+        self._grab_focus(obj)
 
         self._click_object(obj, 'activate')
 
+        return 1
+
+    def appendtext(self, window_name, object_name, data=''):
+        '''
+        Append string sequence.
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
+            obj = self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
+            if not obj:
+                raise LdtpServerException('Unable to get combo box children')
+
+        try:
+            texti = obj.queryEditableText()
+        except NotImplementedError:
+            raise LdtpServerException('Text cannot be entered into object.')
+
+        print dir(texti)
+        texti.setTextContents('%s%s' % (texti.getText(0, texti.characterCount),
+                                        data.encode('utf-8')))
+        return 1
+
+    def istextstateenabled(self, window_name, object_name):
+        '''
+        Verifies text state enabled or not
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+        return int(self._check_state(obj, pyatspi.STATE_EDITABLE))
+
+    def getcharcount(self, window_name, object_name):
+        '''
+        Get character count
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            texti = obj.queryText()
+        except NotImplementedError:
+            raise LdtpServerException('Unable to get text.')
+
+        return texti.characterCount
+
+    def getcursorposition(self, window_name, object_name):
+        '''
+        Get cursor position
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: Cursor position on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            texti = obj.queryText()
+        except NotImplementedError:
+            raise LdtpServerException('Unable to get text.')
+
+        return texti.caretOffset
+
+    def setcursorposition(self, window_name, object_name, cursor_position):
+        '''
+        Set cursor position
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param cursor_position: Cursor position to be set
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        try:
+            texti = obj.queryText()
+        except NotImplementedError:
+            raise LdtpServerException('Unable to get text.')
+
+        texti.setCaretOffset(cursor_position)
         return 1
 
     def cuttext(self, window_name, object_name, start_position, end_position = -1):
