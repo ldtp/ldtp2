@@ -414,7 +414,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         obj = self._get_object(window_name, object_name)
 
-        props = ['child_index', 'key', 'obj_index', 'parent', 'class']
+        props = \
+            ['child_index', 'key', 'obj_index', 'parent', 'class', 'children']
 
         # TODO: label and label_by, what else am I missing?
         return props
@@ -473,6 +474,16 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         elif prop == 'class':
             obj = self._get_object(window_name, object_name)
             return obj.getRoleName().replace(' ', '_')
+        elif prop == 'children':
+            children = []
+            obj = self._get_object(window_name, object_name)
+            for gui in self._list_guis():
+                if self._match_name_to_acc(window_name, gui):
+                    for name, child in self._appmap_pairs(gui):
+                        if child in obj:
+                            children.append(name)
+                    break
+            return ' '.join(children)
 
         raise LdtpServerException('Unknown property "%s" in %s' % \
                                       (prop, object_name))
