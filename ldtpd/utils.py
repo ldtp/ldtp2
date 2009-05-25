@@ -47,7 +47,7 @@ class Utils:
                     label_acc = rel.getTarget(i)
                     break
         return abbreviated_roles.get(acc.getRole(), 'ukn'), \
-            (label_acc or acc).name.replace(' ', '').rstrip(':')
+            (label_acc or acc).name.replace(' ', '').rstrip(':.')
 
     def _glob_match(self, pattern, string):
         return bool(re_match(glob_trans(pattern), string))
