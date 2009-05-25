@@ -35,13 +35,15 @@ import traceback
 
 from menu import Menu
 from text import Text
+from mouse import Mouse
 from table import Table
 from value import Value
 from generic import Generic
 from combo_box import ComboBox
 from page_tab_list import PageTabList
 
-class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
+class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
+            Text, Mouse, Generic, Value):
     '''
     Core LDTP class.
     '''
@@ -165,91 +167,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         return [_coordinates.x, _coordinates.y, \
                     _coordinates.width, _coordinates.height]
 
-    def generatemouseevent(self, x, y, eventType = 'b1c'):
-        '''
-        Generate mouse event on x, y co-ordinates.
-        
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to look for, either full name,
-        LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: string
-
-        @return: 1 on success.
-        @rtype: integer
-        '''
-        return self._mouse_event(x, y, eventType)
-
-    def mouseleftclick(self, window_name, object_name):
-        '''
-        Mouse left click on an object.
-        
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to look for, either full name,
-        LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: string
-
-        @return: 1 on success.
-        @rtype: integer
-        '''
-        obj = self._get_object(window_name, object_name)
-
-        self._grab_focus(obj)
-
-        _coordinates = self._get_size(obj)
-        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
-                                 _coordinates.y + _coordinates.height / 2,
-                                 'b1c')
-
-    def mouserightclick(self, window_name, object_name):
-        '''
-        Mouse right click on an object.
-        
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to look for, either full name,
-        LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: string
-
-        @return: 1 on success.
-        @rtype: integer
-        '''
-        obj = self._get_object(window_name, object_name)
-
-        self._grab_focus(obj)
-
-        _coordinates = self._get_size(obj)
-        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
-                                 _coordinates.y + _coordinates.height / 2,
-                                 'b3c')
-
-    def doubleclick(self, window_name, object_name):
-        '''
-        Double click on the object
-        
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to look for, either full name,
-        LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: string
-
-        @return: 1 on success.
-        @rtype: integer
-        '''
-        obj = self._get_object(window_name, object_name)
-
-        self._grab_focus(obj)
-
-        _coordinates = self._get_size(obj)
-        return self._mouse_event(_coordinates.x + _coordinates.width / 2,
-                                 _coordinates.y + _coordinates.height / 2,
-                                 'b1d')
-
     def getallstates(self, window_name, object_name):
         '''
         Get all states of given object
@@ -313,6 +230,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         self._click_object(obj)
 
@@ -333,6 +251,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         self._click_object(obj, 'press')
 
@@ -353,6 +272,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
             self._click_object(obj)
@@ -374,6 +294,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList, Text, Generic, Value):
         @rtype: integer
         '''
         obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
 
         if self._check_state(obj, pyatspi.STATE_CHECKED):
             self._click_object(obj)
