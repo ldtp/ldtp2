@@ -19,6 +19,8 @@ Headers in this file shall remain intact.
 
 import pyatspi
 import gtk
+import re
+
 from sequence_step import AtomicAction
 import gobject
 import utils
@@ -256,10 +258,19 @@ class TypeAction(AtomicAction):
     @type string_to_type: string
     '''
     interval = 0
-    for char in string_to_type:
-      gobject.timeout_add(interval, self._charType, 
-                          gtk.gdk.unicode_to_keyval(ord(char)))
-      interval += self.interval 
+    seq = [w.startswith('<') and w or list(w) \
+               for w in re.findall(r'\w+|<\w+>', string_to_type)]
+    for to_type in seq:
+        if isinstance(to_type, list):
+            for char in to_type:
+                gobject.timeout_add(interval, self._charType, 
+                                    gtk.gdk.unicode_to_keyval(ord(char)))
+        elif to_type[0] == '<' and to_type[-1] == '>':
+            gobject.timeout_add(
+                interval, self._charType,
+                gtk.gdk.keyval_from_name(to_type[1:-1].capitalize()))
+        interval += self.interval 
+
     gobject.timeout_add(interval, self.stepDone)
 
   def _charType(self, keyval):
