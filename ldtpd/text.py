@@ -41,13 +41,15 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        if data and object_name:
+        if object_name:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
         if data:
             for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
                     self._grab_focus(gui)
+
+        data = data or window_name # TODO: Major hack, this is a bad API choice
 
         type_action = TypeAction(data)
         type_action()
