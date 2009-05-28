@@ -31,7 +31,11 @@ class Waiter(Utils):
         self.success = False
         self._timeout_count = 0
 
-        self.poll()
+        try:
+            self.poll()
+        except:
+            pass
+
         if self.success or self.timeout == 0:
             return self.success
         

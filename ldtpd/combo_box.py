@@ -81,6 +81,7 @@ class ComboBox(Utils):
                     self._click_object(child)
                     return 1
         raise LdtpServerException('Unable to select item')
+    comboselect = selectitem
 
     def selectindex(self, window_name, object_name, item_index):
         '''

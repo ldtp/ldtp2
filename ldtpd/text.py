@@ -25,6 +25,23 @@ from server_exception import LdtpServerException
 from keypress_actions import TypeAction
 
 class Text(Utils):
+    def generatekeyevent(self, data):
+        '''
+        Functionality of generatekeyevent is similar to typekey of 
+        LTFX project.
+        
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+
+        type_action = TypeAction(data)
+        type_action()
+
+        return 1
+
     def enterstring(self, window_name, object_name='', data=''):
         '''
         Type string sequence.

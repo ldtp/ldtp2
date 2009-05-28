@@ -558,8 +558,7 @@ class Table(Utils):
         text = self.getcellvalue(window_name, object_name, row_index, column)
         return int(self._glob_match(row_text, text))
 
-    def doesrowexist(self, window_name, object_name, row_index,
-                        column_index, row_text):
+    def doesrowexist(self, window_name, object_name, row_text):
         '''
         Verify table cell value with given text
         
@@ -569,19 +568,25 @@ class Table(Utils):
         @param object_name: Object name to type in, either full name,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
-        @param row_index: Row index to get
-        @type row_index: index
-        @param column_index: Column index to get, default value 0
-        @type column_index: index
         @param row_text: Row text to match
         @type string
 
         @return: 1 on success 0 on failure.
         @rtype: integer
          '''
-        return verifytablecell(window_name, object_name, row_index,
-                               column, row_text)
+        obj = self._get_object(window_name, object_name)
 
+        def _searchString(acc):
+            try:
+                itext = acc.queryText()
+            except NotImplementedError:
+                return False
+            return row_text == itext.getText(0,-1)
+
+        results = pyatspi.findDescendant(obj, _searchString)
+        
+        return int(bool(results))
+        
     def verifypartialtablecell(self, window_name, object_name, row_index,
                                column_index, row_text):
         '''
