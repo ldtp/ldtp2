@@ -25,7 +25,7 @@ class WidgetTestCase(unittest.TestCase):
     def setUp(self):
         try:
             ldtp.launchapp('gcalctool')
-            ldtp.waittillguiexist('frmCalculator*')
+            ldtp.waittillguiexist('frmCalculator*', guiTimeOut=5)
         except:
             self.tearDown()
             raise

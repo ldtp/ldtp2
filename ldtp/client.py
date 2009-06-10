@@ -26,6 +26,8 @@ from client_exception import LdtpExecutionError, ERROR_CODE
 
 class _Method(xmlrpclib._Method):
     def __call__(self, *args, **kwargs):
+        print '%s(%s)' % (self.__name, 
+                          ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()]))
         args += (kwargs,)
         return self.__send(self.__name, args)
 
