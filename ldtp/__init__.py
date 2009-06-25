@@ -30,6 +30,10 @@ def setHost(uri):
 def whoismyhost():
     return client._client._ServerProxy__host
 
+def log(self, *args):
+    # Don't do nothin. For backward compatability.
+    pass
+
 def _populateNamespace(d):
     for method in client._client.system.listMethods():
         if method.startswith('system.'):
