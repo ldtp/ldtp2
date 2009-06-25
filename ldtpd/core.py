@@ -86,6 +86,23 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         os.environ['NO_AT_BRIDGE'] = '1'
         return process.pid
 
+    def objectexist(self, window_name, object_name):
+        '''
+        Checks whether a window or component exists.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type object_name: string
+
+        @return: 1 if GUI was found, 0 if not.
+        @rtype: integer
+        '''
+        print window_name, object_name
+        return self.guiexist(window_name, object_name)
+
     def guiexist(self, window_name, object_name=''):
         '''
         Checks whether a window or component exists.
