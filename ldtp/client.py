@@ -27,7 +27,6 @@ from log import logger
 
 class _Method(xmlrpclib._Method):
     def __call__(self, *args, **kwargs):
-        
         logger.debug('%s(%s)' % \
                          (self.__name, ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()])))
         args += (kwargs,)
