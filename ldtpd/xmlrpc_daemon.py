@@ -20,6 +20,7 @@ Headers in this file shall remain intact.
 from core import Ldtpd
 from twisted.web import xmlrpc
 import xmlrpclib
+from log import logger
 
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __new__(cls, *args, **kwargs):
@@ -60,6 +61,8 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             except xmlrpc.Fault, f:
                 self._cbRender(f, request)
             else:
+                logger.debug('%s(%s)' % \
+                                 (functionPath, ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()])))
                 xmlrpc.defer.maybeDeferred(function, *args, **kwargs).\
                     addErrback(self._ebRender).\
                     addCallback(self._cbRender, request)
