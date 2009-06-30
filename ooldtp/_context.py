@@ -71,12 +71,12 @@ class Context(_Wrapper):
 
     def getchild(self, child_name='', role=''):
         # TODO: Bad API choice. Inconsistent, should return object or list,
-        # not both.
-        matches = self._remote_getchild(child_name, role)
-        if len(matches) == 1 and role == '': 
+        # not both. UPDATE: Only returns first match.
+        matches = self._remote_getchild(child_name, role, True)
+        if matches: 
             return Component(self._window_name, matches[0])
         else:
-            return [Component(self._window_name, x) for x in matches]
+            return None
     
 class _ContextFuncWrapper:
     def __init__(self, window_name, func):
