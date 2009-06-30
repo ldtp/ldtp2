@@ -23,11 +23,13 @@ from time import sleep
 import subprocess
 import sys
 from client_exception import LdtpExecutionError, ERROR_CODE
+from log import logger
 
 class _Method(xmlrpclib._Method):
     def __call__(self, *args, **kwargs):
-        print '%s(%s)' % (self.__name, 
-                          ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()]))
+        
+        logger.debug('%s(%s)' % \
+                         (self.__name, ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()])))
         args += (kwargs,)
         return self.__send(self.__name, args)
 
