@@ -100,7 +100,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if GUI was found, 0 if not.
         @rtype: integer
         '''
-        print window_name, object_name
         return self.guiexist(window_name, object_name)
 
     def guiexist(self, window_name, object_name=''):
@@ -505,7 +504,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         raise LdtpServerException('Unknown property "%s" in %s' % \
                                       (prop, object_name))
 
-    def getchild(self, window_name, child_name='', role=''):
+    def getchild(self, window_name, child_name='', role='', first=False):
         '''
         Gets the list of object available in the window, which matches 
         component name or role name or both.
@@ -537,6 +536,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                         if child_name == name or \
                                 self._match_name_to_acc(child_name, obj):
                             matches.append(name)
+
+                    #print matches, first
+                    if matches and first:
+                        # Return once we have a match
+                        return matches
                 
         if not matches:
             raise LdtpServerException('Could not find a child.')
