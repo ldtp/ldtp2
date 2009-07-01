@@ -74,7 +74,10 @@ class Context(_Wrapper):
         # not both. UPDATE: Only returns first match.
         matches = self._remote_getchild(child_name, role, True)
         if matches: 
-            return Component(self._window_name, matches[0])
+            if role:
+                return [Component(self._window_name, matches[0])]
+            else:
+                return Component(self._window_name, matches[0])
         else:
             return None
     
