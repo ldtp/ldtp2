@@ -8,6 +8,6 @@ setup(name='LDTPv2',
       maintainer='Nagappan Alagappan',
       maintainer_email='nagappan@gmail.com',
       url='http://ldtp.freesktop.org',
-      packages=['ldtp', 'ldtpd', 'ooldtp'],
+      packages=['ldtp', 'ldtpd', 'ooldtp', 'ldtputils'],
       scripts=['ldtpd.sh']
       )
