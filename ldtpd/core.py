@@ -603,3 +603,21 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         locale.setlocale(locale.LC_ALL, locale_str)
         return 1
+
+    def getwindowsize (self, window_name):
+        '''
+        Get window size.
+        
+        @param window_name: Window name to get size of.
+        @type window_name: string
+
+        @return: list of dimensions [x, y, w, h]
+        @rtype: list
+        '''
+        obj_list = []
+        for gui in self._list_guis():
+            if self._match_name_to_acc(window_name, gui):
+                size = self._get_size(gui)
+                return [size.x, size.y, size.width, size.height]
+
+        raise LdtpServerException('Window does not exist')
