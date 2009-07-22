@@ -1,7 +1,6 @@
 from ldtp import imagecapture
 
 def imagecompare (imgfile1, imgfile2):
-    print 'compare', imgfile1, imgfile2
     try:
         import ImageChops, Image
     except ImportError:
@@ -15,10 +14,8 @@ def imagecompare (imgfile1, imgfile2):
         diffboundrect = imgcompdiff.getbbox ()
         imgdiffcrop = imgcompdiff.crop (diffboundrect)
 
-        print 'foo?'
         data = imgdiffcrop.getdata()
 
-        print data
         seq = []
         for row in data:
             seq += list(row)
