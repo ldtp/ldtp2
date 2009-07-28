@@ -45,7 +45,7 @@ class Utils:
         self.cached_apps.add(event.host_application)
 
     def _list_guis(self):
-        for app in self.cached_apps:
+        for app in list(self.cached_apps):
             if not app: continue
             try:
                 for gui in app:
