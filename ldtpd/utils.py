@@ -35,11 +35,11 @@ class Utils:
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
-            Utils.cached_apps = set()self.name = "Install"
+            Utils.cached_apps = set()
             if lazy_load:
-            for app in self._desktop:
-                if app is None: continue
-                self.cached_apps.add(app)
+                for app in self._desktop:
+                    if app is None: continue
+                    self.cached_apps.add(app)
 
     def _on_window_event(self, event):
         self.cached_apps.add(event.host_application)

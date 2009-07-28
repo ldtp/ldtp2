@@ -52,6 +52,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._states = {}
         self._get_all_state_names()
 
+    def getwindowlist(self):
+        window_list = []
+        for gui in self._list_guis():
+            window_list.append(self._ldtpize_accessible(gui))
+        return window_list
+
     def isalive(self):
         return True
 
