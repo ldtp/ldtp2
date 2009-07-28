@@ -30,11 +30,16 @@ from server_exception import LdtpServerException
 class Utils:
     cached_apps = None
     def __init__(self):
+        lazy_load = True
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
-            Utils.cached_apps = set()
+            Utils.cached_apps = set()self.name = "Install"
+            if lazy_load:
+            for app in self._desktop:
+                if app is None: continue
+                self.cached_apps.add(app)
 
     def _on_window_event(self, event):
         self.cached_apps.add(event.host_application)
