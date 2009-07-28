@@ -28,15 +28,26 @@ from fnmatch import translate as glob_trans
 from server_exception import LdtpServerException
 
 class Utils:
+    cached_apps = None
     def __init__(self):
         self._desktop = pyatspi.Registry.getDesktop(0)
+        if Utils.cached_apps is None:
+            pyatspi.Registry.registerEventListener(
+                self._on_window_event, 'window')
+            Utils.cached_apps = set()
+
+    def _on_window_event(self, event):
+        self.cached_apps.add(event.host_application)
 
     def _list_guis(self):
-        for app in self._desktop:
+        for app in self.cached_apps:
             if not app: continue
-            for gui in app:
-                if not gui: continue
-                yield gui
+            try:
+                for gui in app:
+                    if not gui: continue
+                    yield gui
+            except LookupError:
+                self.cached_apps.remove(app)
 
     def _ldtpize_accessible(self, acc):
         label_acc = None
