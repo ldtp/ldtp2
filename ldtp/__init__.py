@@ -24,8 +24,8 @@ import tempfile
 from base64 import b64decode
 from client_exception import LdtpExecutionError
 
-def setHost(uri):
-    client._client = client.LdtpClient(uri)
+def setHost(host):
+    client._client.setHost(host)
 
 def whoismyhost():
     return client._client._ServerProxy__host

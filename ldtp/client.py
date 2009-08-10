@@ -43,6 +43,9 @@ class LdtpClient(xmlrpclib.ServerProxy):
 
     def kill_daemon(self):
         self._ServerProxy__transport.kill_daemon()
+
+    def setHost(self, host):
+        setattr(self, '_ServerProxy__host', host)
         
 class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):
