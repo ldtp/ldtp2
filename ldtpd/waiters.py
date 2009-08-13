@@ -126,7 +126,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
         if not self.top_level:
             GuiExistsWaiter.poll(self)
             self.success = False
-        else:
+        if self.top_level:
             for name, obj in self._appmap_pairs(self.top_level):
                 if name == self._obj_name:
                     self.success = True
