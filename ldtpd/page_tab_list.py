@@ -108,18 +108,21 @@ class PageTabList(Utils):
         @return: 1 on success 0 on failure
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
-        self._grab_focus(obj)
-
         try:
-            for child in obj:
-                if not child:
-                    continue
-                if self._match_name_to_acc(tab_name, child) and \
-                        self._check_state(child, pyatspi.STATE_SELECTED):
-                    return 1
-        except NotImplementedError:
-            raise LdtpServerException('Unable to select page tab object.')
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
+
+            try:
+                for child in obj:
+                    if not child:
+                        continue
+                    if self._match_name_to_acc(tab_name, child) and \
+                            self._check_state(child, pyatspi.STATE_SELECTED):
+                        return 1
+            except NotImplementedError:
+                pass
+        except:
+            pass
 
         return 0
 

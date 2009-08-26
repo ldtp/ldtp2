@@ -47,7 +47,7 @@ class Value(Utils):
         except NotImplementedError:
             raise LdtpServerException('Value cannot be entered into object.')
 
-        valuei.currentValue = float (data)
+        valuei.currentValue = float(data)
         return 1
 
     def getvalue(self, window_name, object_name):
@@ -105,17 +105,15 @@ class Value(Utils):
         @return: 1 on success 0 on failure.
         @rtype: 1
         '''
-        obj = self._get_object(window_name, object_name)
-
         try:
+            obj = self._get_object(window_name, object_name)
             valuei = obj.queryValue()
-        except NotImplementedError:
-            raise LdtpServerException('Value cannot be entered into object.')
 
-        if valuei.currentValue == data:
-            return 1
-        else:
-            return 0
+            if valuei.currentValue == data:
+                return 1
+        except:
+            pass
+        return 0
 
     def getminvalue(self, window_name, object_name):
         '''
@@ -200,12 +198,14 @@ class Value(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        if self._check_state(obj, pyatspi.STATE_VERTICAL):
-            return 1
-        else:
-            return 0
+            if self._check_state(obj, pyatspi.STATE_VERTICAL):
+                return 1
+        except:
+            pass
+        return 0
 
     def verifysliderhorizontal(self, window_name, object_name):
         '''
@@ -221,12 +221,14 @@ class Value(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
-            return 1
-        else:
-            return 0
+            if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
+                return 1
+        except:
+            pass
+        return 0
 
     def verifyscrollbarvertical(self, window_name, object_name):
         '''
@@ -242,12 +244,14 @@ class Value(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        if self._check_state(obj, pyatspi.STATE_VERTICAL):
-            return 1
-        else:
-            return 0
+            if self._check_state(obj, pyatspi.STATE_VERTICAL):
+                return 1
+        except:
+            pass
+        return 0
 
     def verifyscrollbarhorizontal(self, window_name, object_name):
         '''
@@ -263,12 +267,14 @@ class Value(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
-            return 1
-        else:
-            return 0
+            if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
+                return 1
+        except:
+            pass
+        return 0
 
     def scrollup(self, window_name, object_name):
         '''

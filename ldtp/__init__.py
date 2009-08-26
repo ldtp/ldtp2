@@ -45,12 +45,14 @@ def _populateNamespace(d):
         d[local_name] = getattr(client._client, method)
         d[local_name].__doc__ = client._client.system.methodHelp(method)
 
-def imagecapture(winName = None, outFile = None, resolution1 = None,
-                 resolution2 = None, x = 0, y = 0):
+def imagecapture(winName = None, outFile = None, width = None,
+                 height = None, x = 0, y = 0):
     if not outFile:
         outFile = tempfile.mktemp('.png', 'ldtp_')
+    else:
+        outFile = os.path.expanduser(outFile)
         
-    data = _remote_imagecapture(winName, resolution1, resolution2, x, y)
+    data = _remote_imagecapture(winName, width, height, x, y)
     f = open(outFile, 'w')
     f.write(b64decode(data))
     f.close()
