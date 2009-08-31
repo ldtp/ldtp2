@@ -234,20 +234,23 @@ class ComboBox(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        try:
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
 
-        child_obj = self._get_combo_child_object_type(obj)
-        if not child_obj:
-            raise LdtpServerException('Unable to get combo box children')
+            child_obj = self._get_combo_child_object_type(obj)
+            if not child_obj:
+                return 0
 
-        if child_obj == pyatspi.ROLE_LIST and \
-                self._check_state(obj, pyatspi.STATE_FOCUSABLE):
+            if child_obj == pyatspi.ROLE_LIST and \
+                    self._check_state(obj, pyatspi.STATE_FOCUSABLE):
                 return 1
-        elif child_obj == pyatspi.ROLE_MENU:
-            if self._check_state(obj, pyatspi.STATE_VISIBLE) and \
-                    self._check_state(obj, pyatspi.STATE_SHOWING):
-                return 1
+            elif child_obj == pyatspi.ROLE_MENU:
+                if self._check_state(obj, pyatspi.STATE_VISIBLE) and \
+                        self._check_state(obj, pyatspi.STATE_SHOWING):
+                    return 1
+        except:
+            pass
         return 0
 
     def verifyshowlist(self, window_name, object_name):
@@ -280,20 +283,23 @@ class ComboBox(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        try:
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
 
-        child_obj = self._get_combo_child_object_type(obj)
-        if not child_obj:
-            raise LdtpServerException('Unable to get combo box children')
+            child_obj = self._get_combo_child_object_type(obj)
+            if not child_obj:
+                return 0
 
-        if child_obj == pyatspi.ROLE_LIST and \
-                not self._check_state(obj, pyatspi.STATE_FOCUSABLE):
+            if child_obj == pyatspi.ROLE_LIST and \
+                    not self._check_state(obj, pyatspi.STATE_FOCUSABLE):
                 return 1
-        elif child_obj == pyatspi.ROLE_MENU:
-            if not self._check_state(obj, pyatspi.STATE_VISIBLE) and \
-                    not self._check_state(obj, pyatspi.STATE_SHOWING):
-                return 1
+            elif child_obj == pyatspi.ROLE_MENU:
+                if not self._check_state(obj, pyatspi.STATE_VISIBLE) and \
+                        not self._check_state(obj, pyatspi.STATE_SHOWING):
+                    return 1
+        except:
+            pass
         return 0
 
     def verifyselect(self, window_name, object_name, item_name):
@@ -312,32 +318,35 @@ class ComboBox(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        try:
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
 
-        child_obj = self._get_combo_child_object_type(obj)
-        if not child_obj:
-            raise LdtpServerException('Unable to get combo box children')
-        if child_obj.getRole() == pyatspi.ROLE_LIST:
-            for child in self._list_objects (child_obj):
-                if child == child_obj:
-                    # As the _list_objects gives the current object as well
-                    # ignore it
-                    continue
-                try:
-                    texti = child.queryText()
-                    text = texti.getText(0, texti.characterCount)
-                except NotImplementedError:
-                    text = child.name
+            child_obj = self._get_combo_child_object_type(obj)
+            if not child_obj:
+                return 0
+            if child_obj.getRole() == pyatspi.ROLE_LIST:
+                for child in self._list_objects (child_obj):
+                    if child == child_obj:
+                        # As the _list_objects gives the current object as well
+                        # ignore it
+                        continue
+                    try:
+                        texti = child.queryText()
+                        text = texti.getText(0, texti.characterCount)
+                    except NotImplementedError:
+                        text = child.name
 
-                if self._glob_match(item_name, text):
-                    return 1
-        elif child_obj.getRole() == pyatspi.ROLE_MENU:
-            for child in self._list_objects (child_obj):
-                if child == child_obj:
-                    # As the _list_objects gives the current object as well
-                    # ignore it
-                    continue
-                if self._glob_match(item_name, child.name):
-                    return 1
+                    if self._glob_match(item_name, text):
+                        return 1
+            elif child_obj.getRole() == pyatspi.ROLE_MENU:
+                for child in self._list_objects (child_obj):
+                    if child == child_obj:
+                        # As the _list_objects gives the current object as well
+                        # ignore it
+                        continue
+                    if self._glob_match(item_name, child.name):
+                        return 1
+        except:
+            pass
         return 0

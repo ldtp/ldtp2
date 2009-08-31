@@ -555,8 +555,11 @@ class Table(Utils):
         @return: 1 on success 0 on failure.
         @rtype: integer
          '''
-        text = self.getcellvalue(window_name, object_name, row_index, column)
-        return int(self._glob_match(row_text, text))
+        try:
+            text = self.getcellvalue(window_name, object_name, row_index, column)
+            return int(self._glob_match(row_text, text))
+        except:
+            return 0
 
     def doesrowexist(self, window_name, object_name, row_text):
         '''
@@ -573,20 +576,23 @@ class Table(Utils):
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-         '''
-        obj = self._get_object(window_name, object_name)
+        '''
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        def _searchString(acc):
-            try:
-                itext = acc.queryText()
-            except NotImplementedError:
-                return False
-            return row_text == itext.getText(0,-1)
+            def _searchString(acc):
+                try:
+                    itext = acc.queryText()
+                except NotImplementedError:
+                    return False
+                return row_text == itext.getText(0,-1)
 
-        results = pyatspi.findDescendant(obj, _searchString)
+            results = pyatspi.findDescendant(obj, _searchString)
         
-        return int(bool(results))
-        
+            return int(bool(results))
+        except:
+            return 0
+
     def verifypartialtablecell(self, window_name, object_name, row_index,
                                column_index, row_text):
         '''
@@ -608,8 +614,10 @@ class Table(Utils):
         @return: 1 on success 0 on failure.
         @rtype: integer
         '''
-        text = self.getcellvalue(window_name, object_name, row_index, column)
-        if re.search(row_text, text):
-            return 1
-        else:
-            return 0
+        try:
+            text = self.getcellvalue(window_name, object_name, row_index, column)
+            if re.search(row_text, text):
+                return 1
+        except:
+            pass
+        return 0

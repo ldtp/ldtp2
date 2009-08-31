@@ -103,7 +103,8 @@ class Text(Utils):
 
         return int(texti.setTextContents(data.encode('utf-8')))
 
-    def gettextvalue(self, window_name, object_name):
+    def gettextvalue(self, window_name, object_name, startPosition = None,
+                     endPosition = None):
         '''
         Get text value
         
@@ -113,6 +114,10 @@ class Text(Utils):
         @param object_name: Object name to type in, either full name,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
+        @param startPosition: Starting position of text to fetch
+        @type: startPosition: int
+        @param endPosition: Ending position of text to fetch
+        @type: endPosition: int
 
         @return: text on success.
         @rtype: string
@@ -134,7 +139,16 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Text cannot be entered into object.')
 
-        return texti.getText(0, texti.characterCount)
+        if startPosition and startPosition > 0:
+            start = startPosition
+        else:
+            start = 0
+        if endPosition and endPosition > start:
+            end = endPosition
+        else:
+            end = texti.characterCount
+
+        return texti.getText(start, end)
 
     def verifypartialmatch(self, window_name, object_name, partial_text):
         '''
@@ -152,9 +166,12 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        return int(self._glob_match(partial_text,
-                                    self.gettextvalue(window_name,
-                                                      object_name)))
+        try:
+            return int(self._glob_match(partial_text,
+                                        self.gettextvalue(window_name,
+                                                          object_name)))
+        except:
+            return 0
 
     def verifysettext(self, window_name, object_name, text):
         '''
@@ -242,9 +259,12 @@ class Text(Utils):
         @return: 1 on success 0 on failure.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
-        self._grab_focus(obj)
-        return int(self._check_state(obj, pyatspi.STATE_EDITABLE))
+        try:
+            obj = self._get_object(window_name, object_name)
+            self._grab_focus(obj)
+            return int(self._check_state(obj, pyatspi.STATE_EDITABLE))
+        except:
+            return 0
 
     def getcharcount(self, window_name, object_name):
         '''

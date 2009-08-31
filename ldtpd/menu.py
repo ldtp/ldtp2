@@ -149,6 +149,84 @@ class Menu(Utils):
 
         return 1
 
+    def menuitemenabled(self, window_name, object_name):
+        '''
+        Verify a menu item is enabled
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        try:
+            if re.search(';', object_name):
+                obj = self._get_menu_hierarchy(window_name, object_name)
+            else:
+                obj = self._get_object(window_name, object_name)
+
+            if self._check_state(obj, pyatspi.STATE_ENABLED):
+                return 1
+        except:
+            pass
+        return 0
+
+    def verifymenucheck(self, window_name, object_name):
+        '''
+        Verify a menu item is checked
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        try:
+            if re.search(';', object_name):
+                obj = self._get_menu_hierarchy(window_name, object_name)
+            else:
+                obj = self._get_object(window_name, object_name)
+
+            if self._check_state(obj, pyatspi.STATE_CHECKED):
+                return 1
+        except:
+            pass
+        return 0
+
+    def verifymenuuncheck(self, window_name, object_name):
+        '''
+        Verify a menu item is un-checked
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        try:
+            if re.search(';', object_name):
+                obj = self._get_menu_hierarchy(window_name, object_name)
+            else:
+                obj = self._get_object(window_name, object_name)
+
+            if not self._check_state(obj, pyatspi.STATE_CHECKED):
+                return 1
+        except:
+            pass
+        return 0
+
     def invokemenu(self, window_name, object_name):
         '''
         Invoke menu item.
@@ -163,5 +241,5 @@ class Menu(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        return self.press (window_name, object_name)
+        return self.press(window_name, object_name)
 

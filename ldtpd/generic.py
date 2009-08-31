@@ -29,8 +29,8 @@ from utils import Utils
 from server_exception import LdtpServerException
 
 class Generic(Utils):
-    def imagecapture(self, winName = None, resolution1 = None,
-                     resolution2 = None, x = 0, y = 0):
+    def imagecapture(self, winName = None, width = None,
+                     height = None, x = 0, y = 0):
         if winName:
             acc = None
             for gui in self._list_guis():
@@ -47,12 +47,12 @@ class Generic(Utils):
         window = gtk.gdk.get_default_root_window ()
         size = window.get_size ()
         pb = gtk.gdk.Pixbuf (gtk.gdk.COLORSPACE_RGB, False, 8, 
-                             resolution1 or size [0], 
-                             resolution2 or size [1])
+                             width or size [0], 
+                             height or size [1])
         pb = pb.get_from_drawable (window, window.get_colormap (),
                                    x, y, 0, 0, 
-                                   resolution1 or size [0], 
-                                   resolution2 or size [1])
+                                   width or size [0], 
+                                   height or size [1])
 
         if pb:
             tmpFile = tempfile.mktemp('.png', 'ldtpd_')

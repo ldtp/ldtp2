@@ -72,12 +72,14 @@ class Utils:
         if acc.name == name:
             return 1
         _object_name = self._ldtpize_accessible(acc)
-        _object_name = '%s%s' % (_object_name[0],_object_name[1])
+        _object_name = '%s%s' % (_object_name[0], _object_name[1])
         if _object_name  == name:
             return 1
         if self._glob_match(name, acc.name):
             return 1
         if self._glob_match(name, _object_name):
+            return 1
+        if self._glob_match(re.sub(' ', '', name), _object_name):
             return 1
         return 0
 
@@ -134,24 +136,33 @@ class Utils:
 
     def _appmap_pairs(self, gui):
         ldtpized_list = []
+        ldtpized_obj_index = {}
         for obj in self._list_objects(gui):
             abbrev_role, abbrev_name = self._ldtpize_accessible(obj)
+            if abbrev_role in ldtpized_obj_index:
+                ldtpized_obj_index[abbrev_role] += 1
+            else:
+                ldtpized_obj_index[abbrev_role] = 0
             if abbrev_name == '':
                 ldtpized_name_base = abbrev_role
-                ldtpized_name = '%s0' % ldtpized_name_base
+                ldtpized_name = '%s%d' % (ldtpized_name_base,
+                                          ldtpized_obj_index[abbrev_role])
             else:
-                ldtpized_name_base = '%s%s' % (abbrev_role,abbrev_name)
+                ldtpized_name_base = '%s%s' % (abbrev_role, abbrev_name)
                 ldtpized_name = ldtpized_name_base
             i = 1
             while ldtpized_name in ldtpized_list:
-                ldtpized_name = '%s%d' % (ldtpized_name_base, i)
+                ldtpized_name = '%s%d' % (ldtpized_name_base,
+                                          i)
                 i += 1
             ldtpized_list.append(ldtpized_name)
             yield ldtpized_name, obj
 
     def _get_menu_hierarchy(self, window_name, object_name):
         _menu_hierarchy = re.split(';', object_name)
-        obj = self._get_object(window_name, _menu_hierarchy [0])
+        # Get handle of menu
+        obj = self._get_object(window_name, _menu_hierarchy[0])
+        # Navigate all sub-menu under a menu
         for _menu in _menu_hierarchy[1:]:
             _flag = False
             for _child in self._list_objects(obj):
@@ -159,12 +170,12 @@ class Utils:
                     # if the given object and child object matches
                     continue
                 if self._match_name_to_acc(_menu, _child):
+                    obj = _child
                     _flag = True
                     break
             if not _flag:
                 raise LdtpServerException (
                     "Menu item %s doesn't exist in hierarchy" % _menu)
-            obj = self._get_object(window_name, _menu)
         return obj
 
     def _click_object(self, obj, action = 'click'):

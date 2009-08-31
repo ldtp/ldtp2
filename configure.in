@@ -1,0 +1,51 @@
+dnl *************************************************************
+dnl Process this file with autoconf to produce a configure script
+dnl *************************************************************
+AC_INIT(ldtp2, 2.0, ldtp-dev@lists.freedesktop.org)
+AC_CANONICAL_SYSTEM
+
+AM_INIT_AUTOMAKE
+
+AC_PREREQ(2.52)
+
+dnl checks for programs
+AC_PROG_INSTALL
+
+AC_PATH_PROG(PYTHON_CMD, python, no)
+if test "x$PYTHON_CMD" = "xno"; then
+	AC_MSG_ERROR([Your python installation doesn't expose python])
+fi
+
+dnl Check for the python site-packages install path
+dnl Copied over from a11y-test-suite
+AC_MSG_CHECKING([python site path])
+pythonsitedir="`./find-python-path.py`"
+pythondir="${pythonsitedir}"
+ldtpdir="${pythondir}/ldtp"
+ldtpddir="${pythondir}/ldtpd"
+ooldtpdir="${pythondir}/ooldtp"
+ldtputilsdir="${pythondir}/ldtputils"
+AC_MSG_RESULT([$ldtpdir])
+AC_MSG_RESULT([$ldtpddir])
+AC_MSG_RESULT([$ooldtpdir])
+AC_MSG_RESULT([$ldtputilsdir])
+AC_MSG_RESULT([$pythondir])
+AC_SUBST(ldtpdir)
+AC_SUBST(ldtpddir)
+AC_SUBST(ooldtpdir)
+AC_SUBST(ldtputilsdir)
+AC_SUBST(pythondir)
+
+AC_OUTPUT([
+ldtp/Makefile
+ooldtp/Makefile
+ldtpd/Makefile
+ldtputils/Makefile
+Makefile
+])
+
+echo "---"
+echo "Configuration successful."
+echo
+
+dnl configure.in ends here

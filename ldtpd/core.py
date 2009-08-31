@@ -30,6 +30,7 @@ from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
 import re
+import time
 import pyatspi
 import traceback
 
@@ -70,12 +71,18 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             self._states[state.__repr__()] = state
         return self._states
 
-    def launchapp(self, cmd, args=[]):
+    def launchapp(self, cmd, args=[], delay = 5, env = 1):
         '''
         Launch application.
 
         @param cmdline: Command line string to execute.
         @type cmdline: string
+        @param args: Arguments to the application
+        @type args: list
+        @param delay: Delay after the application is launched
+        @type delay: int
+        @param env: GNOME accessibility environment to be set or not
+        @type env: int
 
         @return: PID of new process
         @rtype: integer
@@ -84,8 +91,16 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         os.environ['NO_GAIL'] = '0'
         os.environ['NO_AT_BRIDGE'] = '0'
+        if env:
+            os.environ['GTK_MODULES'] = 'gail:atk-bridge'
+            os.environ['GNOME_ACCESSIBILITY'] = '1'
         try:
             process = subprocess.Popen([cmd]+args)
+            # Let us wait so that the application launches
+            try:
+                time.sleep(int(delay))
+            except ValueError:
+                time.sleep(5)
         except Exception, e:
             raise LdtpServerException(str(e))
         os.environ['NO_GAIL'] = '1'
@@ -234,14 +249,17 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 on success.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        _state = obj.getState()
-        _obj_state = _state.getStates()
-        state = 'STATE_%s' % state.upper()
-        if state in self._states and \
-                self._states[state] in _obj_state:
-            return 1
+            _state = obj.getState()
+            _obj_state = _state.getStates()
+            state = 'STATE_%s' % state.upper()
+            if state in self._states and \
+                    self._states[state] in _obj_state:
+                return 1
+        except:
+            pass
         return 0
 
     def click(self, window_name, object_name):
@@ -360,9 +378,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 on success 0 on failure.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(obj, pyatspi.STATE_CHECKED))
+            return int(self._check_state(obj, pyatspi.STATE_CHECKED))
+        except:
+            return 0
 
     def verifyuncheck(self, window_name, object_name):
         '''
@@ -378,9 +399,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 on success 0 on failure.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        return int(not self._check_state(obj, pyatspi.STATE_CHECKED))
+            return int(not self._check_state(obj, pyatspi.STATE_CHECKED))
+        except:
+            return 0
 
     def stateenabled(self, window_name, object_name):
         '''
@@ -396,9 +420,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 on success 0 on failure.
         @rtype: integer
         '''
-        obj = self._get_object(window_name, object_name)
+        try:
+            obj = self._get_object(window_name, object_name)
 
-        return int(self._check_state(obj, pyatspi.STATE_ENABLED))
+            return int(self._check_state(obj, pyatspi.STATE_ENABLED))
+        except:
+            return 0
 
     def getobjectlist(self, window_name):
         '''
@@ -437,9 +464,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         obj = self._get_object(window_name, object_name)
 
         props = \
-            ['child_index', 'key', 'obj_index', 'parent', 'class', 'children']
+            ['child_index', 'key', 'obj_index', 'parent', 'class', \
+                 'children', 'label', 'label_by']
 
-        # TODO: label and label_by, what else am I missing?
         return props
 
     def getobjectproperty(self, window_name, object_name, prop):
@@ -464,6 +491,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         elif prop == 'key':
             obj = self._get_object(window_name, object_name) # A sanity check.
             return object_name # For now, we only match exact names anyway.
+        elif prop == 'label':
+            obj = self._get_object(window_name, object_name) # A sanity check.
+            return obj.name
         elif prop == 'obj_index':
             role_count = {}
             for gui in self._list_guis():
