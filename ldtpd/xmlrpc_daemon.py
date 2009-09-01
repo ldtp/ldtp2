@@ -17,11 +17,16 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
-import re, time
+import os, re, time
 from core import Ldtpd
 from twisted.web import xmlrpc
 import xmlrpclib
 from log import logger
+
+if 'LDTP_COMMAND_DELAY' in os.environ:
+    delay = os.environ['LDTP_COMMAND_DELAY']
+else:
+    delay = None
 
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __new__(cls, *args, **kwargs):
@@ -50,12 +55,16 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             if args and isinstance(args[-1], dict):
                 kwargs = args[-1]
                 args = args[:-1]
-                pattern = '(wait|exist|has|get|verify|enabled|launch|image)'
-                p = re.compile(pattern)
-                if not p.search(functionPath):
-                    # Sleep for 1 second, else the at-spi-registryd dies,
-                    # on the speed we execute
-                    time.sleep(1)
+                if delay:
+                    pattern = '(wait|exist|has|get|verify|enabled|launch|image)'
+                    p = re.compile(pattern)
+                    if not p.search(functionPath):
+                        # Sleep for 1 second, else the at-spi-registryd dies,
+                        # on the speed we execute
+                        try:
+                            time.sleep(int(delay))
+                        except ValueError:
+                            time.sleep(0.5)
             else:
                 kwargs = {}
         except Exception, e:

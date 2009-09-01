@@ -53,10 +53,45 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._states = {}
         self._get_all_state_names()
 
+
+    def getapplist(self):
+        '''
+        Get all accessibility application name that are currently running
+        
+        @return: list of appliction name of string type on success.
+        @rtype: list
+        '''
+        app_list = []
+        for app in self._list_apps():
+            if app.name != '<unknown>':
+                app_list.append(app.name)
+        return app_list
+
     def getwindowlist(self):
+        '''
+        Get all accessibility window that are currently open
+        
+        @return: list of window names in LDTP format of string type on success.
+        @rtype: list
+        '''
         window_list = []
+        window_type = {}
         for gui in self._list_guis():
-            window_list.append(self._ldtpize_accessible(gui))
+            window_name = self._ldtpize_accessible(gui)
+            if window_name[1] == '':
+                if window_name[0] in window_type:
+                    window_type[window_name[0]] += 1
+                else:
+                    window_type[window_name[0]] = 0
+                tmp_name = '%d' % window_type[window_name[0]]
+            else:
+                tmp_name = window_name[1]
+            w_name = window_name = '%s%s' % (window_name[0], tmp_name)
+            index = 1
+            while window_name in window_list:
+                window_name = '%s%d' % (w_name, index)
+                index += 1
+            window_list.append(window_name)
         return window_list
 
     def isalive(self):
@@ -441,7 +476,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         obj_list = []
         for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
-                for name, obj in self._appmap_pairs(gui):
+                for name, obj, obj_index in self._appmap_pairs(gui):
                     obj_list.append(name)
                 return obj_list
 
@@ -498,13 +533,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             role_count = {}
             for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
-                    for name, obj in self._appmap_pairs(gui):
+                    for name, obj, obj_index in self._appmap_pairs(gui):
                         role = obj.getRole()
                         role_count[role] = role_count.get(role, 0) + 1
                         if name == object_name:
-                            return '%s#%d' % (
-                                abbreviated_roles.get(role, 'ukn'),
-                                role_count.get(role, 1) - 1)
+                            return obj_index
 
             raise LdtpServerException(
                 'Unable to find object name in application map')
@@ -512,7 +545,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             cached_list = []
             for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
-                    for name, obj in self._appmap_pairs(gui):
+                    for name, obj, obj_index in self._appmap_pairs(gui):
                         if name == object_name:
                             for pname, pobj in cached_list:
                                 if obj in pobj: # avoid double link issues
@@ -531,7 +564,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             obj = self._get_object(window_name, object_name)
             for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
-                    for name, child in self._appmap_pairs(gui):
+                    for name, child, obj_index in self._appmap_pairs(gui):
                         if child in obj:
                             children.append(name)
                     break
@@ -559,7 +592,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         matches = []
         for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
-                for name, obj in self._appmap_pairs(gui):
+                for name, obj, obj_index in self._appmap_pairs(gui):
                     if child_name and role:
                         if obj.getRoleName() == role and \
                                 (child_name == name or \

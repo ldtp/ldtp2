@@ -20,7 +20,6 @@ Headers in this file shall remain intact.
 '''
 
 import re
-import gobject
 import pyatspi
 from re import match as re_match
 from constants import abbreviated_roles
@@ -59,7 +58,8 @@ class Utils:
         rel_set = acc.getRelationSet()
         if rel_set:
             for i, rel in enumerate(rel_set):
-                if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY or \
+                relationType = rel.getRelationType()
+                if relationType == pyatspi.RELATION_LABELLED_BY or \
                         relationType == pyatspi.RELATION_CONTROLLED_BY:
                     label_acc = rel.getTarget(i)
                     break
@@ -157,7 +157,8 @@ class Utils:
                                           i)
                 i += 1
             ldtpized_list.append(ldtpized_name)
-            yield ldtpized_name, obj
+            yield ldtpized_name, obj, '%s#%d' % (abbrev_role,
+                                                 ldtpized_obj_index[abbrev_role])
 
     def _get_menu_hierarchy(self, window_name, object_name):
         _menu_hierarchy = re.split(';', object_name)
@@ -192,15 +193,55 @@ class Utils:
                     return
             raise LdtpServerException('Object does not have a "click" action')
 
-    def _get_object(self, window_name, obj_name):
+    def _get_window_handle(self, window_name):
+        window_list = []
+        window_type = {}
+
+        # Search with accessible name
         for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
-                for name, obj in self._appmap_pairs(gui):
-                    if self._match_name_to_acc(obj_name, obj) or \
-                            self._match_name_to_appmap(obj_name, name):
-                        return obj
+                return gui
+
+        # Search with LDTP appmap format
+        for gui in self._list_guis():
+            w_name = self._ldtpize_accessible(gui)
+            if w_name[1] == '':
+                if w_name[0] in window_type:
+                    window_type[w_name[0]] += 1
+                else:
+                    window_type[w_name[0]] = 0
+                tmp_name = '%d' % window_type[w_name[0]]
+            else:
+                tmp_name = w_name[1]
+            w_name = tmp_name = '%s%s' % (w_name[0], tmp_name)
+            index = 1
+            while w_name in window_list:
+                w_name = '%s%d' % (tmp_name, index)
+                index += 1
+            window_list.append(w_name)
+            if window_name == w_name:
+                return gui
+            if self._glob_match(window_name, w_name):
+                return gui
+            if self._glob_match(window_name, w_name):
+                return gui
+            if self._glob_match(re.sub(' ', '', window_name),
+                                re.sub(' ', '', w_name)):
+                return gui
+        return None
+
+    def _get_object(self, window_name, obj_name):
+        _window_handle = self._get_window_handle(window_name)
+        if not _window_handle:
+            raise LdtpServerException('Unable to find window "%s"' % \
+                                          window_name)
+        for name, obj, obj_index in self._appmap_pairs(_window_handle):
+            if self._glob_match(obj_name, obj_index) or \
+                    self._match_name_to_acc(obj_name, obj) or \
+                    self._match_name_to_appmap(obj_name, name):
+                return obj
         raise LdtpServerException(
-            'Unable to find object name in application map')
+            'Unable to find object name "%s" in application map' % obj_name)
 
     def _grab_focus(self, obj):
         try:
