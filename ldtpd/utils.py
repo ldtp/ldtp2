@@ -59,7 +59,8 @@ class Utils:
         rel_set = acc.getRelationSet()
         if rel_set:
             for i, rel in enumerate(rel_set):
-                if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY:
+                if rel.getRelationType() == pyatspi.RELATION_LABELLED_BY or \
+                        relationType == pyatspi.RELATION_CONTROLLED_BY:
                     label_acc = rel.getTarget(i)
                     break
         return abbreviated_roles.get(acc.getRole(), 'ukn'), \
