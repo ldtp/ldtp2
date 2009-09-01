@@ -17,6 +17,7 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
+import re, time
 from core import Ldtpd
 from twisted.web import xmlrpc
 import xmlrpclib
@@ -49,6 +50,12 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             if args and isinstance(args[-1], dict):
                 kwargs = args[-1]
                 args = args[:-1]
+                pattern = '(wait|exist|has|get|verify|enabled|launch|image)'
+                p = re.compile(pattern)
+                if not p.search(functionPath):
+                    # Sleep for 1 second, else the at-spi-registryd dies,
+                    # on the speed we execute
+                    time.sleep(1)
             else:
                 kwargs = {}
         except Exception, e:
