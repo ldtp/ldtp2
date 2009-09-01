@@ -95,7 +95,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             os.environ['GTK_MODULES'] = 'gail:atk-bridge'
             os.environ['GNOME_ACCESSIBILITY'] = '1'
         try:
-            process = subprocess.Popen([cmd]+args)
+            process = subprocess.Popen([cmd]+args, close_fds = True)
             # Let us wait so that the application launches
             try:
                 time.sleep(int(delay))
