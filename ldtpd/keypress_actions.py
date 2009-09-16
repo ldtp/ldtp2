@@ -17,13 +17,13 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
-import pyatspi
-import gtk
 import re
+import time
+import gobject
+import pyatspi
+import subprocess
 
 from sequence_step import AtomicAction
-import gobject
-import utils
 _ = lambda x: x
 
 # Highest granularity, define timing for every single press and release
@@ -34,7 +34,163 @@ min_delta = 50
 # Maximum time before a key release
 release_max = 400
 
-keymap = gtk.gdk.keymap_get_default()
+_non_print_key_val = {"escape" : 9, "esc" : 9, "backspace" : 22,
+                      "bksp" : 22, "ctrl" : 37, "windowskey" : 115,
+                      "tab" : 23, "return" : 36, "enter" : 36,
+                      "shift" : 50, "shiftl" : 50, "shiftr" : 62,
+                      "home" : 97, "end" : 103, "window" : 115,
+                      "alt" : 64, "altl" : 64, "altr" : 113,
+                      "up" : 98, "down" : 104, "right" : 102,
+                      "left" : 100, "space" : 65, "capslock" : 66,
+                      "caps" : 66, "menu" : 117, "ins" : 106,
+                      "del" : 107, "insert" : 106, "delete" : 107,
+                      "pageup" : 99, "pagedown" : 105, "pgup" : 99,
+                      "pgdown" : 105, "numlock" : 77, "scrolllock" : 78,
+                      "F1" : 67, "F2" : 68, "F3" : 69, "F4" : 70,
+                      "F5" : 71, "F6" : 72, "F7" : 73, "F8" : 74,
+                      "F9" : 75, "F10" : 76, "F11" : 95, "F12" : 96,
+                      "prtscrn" : 111}
+
+def _get_keyboard_keycodes():
+  output = subprocess.Popen('xmodmap -pke', stdout = subprocess.PIPE,
+                            stderr = subprocess.PIPE,
+                            shell = True, close_fds = True).communicate()
+  if output[0] != '':
+    output = output[0]
+    for line in output.split('\n'):
+      if line.strip() == '':
+        continue
+      split = re.split('=', line, maxsplit = 2)
+      keycode = int(re.split(" ", split[0].strip())[-1])
+      if len(split[1]):
+        key = re.split(" ", split[1], 3)[1].lower()
+        _non_print_key_val[key] = keycode
+
+_get_keyboard_keycodes()
+
+class KeyCombo:
+  def __init__(self):
+    self.shift = False
+    self.capslck = False
+    self.non_print_key = False
+    self.value = None
+
+class KeyboardOp:
+  def __init__(self):
+    self._downchar = 12
+    self._upchar = 21
+    self._undefined_key = -1
+    self._max_tokens = 256
+    self._max_tok_size = 15
+
+  def _get_key_value(self, keyval):
+    # A - Z / a - z
+    _char_key = {'a' : 38, 'b' : 56, 'c' : 54, 'd' : 40, 'e' : 26,
+                 'f' : 41, 'g' : 42, 'h' : 43, 'i' : 31, 'j' : 44,
+                 'k' : 45, 'l' : 46, 'm' : 58, 'n' : 57, 'o' : 32,
+                 'p' : 33, 'q' : 24, 'r' : 27, 's' : 39, 't' : 28,
+                 'u' : 30, 'v' : 55, 'w' : 25, 'x' : 53, 'y' : 29,
+                 'z' : 52}
+    # 0 - 9
+    _digit_key = {'0' : 19, '1' : 10, '2' : 11, '3' : 12, '4' : 13,
+                  '5' : 14, '6' : 15, '7' : 16, '8' : 17, '9' : 18}
+    # Symbols
+    _symbol_key_val = {'-' : 20, '=' : 21, '[' : 34,
+                       ']' : 35, ';' : 47, '\'' : 48,
+                       '`' : 49, '\\' : 51, ' :' : 59,
+                       '.' : 60, '/' : 61, ' ' : 65}
+    _symbol_shift_key_val = {'!' : 10, '@' : 11, '#' : 12,
+                             '$' : 13, '%' : 14, '^' : 15,
+                             '&' : 16, '*' : 17, '(' : 18,
+                             ')' : 19, '_' : 20, '+' : 21,
+                             '{' : 34, '}' : 35, ':' : 47,
+                             '"' :48, '~' : 49, '|' : 51,
+                             '<' : 59, '>' : 60, '?' : 61}
+
+    return_val = KeyCombo()
+    if len(keyval) == 1:
+      # This will identify small characters
+      if keyval in _char_key:
+        return_val.shift = False
+        return_val.capslck = False
+        return_val.non_print_key = False
+        return_val.value = _char_key[keyval]
+        return return_val
+      # This will identify Capital Charaters i.e. Shift+Small
+      # Character
+      if keyval.lower() in _char_key:
+        return_val.shift = False
+        return_val.capslck = True
+        return_val.non_print_key = False
+        return_val.value = _char_key[keyval.lower()]
+        return return_val
+      # This will identify Digits
+      if keyval in _digit_key:
+        return_val.shift = False
+        return_val.capslck = False
+        return_val.non_print_key = False
+        return_val.value = _digit_key[keyval]
+        return return_val
+      # This will identify Symbols
+      # Symbols obtained without using Shift Key
+      if keyval in _symbol_key_val:
+        return_val.shift = False
+        return_val.capslck = False
+        return_val.non_print_key = False
+        return_val.value = _symbol_key_val[keyval]
+        return return_val
+      # Symbols produced with a key combination
+      # including Shift Key
+      if keyval in _symbol_shift_key_val:
+        return_val.shift = True
+        return_val.capslck = False
+        return_val.non_print_key = False
+        return_val.value = _symbol_shift_key_val[keyval]
+        return return_val
+    else:
+      # This is for identifying non printing keys like numlock,
+      # capslock, etc
+      if keyval.lower() in _non_print_key_val:
+        return_val.shift = False
+        return_val.capslck = False
+        return_val.non_print_key = True
+        return_val.value = _non_print_key_val[keyval.lower()]
+        return return_val
+
+    # Key Undefined
+    return_val.shift = False
+    return_val.capslck = False
+    return_val.non_print_key = False
+    return_val.value = self._undefined_key
+    return return_val
+
+  def get_keyval_id(self, input_str):
+    index = 0
+    key_vals = []
+    while index  < len(input_str):
+      token = ''
+      # Identified a Non Printing Key
+      if input_str[index] == '<':
+        index += 1
+        i = 0
+        while input_str[index] != '>' and i < self._max_tok_size:
+          token += input_str[index]
+          index += 1
+          i += 1
+        if input_str[index] != '>':
+          # Premature end of string without an opening '<'
+          return None
+        index += 1
+      else:
+        token = input_str[index]
+        index += 1
+  
+      key_val = self._get_key_value(token)
+      if key_val.value == self._undefined_key:
+        # Invalid key
+        return None
+      key_vals.append(key_val)
+    return key_vals
 
 class KeyPressAction(AtomicAction):
   '''
@@ -57,7 +213,12 @@ class KeyPressAction(AtomicAction):
     if delta_time > release_max: delta_time = release_max
     self._key_name = key_name
     if key_code is None:
-      key_code = utils.getKeyCodeFromVal(gtk.gdk.keyval_from_name(key_name))
+      key_vals = _get_keyval_id(key_name)
+      if not key_vals:
+        return
+      for key_val in key_vals:
+        key_code = key_val.value
+        break
     AtomicAction.__init__(self, delta_time, self._keyPress, key_code)
 
   def _keyPress(self, key_code):
@@ -99,7 +260,12 @@ class KeyReleaseAction(AtomicAction):
     if delta_time > release_max: delta_time = release_max
     self._key_name = key_name
     if key_code is None:
-      key_code = utils.getKeyCodeFromVal(gtk.gdk.keyval_from_name(key_name))
+      key_vals = _get_keyval_id(key_name)
+      if not key_vals:
+        return
+      for key_val in key_vals:
+        key_code = key_val.value
+        break
     AtomicAction.__init__(self, delta_time, self._keyRelease, key_code)
 
   def _keyRelease(self, key_code):
@@ -147,11 +313,13 @@ class KeyComboAction(AtomicAction):
     @param delta_time: Time to wait before performing step.
     @type delta_time: integer
     '''
-    keyval, modifiers = gtk.accelerator_parse(key_combo)
-    key_code = utils.getKeyCodeFromVal(keyval)
-    self._key_combo = key_combo
+    self.key_op = KeyboardOp()
+    key_vals = self.key_op.get_keyval_id(key_combo)
+    if not key_vals:
+      return
+    self._key_combo = key_vals
     if delta_time < min_delta: delta_time = min_delta
-    AtomicAction.__init__(self, delta_time, self._doCombo, key_code, modifiers)
+    AtomicAction.__init__(self, delta_time, self._doCombo)
 
   def __call__(self):
     '''
@@ -159,7 +327,7 @@ class KeyComboAction(AtomicAction):
     '''
     self._func(*self._args)
 
-  def _doCombo(self, key_code, modifiers):
+  def _doCombo(self):
     '''
     Perform combo operation.
     
@@ -169,16 +337,57 @@ class KeyComboAction(AtomicAction):
     @type modifiers: integer
     '''
     interval = 0
-    mod_hw_codes = map(mod_key_code_mappings.get, modifiers.value_names)
-    for mod_hw_code in mod_hw_codes:
-      gobject.timeout_add(interval, self._keyPress, mod_hw_code)
-      interval += keystroke_interval
-    gobject.timeout_add(interval, self._keyPressRelease, key_code)
-    interval += keystroke_interval
-    mod_hw_codes.reverse()
-    for mod_hw_code in mod_hw_codes:
-      gobject.timeout_add(interval, self._keyRelease, mod_hw_code)
-      interval += keystroke_interval
+    for key_val in self._key_combo:
+      if key_val.non_print_key == True:
+        _type = pyatspi.KEY_PRESS
+      else:
+        _type = pyatspi.KEY_PRESSRELEASE
+
+      if key_val.shift:
+        # press shift
+        pyatspi.Registry.generateKeyboardEvent(50, None, pyatspi.KEY_PRESS)
+      if key_val.capslck:
+        # press / release capslck
+        pyatspi.Registry.generateKeyboardEvent(66, None, pyatspi.KEY_PRESSRELEASE)
+
+      time.sleep(0.01)
+      pyatspi.Registry.generateKeyboardEvent(key_val.value, None, _type)
+
+      if key_val.shift:
+        # release shift
+        pyatspi.Registry.generateKeyboardEvent(50, None, pyatspi.KEY_RELEASE)
+      if key_val.capslck:
+        # press / release capslck
+        pyatspi.Registry.generateKeyboardEvent(66, None, pyatspi.KEY_PRESSRELEASE)
+
+      if key_val.non_print_key == False:
+        # If NOT found non_print_key, then release all
+        # non_print_key
+        index = self._key_combo.index(key_val)
+        while index >= 0:
+          index -= 1
+          if index == -1:
+            break
+          tmp_key_val = self._key_combo[index]
+          # EX: <alt><tab> - Here release both alt and tab
+          # <alt>m - 
+          if tmp_key_val.non_print_key == False:
+            break
+          # Release all non_print_key
+          pyatspi.Registry.generateKeyboardEvent(tmp_key_val.value, None, pyatspi.KEY_RELEASE)
+
+    index = self._key_combo.index(key_val)
+    if key_val.non_print_key == False:
+      index -= 1
+    while index >= 0:
+      tmp_key_val = self._key_combo[index]
+      index -= 1
+      # EX: <alt><tab> - Here release both alt and tab
+      if tmp_key_val.non_print_key == False:
+        break
+      # Release all non_print_key
+      pyatspi.Registry.generateKeyboardEvent(tmp_key_val.value, None, pyatspi.KEY_RELEASE)
+
     gobject.timeout_add(interval, self.stepDone)
 
   def _keyPress(self, hw_code):
@@ -221,86 +430,10 @@ class KeyComboAction(AtomicAction):
     '''
     return _('Press %s') % self._key_combo
 
-class TypeAction(AtomicAction):
-  '''
-  Type a sequence of characters.
-  '''
-  def __init__(self, string_to_type, delta_time=0, interval=None):    
-    '''
-    Initialize L{TypeAction}
-    
-    @param string_to_type: String to type.
-    @type string_to_type: string
-    @param delta_time: time before starting this step.
-    @type delta_time: integer
-    @param interval: Time between keystrokes.
-    @type interval: integer
-    '''
-    self._string_to_type = string_to_type
-    if interval:
-      self.interval = interval
-    else:
-      self.interval = keystroke_interval
-    if delta_time < min_delta: delta_time = min_delta
-    AtomicAction.__init__(self, delta_time, self._doType, string_to_type)
-
-  def __call__(self):
-    '''
-    Perform step. Overridden to omit L{SequenceStep.stepDone}.
-    '''
-    self._func(*self._args)
-
-  def _doType(self, string_to_type):
-    '''
-    Do typing action.
-    
-    @param string_to_type: String to type.
-    @type string_to_type: string
-    '''
-    interval = 0
-    seq = [w.startswith('<') and w or list(w) \
-               for w in re.findall(r'\w+|<\w+>', string_to_type)]
-    for to_type in seq:
-        if isinstance(to_type, list):
-            for char in to_type:
-                gobject.timeout_add(interval, self._charType, 
-                                    gtk.gdk.unicode_to_keyval(ord(char)))
-        elif to_type[0] == '<' and to_type[-1] == '>':
-            gobject.timeout_add(
-                interval, self._charType,
-                gtk.gdk.keyval_from_name(to_type[1:-1].capitalize()))
-        interval += self.interval 
-
-    gobject.timeout_add(interval, self.stepDone)
-
-  def _charType(self, keyval):
-    '''
-    Type a single character.
-    
-    @param keyval: Key code to type.
-    @type keyval: intger
-    '''
-    key_code, group, level = keymap.get_entries_for_keyval(keyval)[0]
-    if level == 1:
-        pyatspi.Registry.generateKeyboardEvent(50, None, 
-                                               pyatspi.KEY_PRESS)
-    pyatspi.Registry.generateKeyboardEvent(key_code, None, 
-                                           pyatspi.KEY_PRESSRELEASE)
-    if level == 1:
-        pyatspi.Registry.generateKeyboardEvent(50, None, 
-                                               pyatspi.KEY_RELEASE)
-    return False
-
-  def __str__(self):
-    '''
-    String representation of instance.
-
-    @return: String representation of instance.
-    @rtype: string
-    '''
-    return _('Type %s') % self._string_to_type
-
 if __name__ == "__main__":
-    type_action = TypeAction("Hello world!")
+    type_action = KeyComboAction("Hello world!")
     type_action()
-    gobject.MainLoop().run()
+    try:
+      gobject.MainLoop().run()
+    except KeyboardInterrupt:
+      pass
