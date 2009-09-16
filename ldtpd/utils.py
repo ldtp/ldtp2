@@ -72,15 +72,19 @@ class Utils:
     def _match_name_to_acc(self, name, acc):
         if acc.name == name:
             return 1
-        _object_name = self._ldtpize_accessible(acc)
-        _object_name = '%s%s' % (_object_name[0], _object_name[1])
+        _ldtpize_accessible_name = self._ldtpize_accessible(acc)
+        _object_name = '%s%s' % (_ldtpize_accessible_name[0],
+                                 _ldtpize_accessible_name[1])
         if _object_name  == name:
             return 1
         if self._glob_match(name, acc.name):
             return 1
         if self._glob_match(name, _object_name):
             return 1
-        if self._glob_match(re.sub(' ', '', name), _object_name):
+        _tmp_name = re.sub(' ', '', name)
+        if self._glob_match(_tmp_name, _object_name):
+            return 1
+        if self._glob_match(_tmp_name, _ldtpize_accessible_name[1]):
             return 1
         return 0
 
