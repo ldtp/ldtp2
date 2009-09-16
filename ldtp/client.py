@@ -51,7 +51,7 @@ class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):
         self._daemon = subprocess.Popen(
             ['python', '-c', 'import ldtpd; ldtpd.main()'],
-            stderr=sys.stderr, close_fds = True)
+            close_fds = True)
         sleep(2)
 
     def request(self, host, handler, request_body, verbose=0):
