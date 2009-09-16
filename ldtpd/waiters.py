@@ -27,7 +27,6 @@ class Waiter(Utils):
     def __init__(self, timeout):
         Utils.__init__(self)
         self.timeout = timeout
-        self._loop = gobject.MainLoop()
 
     def run(self):
         self.success = False
