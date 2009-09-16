@@ -189,7 +189,7 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        return verifypartialmatch(window_name, object_name, text)
+        return self.verifypartialmatch(window_name, object_name, text)
 
     def activatetext(self, window_name, object_name):
         '''
