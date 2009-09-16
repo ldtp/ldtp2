@@ -19,8 +19,10 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
+import re
 import pyatspi 
 from utils import Utils
+from fnmatch import translate as glob_trans
 from server_exception import LdtpServerException
 from keypress_actions import KeyComboAction
 
@@ -167,9 +169,12 @@ class Text(Utils):
         @rtype: integer
         '''
         try:
-            return int(self._glob_match(partial_text,
-                                        self.gettextvalue(window_name,
-                                                          object_name)))
+            if re.search(partial_text,
+                         self.gettextvalue(window_name,
+                                           object_name)):
+                return 1
+            else:
+                return 0
         except:
             return 0
 
@@ -189,7 +194,12 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         '''
-        return self.verifypartialmatch(window_name, object_name, text)
+        try:
+            return int(self._glob_match(partial_text,
+                                        self.gettextvalue(window_name,
+                                                          object_name)))
+        except:
+            return 0
 
     def activatetext(self, window_name, object_name):
         '''
