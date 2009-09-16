@@ -81,6 +81,9 @@ class ComboBox(Utils):
                     self._click_object(child)
                     return 1
         raise LdtpServerException('Unable to select item')
+
+    # Since selectitem and comboselect implementation are same,
+    # for backward compatibility let us assign selectitem to comboselect
     comboselect = selectitem
 
     def selectindex(self, window_name, object_name, item_index):
