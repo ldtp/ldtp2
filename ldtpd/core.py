@@ -26,7 +26,6 @@ from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
     GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter
-from keypress_actions import TypeAction
 from server_exception import LdtpServerException
 import os
 import re
@@ -179,7 +178,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def waittillguiexist(self, window_name, object_name='', guiTimeOut=5):
+    def waittillguiexist(self, window_name, object_name='', guiTimeOut=30):
         '''
         Wait till a window or component exists.
         
@@ -202,7 +201,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def waittillguinotexist(self, window_name, object_name='', guiTimeOut=5):
+    def waittillguinotexist(self, window_name, object_name='', guiTimeOut=30):
         '''
         Wait till a window does not exist.
         
@@ -296,6 +295,25 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         except:
             pass
         return 0
+
+    def grabfocus(self, window_name, object_name):
+        '''
+        Grab focus.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+        self._grab_focus(obj)
+
+        return 1
 
     def click(self, window_name, object_name):
         '''
@@ -474,13 +492,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: list
         '''
         obj_list = []
-        for gui in self._list_guis():
-            if self._match_name_to_acc(window_name, gui):
-                for name, obj, obj_index in self._appmap_pairs(gui):
-                    obj_list.append(name)
-                return obj_list
-
-        raise LdtpServerException('Window does not exist')
+        gui = self._get_window_handle(window_name)
+        if not gui:
+            raise LdtpServerException('Unable to find window "%s"' % \
+                                          window_name)
+        for name, obj, obj_index in self._appmap_pairs(gui):
+            obj_list.append(name)
+        return obj_list
 
     def getobjectinfo(self, window_name, object_name):
         '''
