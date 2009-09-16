@@ -22,7 +22,7 @@ Headers in this file shall remain intact.
 import pyatspi 
 from utils import Utils
 from server_exception import LdtpServerException
-from keypress_actions import TypeAction
+from keypress_actions import KeyComboAction
 
 class Text(Utils):
     def generatekeyevent(self, data):
@@ -37,8 +37,8 @@ class Text(Utils):
         @rtype: integer
         '''
 
-        type_action = TypeAction(data)
-        type_action()
+        key_combo_action = KeyComboAction(data)
+        key_combo_action()
 
         return 1
 
@@ -68,8 +68,8 @@ class Text(Utils):
 
         data = data or window_name # TODO: Major hack, this is a bad API choice
 
-        type_action = TypeAction(data)
-        type_action()
+        key_combo_action = KeyComboAction(data)
+        key_combo_action()
 
         return 1
 
