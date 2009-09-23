@@ -33,10 +33,10 @@ class Mouse(Utils):
         
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
-        @type window_name: string
+        @type window_name: int
         @param object_name: Object name to look for, either full name,
         LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: string
+        @type object_name: int
 
         @return: 1 on success.
         @rtype: integer
