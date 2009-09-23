@@ -21,6 +21,7 @@ Headers in this file shall remain intact.
 
 import re
 import pyatspi
+import orderedset
 from re import match as re_match
 from constants import abbreviated_roles
 from fnmatch import translate as glob_trans
@@ -34,7 +35,7 @@ class Utils:
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
-            Utils.cached_apps = set()
+            Utils.cached_apps = orderedset.OrderedSet()
             if lazy_load:
                 for app in self._desktop:
                     if app is None: continue
@@ -51,7 +52,7 @@ class Utils:
                     if not gui: continue
                     yield gui
             except LookupError:
-                self.cached_apps.remove(app)
+                self.cached_apps.discard(app)
 
     def _ldtpize_accessible(self, acc):
         label_acc = None
@@ -63,18 +64,8 @@ class Utils:
                         relationType == pyatspi.RELATION_CONTROLLED_BY:
                     label_acc = rel.getTarget(i)
                     break
-        role = acc.getRole()
-        if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
-                role == pyatspi.ROLE_WINDOW or \
-                role == pyatspi.ROLE_FONT_CHOOSER or \
-                role == pyatspi.ROLE_FILE_CHOOSER or \
-                role == pyatspi.ROLE_ALERT or \
-                role == pyatspi.ROLE_COLOR_CHOOSER:
-            strip = '( |\n)'
-        else:
-            strip = '( |:|\.|_|\n)'
-        return abbreviated_roles.get(role, 'ukn'), \
-            re.sub(strip, '', (label_acc or acc).name)
+        return abbreviated_roles.get(acc.getRole(), 'ukn'), \
+            (label_acc or acc).name.replace(' ', '').rstrip(':.')
 
     def _glob_match(self, pattern, string):
         return bool(re_match(glob_trans(pattern), string))
@@ -212,7 +203,7 @@ class Utils:
                 'Object does not have an Action interface')
         else:
             for i in xrange(iaction.nActions):
-                if iaction.getName(i) == action:
+                if re.match(action, iaction.getName(i)):
                     iaction.doAction(i)
                     return
             raise LdtpServerException('Object does not have a "click" action')
