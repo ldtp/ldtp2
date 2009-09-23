@@ -173,10 +173,9 @@ class Text(Utils):
                          self.gettextvalue(window_name,
                                            object_name)):
                 return 1
-            else:
-                return 0
         except:
-            return 0
+            pass
+        return 0
 
     def verifysettext(self, window_name, object_name, text):
         '''
