@@ -2,8 +2,8 @@
 
 from distutils.core import setup
 
-setup(name='LDTPv2',
-      version='0.1',
+setup(name='ldtp2',
+      version='2.0.1',
       description='Linux Desktop Testing Project Version 2',
       maintainer='Nagappan Alagappan',
       maintainer_email='nagappan@gmail.com',
