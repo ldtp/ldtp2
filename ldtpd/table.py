@@ -556,7 +556,8 @@ class Table(Utils):
         @rtype: integer
          '''
         try:
-            text = self.getcellvalue(window_name, object_name, row_index, column)
+            text = self.getcellvalue(window_name, object_name,
+                                     row_index, column_index)
             return int(self._glob_match(row_text, text))
         except:
             return 0
