@@ -62,7 +62,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                         # Sleep for 1 second, else the at-spi-registryd dies,
                         # on the speed we execute
                         try:
-                            time.sleep(int(delay))
+                            time.sleep(float(delay))
                         except ValueError:
                             time.sleep(0.5)
             else:
