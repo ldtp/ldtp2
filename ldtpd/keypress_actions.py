@@ -288,7 +288,6 @@ class KeyReleaseAction(AtomicAction):
     '''
     return _('Key release %s') % self._key_name or 'a key'
 
-
 # A bit smarter about common interactions.
 
 keystroke_interval = 10
