@@ -17,6 +17,7 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
+import os
 import state
 import client
 import atexit
