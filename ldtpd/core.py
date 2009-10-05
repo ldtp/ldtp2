@@ -334,6 +334,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         if obj.getRole() == pyatspi.ROLE_TOGGLE_BUTTON:
             self._click_object(obj, '(click|activate)')
+        elif obj.getRole() == pyatspi.ROLE_COMBO_BOX:
+            self._click_object(obj, '(click|press)')
         else:
             self._click_object(obj)
 
