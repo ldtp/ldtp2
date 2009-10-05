@@ -88,10 +88,8 @@ class GuiExistsWaiter(Waiter):
         self.top_level = None # Useful in subclasses
 
     def poll(self):
-        for gui in self._list_guis():
-            if self._match_name_to_acc(self._frame_name, gui):
-                self.top_level = gui
-                self.success = True
+        gui = self._get_window_handle(self._frame_name)
+        self.success = bool(gui)
 
     def event_cb(self, event):
         if self._match_name_to_acc(self._frame_name, event.source):
@@ -106,13 +104,8 @@ class GuiNotExistsWaiter(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        found = False
-        for gui in self._list_guis():
-            if self._match_name_to_acc(self._frame_name, gui):
-                self.top_level = gui
-                found = True
-
-        self.success = not found
+        gui = self._get_window_handle(self._frame_name)
+        self.success = not bool(gui)
 
     def event_cb(self, event):
         if self._match_name_to_acc(self._frame_name, event.source):
