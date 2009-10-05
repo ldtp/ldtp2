@@ -44,6 +44,11 @@ class Utils:
     def _on_window_event(self, event):
         self.cached_apps.add(event.host_application)
 
+    def _list_apps(self):
+        for app in list(self.cached_apps):
+            if not app: continue
+            yield app
+
     def _list_guis(self):
         for app in list(self.cached_apps):
             if not app: continue
