@@ -196,7 +196,7 @@ class KeyPressAction(AtomicAction):
   '''
   A key press step. Emulates a keyboard key press.
   '''
-  def __init__(self, delta_time, key_code=None, key_name=None):
+  def __init__(self, key_code=None, key_name=None, delta_time=0):
     '''
     Initialize L{KeyPressAction}. Could use either a hardware keycode, 
     a key name, or both.
@@ -213,13 +213,14 @@ class KeyPressAction(AtomicAction):
     if delta_time > release_max: delta_time = release_max
     self._key_name = key_name
     if key_code is None:
-      key_vals = _get_keyval_id(key_name)
+      self.key_op = KeyboardOp()
+      key_vals = self.key_op.get_keyval_id(key_name)
       if not key_vals:
         return
       for key_val in key_vals:
-        key_code = key_val.value
-        break
-    AtomicAction.__init__(self, delta_time, self._keyPress, key_code)
+        AtomicAction.__init__(self, delta_time, self._keyPress, key_val.value)
+    else:
+      AtomicAction.__init__(self, delta_time, self._keyPress, key_code)
 
   def _keyPress(self, key_code):
     '''
@@ -243,7 +244,7 @@ class KeyReleaseAction(AtomicAction):
   '''
   A key release step. Emulates a keyboard key release.
   '''
-  def __init__(self, delta_time, key_code=None, key_name=None):
+  def __init__(self, key_code=None, key_name=None, delta_time=0):
     '''
     Initialize L{KeyReleaseAction}. Could use either a hardware keycode, 
     a key name, or both.
@@ -260,13 +261,14 @@ class KeyReleaseAction(AtomicAction):
     if delta_time > release_max: delta_time = release_max
     self._key_name = key_name
     if key_code is None:
-      key_vals = _get_keyval_id(key_name)
+      self.key_op = KeyboardOp()
+      key_vals = self.key_op.get_keyval_id(key_name)
       if not key_vals:
         return
       for key_val in key_vals:
-        key_code = key_val.value
-        break
-    AtomicAction.__init__(self, delta_time, self._keyRelease, key_code)
+        AtomicAction.__init__(self, delta_time, self._keyRelease, key_val.value)
+    else:
+      AtomicAction.__init__(self, delta_time, self._keyRelease, key_code)
 
   def _keyRelease(self, key_code):
     '''

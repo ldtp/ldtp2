@@ -24,7 +24,7 @@ import pyatspi
 from utils import Utils
 from fnmatch import translate as glob_trans
 from server_exception import LdtpServerException
-from keypress_actions import KeyComboAction
+from keypress_actions import KeyComboAction, KeyPressAction, KeyReleaseAction
 
 class Text(Utils):
     def generatekeyevent(self, data):
@@ -41,6 +41,38 @@ class Text(Utils):
 
         key_combo_action = KeyComboAction(data)
         key_combo_action()
+
+        return 1
+
+    def keypress(self, data):
+        '''
+        Press key. NOTE: keyrelease should be called
+
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+
+        key_press_action = KeyPressAction(key_name = data)
+        key_press_action()
+
+        return 1
+
+    def keyrelease(self, data):
+        '''
+        Release key. NOTE: keypress should be called before this
+
+        @param data: data to type.
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+
+        key_release_action = KeyReleaseAction(key_name = data)
+        key_release_action()
 
         return 1
 
