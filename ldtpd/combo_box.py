@@ -192,7 +192,7 @@ class ComboBox(Utils):
         if not child_obj:
             raise LdtpServerException('Unable to get combo box children')
 
-        if not self._check_state(obj, pyatspi.STATE_VISIBLE):
+        if not self._check_state(child_obj, pyatspi.STATE_VISIBLE):
             self._click_object(obj, 'press')
 
         return 1
@@ -218,7 +218,7 @@ class ComboBox(Utils):
         if not child_obj:
             raise LdtpServerException('Unable to get combo box children')
 
-        if self._check_state(obj, pyatspi.STATE_VISIBLE):
+        if self._check_state(child_obj, pyatspi.STATE_VISIBLE):
             self._click_object(obj, 'press')
 
         return 1
