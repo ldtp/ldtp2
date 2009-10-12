@@ -18,6 +18,7 @@ See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
 '''
+import re
 import pyatspi 
 from utils import Utils
 from server_exception import LdtpServerException
