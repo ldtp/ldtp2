@@ -245,12 +245,11 @@ class ComboBox(Utils):
             if not child_obj:
                 return 0
 
-            if child_obj == pyatspi.ROLE_LIST and \
+            if child_obj.getRole() == pyatspi.ROLE_LIST and \
                     self._check_state(obj, pyatspi.STATE_FOCUSABLE):
                 return 1
-            elif child_obj == pyatspi.ROLE_MENU:
-                if self._check_state(obj, pyatspi.STATE_VISIBLE) and \
-                        self._check_state(obj, pyatspi.STATE_SHOWING):
+            elif child_obj.getRole() == pyatspi.ROLE_MENU:
+                if self._check_state(child_obj, pyatspi.STATE_VISIBLE):
                     return 1
         except:
             pass
@@ -294,10 +293,10 @@ class ComboBox(Utils):
             if not child_obj:
                 return 0
 
-            if child_obj == pyatspi.ROLE_LIST and \
+            if child_obj.getRole() == pyatspi.ROLE_LIST and \
                     not self._check_state(obj, pyatspi.STATE_FOCUSABLE):
                 return 1
-            elif child_obj == pyatspi.ROLE_MENU:
+            elif child_obj.getRole() == pyatspi.ROLE_MENU:
                 if not self._check_state(obj, pyatspi.STATE_VISIBLE) and \
                         not self._check_state(obj, pyatspi.STATE_SHOWING):
                     return 1
