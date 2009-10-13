@@ -117,14 +117,11 @@ class ObjectExistsWaiter(GuiExistsWaiter):
         self._obj_name = obj_name
 
     def poll(self):
-        if not self.top_level:
-            GuiExistsWaiter.poll(self)
-            self.success = False
-        if self.top_level:
-            for name, obj in self._appmap_pairs(self.top_level):
-                if name == self._obj_name:
-                    self.success = True
-                    break
+        try:
+            self._get_object(self._frame_name, self._obj_name)
+            self.success = True
+        except:
+            pass
 
     def event_cb(self, event):
         GuiExistsWaiter.event_cb(self, event)
@@ -136,16 +133,11 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
         self._obj_name = obj_name
 
     def poll(self):
-        GuiNotExistsWaiter.poll(self)
-        if self.success:
-            return
-        
-        for name, obj in self._appmap_pairs(self.top_level):
-            if name == self._obj_name:
-                self.success = False
-                return
-
-        self.success = True
+        try:
+            self._get_object(self._frame_name, self._obj_name)
+            self.success = False
+        except:
+            self.success = True
 
 if __name__ == "__main__":
     waiter = ObjectExistsWaiter('frmCalculator', 'mnuEitanIsaacsonFoo', 0)
