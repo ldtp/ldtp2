@@ -259,7 +259,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: list of integers on success.
         @rtype: list
         '''
-        obj = self._get_object(window_name, object_name)
+        if re.search(';', object_name):
+            obj = self._get_menu_hierarchy(window_name, object_name)
+        else:
+            obj = self._get_object(window_name, object_name)
 
         _state = obj.getState()
         _current_state = _state.getStates()
@@ -284,7 +287,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         '''
         try:
-            obj = self._get_object(window_name, object_name)
+            if re.search(';', object_name):
+                obj = self._get_menu_hierarchy(window_name, object_name)
+            else:
+                obj = self._get_object(window_name, object_name)
 
             _state = obj.getState()
             _obj_state = _state.getStates()
