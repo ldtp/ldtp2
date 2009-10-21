@@ -118,7 +118,10 @@ class ObjectExistsWaiter(GuiExistsWaiter):
 
     def poll(self):
         try:
-            self._get_object(self._frame_name, self._obj_name)
+            if re.search(';', object_name):
+                self._get_menu_hierarchy(self._frame_name, self._obj_name)
+            else:
+                self._get_object(self._frame_name, self._obj_name)
             self.success = True
         except:
             pass
@@ -134,7 +137,10 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
 
     def poll(self):
         try:
-            self._get_object(self._frame_name, self._obj_name)
+            if re.search(';', object_name):
+                self._get_menu_hierarchy(self._frame_name, self._obj_name)
+            else:
+                self._get_object(self._frame_name, self._obj_name)
             self.success = False
         except:
             self.success = True
