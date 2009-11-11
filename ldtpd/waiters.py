@@ -18,7 +18,10 @@ Headers in this file shall remain intact.
 '''
 
 from utils import Utils
-import gobject, pyatspi
+import re
+import gobject
+import pyatspi
+import traceback
 
 _main_loop = gobject.MainLoop()
 
