@@ -25,7 +25,9 @@ import subprocess
 from utils import Utils
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
-    GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter
+    GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter, \
+    MaximizeWindow, MinimizeWindow, UnmaximizeWindow, UnminimizeWindow, \
+    ActivateWindow, CloseWindow
 from server_exception import LdtpServerException
 import os
 import re
@@ -156,6 +158,96 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         '''
         return self.guiexist(window_name, object_name)
+
+    def maximizewindow(self, window_name):
+        '''
+        Maximize a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window maximized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = MaximizeWindow(window_name)
+
+        return int(waiter.run())
+
+    def minimizewindow(self, window_name):
+        '''
+        Minimize a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window minimized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = MinimizeWindow(window_name)
+
+        return int(waiter.run())
+
+    def unmaximizewindow(self, window_name):
+        '''
+        Unmaximize a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window unmaximized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = UnmaximizeWindow(window_name)
+
+        return int(waiter.run())
+
+    def unminimizewindow(self, window_name):
+        '''
+        Unminimize a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window unminimized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = UnminimizeWindow(window_name)
+
+        return int(waiter.run())
+
+    def activatewindow(self, window_name):
+        '''
+        Activate a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window unminimized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = ActivateWindow(window_name)
+
+        return int(waiter.run())
+
+    def closewindow(self, window_name):
+        '''
+        Close a window using wnck
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if window unminimized, 0 if not.
+        @rtype: integer
+        '''
+        waiter = CloseWindow(window_name)
+
+        return int(waiter.run())
 
     def guiexist(self, window_name, object_name=''):
         '''
