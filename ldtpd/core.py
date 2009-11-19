@@ -103,7 +103,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         This is used by client internally to populate all states
         Create a dictionary
         """
-        for state in pyatspi.STATE_INVALID.__enum_values__:
+        for state in pyatspi.STATE_VALUE_TO_NAME.keys():
             self._states[state.__repr__()] = state
         return self._states
 
