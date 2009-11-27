@@ -159,7 +159,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         return self.guiexist(window_name, object_name)
 
-    def maximizewindow(self, window_name):
+    def maximizewindow(self, window_name = None):
         '''
         Maximize a window using wnck
         
@@ -174,7 +174,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def minimizewindow(self, window_name):
+    def minimizewindow(self, window_name = None):
         '''
         Minimize a window using wnck
         
@@ -189,7 +189,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def unmaximizewindow(self, window_name):
+    def unmaximizewindow(self, window_name = None):
         '''
         Unmaximize a window using wnck
         
@@ -204,7 +204,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def unminimizewindow(self, window_name):
+    def unminimizewindow(self, window_name = None):
         '''
         Unminimize a window using wnck
         
@@ -234,7 +234,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def closewindow(self, window_name):
+    def closewindow(self, window_name = None):
         '''
         Close a window using wnck
         
