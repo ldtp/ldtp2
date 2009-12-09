@@ -18,38 +18,38 @@ See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
 '''
+import gc
+import os
+import gtk
 import pyatspi 
 import tempfile
-import gc
-import gtk
-import os
 from base64 import b64encode
 
 from utils import Utils
 from server_exception import LdtpServerException
 
 class Generic(Utils):
-    def imagecapture(self, winName = None, width = None,
-                     height = None, x = 0, y = 0):
-        if winName:
+    def imagecapture(self, window_name = None, x = 0, y = 0,
+                     width = None, height = None):
+        if window_name:
             acc = None
             for gui in self._list_guis():
-                if self._match_name_to_acc(winName, gui):
+                if self._match_name_to_acc(window_name, gui):
                     if 'Component' in pyatspi.listInterfaces(gui):
                         acc = gui
                         break
             if not acc:
-                raise LdtpServerException('No window matches %s' % winName)
+                raise LdtpServerException('No window matches %s' % window_name)
             icomponent = acc.queryComponent()
             bb = icomponent.getExtents(pyatspi.DESKTOP_COORDS)
             x, y, resolution2, resolution1 = bb.x, bb.y, bb.height, bb.width
 
-        window = gtk.gdk.get_default_root_window ()
-        size = window.get_size ()
-        pb = gtk.gdk.Pixbuf (gtk.gdk.COLORSPACE_RGB, False, 8, 
-                             width or size [0], 
-                             height or size [1])
-        pb = pb.get_from_drawable (window, window.get_colormap (),
+        window = gtk.gdk.get_default_root_window()
+        size = window.get_size()
+        pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 
+                            width or size [0], 
+                            height or size [1])
+        pb = pb.get_from_drawable(window, window.get_colormap(),
                                    x, y, 0, 0, 
                                    width or size [0], 
                                    height or size [1])
