@@ -47,6 +47,18 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         return [a[7:] for a in \
                   filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
 
+    def _ebRender(self, failure):
+        '''Custom error render method (used by our XMLRPC objects)'''
+        if isinstance(failure.value, xmlrpclib.Fault):
+            return failure.value
+
+        if hasattr(failure, 'getErrorMessage'):
+            value = failure.getErrorMessage()
+        else:
+            value = 'error'
+
+        return xmlrpclib.Fault(self.FAILURE, value)
+
     def render_POST(self, request):
         request.content.seek(0, 0)
         request.setHeader("content-type", "text/xml")
