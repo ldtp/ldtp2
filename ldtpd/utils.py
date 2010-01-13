@@ -31,6 +31,9 @@ class Utils:
     cached_apps = None
     def __init__(self):
         lazy_load = True
+        self._callback = {}
+        self._window_uptime = {}
+        self._callback_event = []
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
