@@ -34,6 +34,7 @@ import re
 import time
 import pyatspi
 import traceback
+from fnmatch import translate as glob_trans
 
 from menu import Menu
 from text import Text
@@ -53,7 +54,28 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         Utils.__init__(self)
         self._states = {}
         self._get_all_state_names()
+        self._events = ["window:create", "window:destroy"]
+        pyatspi.Registry.registerEventListener(self._event_cb, *self._events)
 
+    def __del__(self):
+        pyatspi.Registry.deregisterEventListener(self._event_cb, *self._events)
+
+    def _event_cb(self, event):
+        if event and event.type == "window:create":
+            for window in self._callback:
+                if event and event.source and window and \
+                        self._match_name_to_acc(window, event.source):
+                    self._callback_event.append(window)
+            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            obj_name = u'%s%s' % (abbrev_role, abbrev_name)
+            self._window_uptime[obj_name] = [event.source_name,
+                                             time.strftime("%Y %m %d %H %M %S")]
+        elif event and event.type == "window:destroy":
+            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            obj_name = u'%s%s' % (abbrev_role, abbrev_name)
+            if obj_name in self._window_uptime:
+                self._window_uptime[obj_name].append( \
+                    time.strftime("%Y %m %d %H %M %S"))
 
     def getapplist(self):
         '''
@@ -142,6 +164,83 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         os.environ['NO_GAIL'] = '1'
         os.environ['NO_AT_BRIDGE'] = '1'
         return process.pid
+
+    def poll_onwindowcreate(self):
+        '''
+        Raise event on window create
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: window name
+        @rtype: string
+        '''
+
+        if not self._callback_event:
+            return ''
+
+        return self._callback_event.pop()
+
+    def windowuptime(self, window_name):
+        '''
+        Get window uptime
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: "starttime - endtime" in string format
+        ex: '2010 01 12 14 21 13 - 2010 01 12 14 23 05'
+        @rtype: string
+        '''
+
+        if window_name in self._window_uptime and \
+                len(self._window_uptime[window_name]) == 3:
+            return '%s-%s' % (self._window_uptime[window_name][1],
+                                self._window_uptime[window_name][2])
+        for window in self._window_uptime:
+            if re.match(glob_trans(window_name), window,
+                        re.M | re.U | re.L) or \
+                        re.match(glob_trans(window_name),
+                                 self._window_uptime[window][0],
+                                 re.M | re.U | re.L):
+                        return '%s-%s' % (self._window_uptime[window][1],
+                                          self._window_uptime[window][2])
+        return ''
+
+    def onwindowcreate(self, window_name):
+        '''
+        Raise event on window create
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if registration was successful, 0 if not.
+        @rtype: integer
+        '''
+
+        self._callback[window_name] = window_name
+
+        return 1
+
+    def removecallback(self, window_name):
+        '''
+        Remove callback of window create
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+
+        @return: 1 if remove was successful, 0 if not.
+        @rtype: integer
+        '''
+
+        if window_name in self._callback:
+            del self._callback[window_name]
+
+        return 1
 
     def objectexist(self, window_name, object_name):
         '''
