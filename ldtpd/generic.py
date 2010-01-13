@@ -31,6 +31,24 @@ from server_exception import LdtpServerException
 class Generic(Utils):
     def imagecapture(self, window_name = None, x = 0, y = 0,
                      width = None, height = None):
+        '''
+        Captures screenshot of the whole desktop or given window
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param x: x co-ordinate value
+        @type x: int
+        @param y: y co-ordinate value
+        @type y: int
+        @param width: width co-ordinate value
+        @type width: int
+        @param height: height co-ordinate value
+        @type height: int
+
+        @return: screenshot with base64 encoded for the client
+        @rtype: string
+        '''
         if window_name:
             acc = None
             for gui in self._list_guis():
