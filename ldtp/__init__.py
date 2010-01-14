@@ -32,7 +32,7 @@ from base64 import b64decode
 from fnmatch import translate as glob_trans
 from client_exception import LdtpExecutionError
 
-_pollWindowCreate = None
+_pollEvents = None
 
 def setHost(host):
     client._client.setHost(host)
@@ -55,7 +55,7 @@ def _populateNamespace(d):
         d[local_name] = getattr(client._client, method)
         d[local_name].__doc__ = client._client.system.methodHelp(method)
 
-class PollWindowCreate:
+class PollEvents:
     def __init__(self):
         self._stop = False
         self._callback = {}
@@ -65,32 +65,53 @@ class PollWindowCreate:
 
     def run(self):
         while not self._stop:
-            time.sleep(1)
-            self.poll_server()
+            status = self.poll_server()
+            if status is False:
+                # Socket error
+                break
+            elif status is None:
+                # No event in queue, sleep a second
+                time.sleep(1)
 
     def poll_server(self):
         if not self._callback:
             return
         try:
-            window_name = poll_onwindowcreate()
+            event = poll_events()
         except socket.error:
-            return
+            return False
 
-        if not window_name:
-            return
+        if not event:
+            return None
+
+        # Event format:
+        # window:create-Untitled Document 1 - gedit
+        event = event.split('-', 1) # Split first -
+        window_name = event[1]
+        event = event[0] # Just event type
+        # self._callback[window][0] - Event type
+        # self._callback[window][1] - Callback function
+        # self._callback[window][2] - Arguments to callback function
         for window in self._callback:
-            if re.match(glob_trans(window), window_name,
-                                        re.M | re.U | re.L):
-                callback = self._callback[window][0]
-                if callable(callback):
-                    try:
-                        args = self._callback[window][1]
-                        if len(args) and args[0]:
-                            callback(*args)
-                        else:
-                            callback()
-                    except:
-                        pass
+            if (event == "onwindowcreate" and \
+                    re.match(glob_trans(window),
+                             window_name, re.M | re.U | re.L)) or \
+                             (event != "onwindowcreate" and \
+                                  self._callback[window][0] == event):
+                             callback = self._callback[window][1]
+                             if callable(callback):
+                                 try:
+                                     args = self._callback[window][2]
+                                     if len(args) and args[0]:
+                                         # If one or more args
+                                         thread.start_new_thread(callback, args)
+                                     else:
+                                         # No args to the callback function
+                                         thread.start_new_thread(callback, ())
+                                         #callback()
+                                 except:
+                                     pass
+        return True
 
 def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
                  width = None, height = None):
@@ -140,7 +161,7 @@ def onwindowcreate(window_name, fn_name, *args):
     @rtype: integer
     '''
 
-    _pollWindowCreate._callback[window_name] = [fn_name, args]
+    _pollEvents._callback[window_name] = ["onwindowcreate", fn_name, args]
     return _remote_onwindowcreate(window_name)
 
 def removecallback(window_name):
@@ -155,9 +176,42 @@ def removecallback(window_name):
     @rtype: integer
     '''
 
-    if window_name in _pollWindowCreate._callback:
-        del _pollWindowCreate._callback[window_name]
+    if window_name in _pollEvents._callback:
+        del _pollEvents._callback[window_name]
     return _remote_removecallback(window_name)
+
+def registerevent(event_name, fn_name, *args):
+    '''
+    Register at-spi event
+
+    @param event_name: Event name in at-spi format.
+    @type event_name: string
+    @param fn_name: Callback function
+    @type fn_name: function
+    @param *args: arguments to be passed to the callback function
+    @type *args: var args
+
+    @return: 1 if registration was successful, 0 if not.
+    @rtype: integer
+    '''
+
+    _pollEvents._callback[event_name] = [event_name, fn_name, args]
+    return _remote_registerevent(event_name)
+
+def removeevent(event_name):
+    '''
+    Remove callback of registered event
+
+    @param event_name: Event name in at-spi format.
+    @type event_name: string
+
+    @return: 1 if registration was successful, 0 if not.
+    @rtype: integer
+    '''
+
+    if event_name in _pollEvents._callback:
+        del _pollEvents._callback[event_name]
+    return _remote_removeevent(event_name)
 
 def windowuptime(window_name):
     '''
@@ -185,7 +239,7 @@ def windowuptime(window_name):
     return None
 
 _populateNamespace(globals())
-_pollWindowCreate = PollWindowCreate()
-thread.start_new_thread(_pollWindowCreate.run, ())
+_pollEvents = PollEvents()
+thread.start_new_thread(_pollEvents.run, ())
 
 atexit.register(client._client.kill_daemon)
