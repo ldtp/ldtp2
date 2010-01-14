@@ -54,27 +54,38 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         Utils.__init__(self)
         self._states = {}
         self._get_all_state_names()
+        # Window up time and onwindowcreate events
         self._events = ["window:create", "window:destroy"]
+        # User registered events
+        self._registered_events = []
         pyatspi.Registry.registerEventListener(self._event_cb, *self._events)
 
     def __del__(self):
         pyatspi.Registry.deregisterEventListener(self._event_cb, *self._events)
+        pyatspi.Registry.deregisterEventListener(self._registered_event_cb,
+                                                 *self._registered_events)
+
+    def _registered_event_cb(self, event):
+        if event and event.source and event.type:
+            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            window_name = u'%s%s' % (abbrev_role, abbrev_name)
+            self._callback_event.append(u"%s-%s" % (event.type, window_name))
 
     def _event_cb(self, event):
         if event and event.type == "window:create":
             for window in self._callback:
                 if event and event.source and window and \
                         self._match_name_to_acc(window, event.source):
-                    self._callback_event.append(window)
+                    self._callback_event.append(u"onwindowcreate-%s" % window)
             abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
-            obj_name = u'%s%s' % (abbrev_role, abbrev_name)
-            self._window_uptime[obj_name] = [event.source_name,
+            win_name = u'%s%s' % (abbrev_role, abbrev_name)
+            self._window_uptime[win_name] = [event.source_name,
                                              time.strftime("%Y %m %d %H %M %S")]
         elif event and event.type == "window:destroy":
             abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
-            obj_name = u'%s%s' % (abbrev_role, abbrev_name)
-            if obj_name in self._window_uptime:
-                self._window_uptime[obj_name].append( \
+            win_name = u'%s%s' % (abbrev_role, abbrev_name)
+            if win_name in self._window_uptime:
+                self._window_uptime[win_name].append( \
                     time.strftime("%Y %m %d %H %M %S"))
 
     def getapplist(self):
@@ -165,13 +176,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         os.environ['NO_AT_BRIDGE'] = '1'
         return process.pid
 
-    def poll_onwindowcreate(self):
+    def poll_events(self):
         '''
-        Raise event on window create
-
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
+        Poll for any registered events or window create events
 
         @return: window name
         @rtype: string
@@ -239,6 +246,48 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         if window_name in self._callback:
             del self._callback[window_name]
+
+        return 1
+
+    def registerevent(self, event_name):
+        '''
+        Register at-spi event
+
+        @param event_name: Event name in at-spi format.
+        @type event_name: string
+
+        @return: 1 if registration was successful, 0 if not.
+        @rtype: integer
+        '''
+
+        pyatspi.Registry.deregisterEventListener( \
+            self._registered_event_cb, *self._registered_events)
+        self._registered_events.append(event_name)
+        pyatspi.Registry.registerEventListener(self._registered_event_cb,
+                                               *self._registered_events)
+
+        return 1
+
+    def removeevent(self, event_name):
+        '''
+        Remove callback of registered event
+
+        @param event_name: Event name in at-spi format.
+        @type event_name: string
+
+        @return: 1 if remove was successful, 0 if not.
+        @rtype: integer
+        '''
+
+        for event in self._registered_events:
+            if event_name == event:
+                pyatspi.Registry.deregisterEventListener( \
+                    self._registered_event_cb, *self._registered_events)
+                del self._registered_events[ \
+                    self._registered_events.index(event)]
+                pyatspi.Registry.registerEventListener( \
+                    self._registered_event_cb, *self._registered_events)
+                break
 
         return 1
 
