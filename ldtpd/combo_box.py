@@ -52,11 +52,12 @@ class LayeredPane(Utils):
                 selectioni = obj.querySelection()
                 selectioni.selectChild(index)
                 try:
-                    # If click action is available, then do it
-                    self._click_object(child)
-                except:
-                    # Incase of exception, just ignore it
-                    pass
+                    try:
+                        # If click action is available, then do it
+                        self._click_object(child)
+                    except:
+                        # Incase of exception, just ignore it
+                        pass
                 finally:
                     return 1
             index += 1
@@ -115,11 +116,12 @@ class LayeredPane(Utils):
                 selectioni = obj.querySelection()
                 selectioni.deselectChild(index)
                 try:
-                    # If click action is available, then do it
-                    self._click_object(child)
-                except:
-                    # Incase of exception, just ignore it
-                    pass
+                    try:
+                        # If click action is available, then do it
+                        self._click_object(child)
+                    except:
+                        # Incase of exception, just ignore it
+                        pass
                 finally:
                     return 1
             index += 1
@@ -324,11 +326,12 @@ class ComboBox(Utils, LayeredPane):
                     selectioni = child_obj.querySelection()
                     selectioni.selectChild(index)
                     try:
-                        # If click action is available, then do it
-                        self._click_object(child)
-                    except:
-                        # Incase of exception, just ignore it
-                        pass
+                        try:
+                            # If click action is available, then do it
+                            self._click_object(child)
+                        except:
+                            # Incase of exception, just ignore it
+                            pass
                     finally:
                         return 1
                 index += 1
