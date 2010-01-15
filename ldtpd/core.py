@@ -283,8 +283,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             if event_name == event:
                 pyatspi.Registry.deregisterEventListener( \
                     self._registered_event_cb, *self._registered_events)
-                del self._registered_events[ \
-                    self._registered_events.index(event)]
+                self._registered_events.remove(event)
                 pyatspi.Registry.registerEventListener( \
                     self._registered_event_cb, *self._registered_events)
                 break
