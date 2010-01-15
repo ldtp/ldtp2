@@ -37,15 +37,16 @@ class Utils:
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
-                self._on_window_event, 'window')
-            Utils.cached_apps = orderedset.OrderedSet()
+                self._on_window_event, 'window:create')
+            Utils.cached_apps = list()
             if lazy_load:
                 for app in self._desktop:
                     if app is None: continue
-                    self.cached_apps.add(app)
+                    self.cached_apps.append(app)
 
     def _on_window_event(self, event):
-        self.cached_apps.add(event.host_application)
+        if event.host_application not in self.cached_apps:
+            self.cached_apps.append(event.host_application)
 
     def _list_apps(self):
         for app in list(self.cached_apps):
@@ -60,7 +61,7 @@ class Utils:
                     if not gui: continue
                     yield gui
             except LookupError:
-                self.cached_apps.discard(app)
+                self.cached_apps.remove(app)
 
     def _ldtpize_accessible(self, acc):
         label_acc = None
