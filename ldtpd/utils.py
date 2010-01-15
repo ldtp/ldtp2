@@ -21,7 +21,6 @@ Headers in this file shall remain intact.
 
 import re
 import pyatspi
-import orderedset
 from re import match as re_match
 from constants import abbreviated_roles
 from fnmatch import translate as glob_trans
