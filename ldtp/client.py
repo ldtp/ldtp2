@@ -53,9 +53,9 @@ class Transport(xmlrpclib.Transport):
             return xmlrpclib.Transport.request(
                 self, host, handler, request_body, verbose=0)
         except SocketError, e:
-            if e.errno == 111 and 'localhost' in host:
+            if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
                 self._spawn_daemon()
-                time.sleep(2)
+                time.sleep(3)
                 # Retry connecting again
                 return xmlrpclib.Transport.request(
                     self, host, handler, request_body, verbose=0)
