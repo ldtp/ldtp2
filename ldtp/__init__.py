@@ -44,6 +44,18 @@ def log(self, *args):
     # Do nothing. For backward compatability
     pass
 
+def startlog(self, *args):
+    # Do nothing. For backward compatability
+    pass
+
+def stoplog(self):
+    # Do nothing. For backward compatability
+    pass
+
+def logFailures(self, *args):
+    # Do nothing. For backward compatability
+    pass
+
 def _populateNamespace(d):
     for method in client._client.system.listMethods():
         if method.startswith('system.'):
@@ -65,13 +77,17 @@ class PollEvents:
 
     def run(self):
         while not self._stop:
-            status = self.poll_server()
-            if status is False:
-                # Socket error
+            try:
+                status = self.poll_server()
+                if status is False:
+                    # Socket error
+                    break
+                elif status is None:
+                    # No event in queue, sleep a second
+                    time.sleep(1)
+            except:
+                self._stop = False
                 break
-            elif status is None:
-                # No event in queue, sleep a second
-                time.sleep(1)
 
     def poll_server(self):
         if not self._callback:
