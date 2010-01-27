@@ -1,4 +1,4 @@
 include examples/*.py
-include ldtpd.sh
+include scripts/ldtp
 include AUTHORS
 include COPYING
