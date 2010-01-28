@@ -305,10 +305,13 @@ class ComboBox(Utils, LayeredPane):
 
         if obj.getRole() == pyatspi.ROLE_LAYERED_PANE:
             return self._lp_selectitem(obj, item_name)
-
-        child_obj = self._get_combo_child_object_type(obj)
-        if not child_obj:
-            raise LdtpServerException('Unable to get combo box children')
+        elif obj.getRole() == pyatspi.ROLE_LIST:
+            # Firefox Preference has ROLE_LIST item as top level object
+            child_obj = obj
+        else:
+            child_obj = self._get_combo_child_object_type(obj)
+            if not child_obj:
+                raise LdtpServerException('Unable to get combo box children')
         if child_obj.getRole() == pyatspi.ROLE_LIST:
             index = 0
             for child in self._list_objects(child_obj):
@@ -324,11 +327,13 @@ class ComboBox(Utils, LayeredPane):
 
                 if self._glob_match(item_name, text):
                     selectioni = child_obj.querySelection()
-                    selectioni.selectChild(index)
+                    print selectioni.selectChild(index)
                     try:
                         try:
+                            # In Firefox Preferences: Action to select
+                            # list item has empty action
                             # If click action is available, then do it
-                            self._click_object(child)
+                            self._click_object(child, action = 'click|')
                         except:
                             # Incase of exception, just ignore it
                             pass
