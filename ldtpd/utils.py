@@ -84,7 +84,7 @@ class Utils:
         _ldtpize_accessible_name = self._ldtpize_accessible(acc)
         _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
                                   _ldtpize_accessible_name[1])
-        if _object_name  == name:
+        if _object_name == name:
             return 1
         if self._glob_match(name, acc.name):
             return 1
