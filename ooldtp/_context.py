@@ -96,6 +96,9 @@ class Component(_Wrapper):
         self._window_name = window_name
         self._object_name = object_name
 
+    def getName(self):
+        return self._object_name
+
     def __repr__(self):
         return 'Component "%s" in "%s"' % \
             (self._object_name, self._window_name)
