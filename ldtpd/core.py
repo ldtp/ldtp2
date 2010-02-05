@@ -53,6 +53,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def __init__(self):
         Utils.__init__(self)
         self._states = {}
+        self._state_names = {}
         self._get_all_state_names()
         # Window up time and onwindowcreate events
         self._events = ["window:create", "window:destroy"]
@@ -138,6 +139,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         """
         for state in pyatspi.STATE_VALUE_TO_NAME.keys():
             self._states[state.__repr__()] = state
+            # Ignore STATE_ string for LDTPv1 compatibility
+            self._state_names[state] = \
+                state.__repr__().lower().partition("state_")[2]
         return self._states
 
     def launchapp(self, cmd, args=[], delay = 5, env = 1):
@@ -495,7 +499,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
 
-        @return: list of integers on success.
+        @return: list of string on success
         @rtype: list
         '''
         if re.search(';', object_name):
@@ -507,7 +511,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         _current_state = _state.getStates()
         _obj_states = []
         for state in _current_state:
-            _obj_states.append(state.real)
+            _obj_states.append(self._state_names[state.real])
         _state.unref()
         return _obj_states
 
@@ -531,8 +535,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             else:
                 obj = self._get_object(window_name, object_name)
 
-            _state = obj.getState()
-            _obj_state = _state.getStates()
+            _state_inst = obj.getState()
+            _obj_state = _state_inst.getStates()
             state = 'STATE_%s' % state.upper()
             if state in self._states and \
                     self._states[state] in _obj_state:
