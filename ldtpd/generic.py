@@ -55,12 +55,25 @@ class Generic(Utils):
                 if self._match_name_to_acc(window_name, gui):
                     if 'Component' in pyatspi.listInterfaces(gui):
                         acc = gui
+                        for obj in self._list_objects(gui):
+                            role = obj.getRole()
+                            if role == pyatspi.ROLE_CHECK_BOX or \
+                                    role == pyatspi.ROLE_PUSH_BUTTON or \
+                                    role == pyatspi.ROLE_RADIO_BUTTON:
+                                try:
+                                    # Try to grab focus
+                                    self._grab_focus(obj)
+                                except:
+                                    pass
+                                # Inner for loop
+                                break
+                        # Outer for loop
                         break
             if not acc:
                 raise LdtpServerException('No window matches %s' % window_name)
             icomponent = acc.queryComponent()
             bb = icomponent.getExtents(pyatspi.DESKTOP_COORDS)
-            x, y, resolution2, resolution1 = bb.x, bb.y, bb.height, bb.width
+            x, y, height, width = bb.x, bb.y, bb.height, bb.width
 
         window = gtk.gdk.get_default_root_window()
         size = window.get_size()
