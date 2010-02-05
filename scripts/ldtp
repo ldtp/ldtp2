@@ -21,4 +21,7 @@ def parse_cmd_line_option():
       sys.exit(0)
 
 parse_cmd_line_option()
-ldtpd.main()
+try:
+   ldtpd.main()
+except KeyboardInterrupt:
+   pass
