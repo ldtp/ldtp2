@@ -182,7 +182,7 @@ class Text(Utils):
         else:
             end = texti.characterCount
 
-        return texti.getText(start, end)
+        return unicode(texti.getText(start, end))
 
     def verifypartialmatch(self, window_name, object_name, partial_text):
         '''
