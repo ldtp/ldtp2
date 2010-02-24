@@ -20,6 +20,7 @@ Headers in this file shall remain intact.
 '''
 import pyatspi 
 from utils import Utils
+from server_exception import LdtpServerException
 
 class PageTabList(Utils):
     def selecttab(self, window_name, object_name, tab_name):
