@@ -100,11 +100,13 @@ class MaximizeWindow(Waiter):
         for w in window_list:
             if self._frame_name:
                 current_window = w.get_name()
-                if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                if re.search(
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then maximize just that window
                     w.maximize()
                     self.success = True
@@ -128,10 +130,12 @@ class MinimizeWindow(Waiter):
             if self._frame_name:
                 current_window = w.get_name()
                 if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then minimize just that window
                     w.minimize()
                     self.success = True
@@ -155,10 +159,12 @@ class UnmaximizeWindow(Waiter):
             if self._frame_name:
                 current_window = w.get_name()
                 if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then unmaximize just that window
                     w.unmaximize()
                     self.success = True
@@ -182,10 +188,12 @@ class UnminimizeWindow(Waiter):
             if self._frame_name:
                 current_window = w.get_name()
                 if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then unminimize just that window
                     w.unminimize(int(time.time()))
                     self.success = True
@@ -209,10 +217,12 @@ class ActivateWindow(Waiter):
             if self._frame_name:
                 current_window = w.get_name()
                 if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then activate just that window
                     w.activate(int(time.time()))
                     self.success = True
@@ -234,10 +244,12 @@ class CloseWindow(Waiter):
             if self._frame_name:
                 current_window = w.get_name()
                 if re.search( \
-                    fnmatch.translate(self._frame_name), current_window, re.I) \
+                    fnmatch.translate(self._frame_name), current_window,
+                    re.U | re.M | re.L) \
                     or re.search(fnmatch.translate(re.sub("(^frm)|(^dlg)", "",
                                                           self._frame_name)),
-                                 re.sub(" *(\t*)|(\n*)", "", current_window), re.I):
+                                 re.sub(" *(\t*)|(\n*)", "", current_window),
+                                 re.U | re.M | re.L):
                     # If window name specified, then close just that window
                     w.close(int(time.time()))
                     self.success = True
@@ -279,17 +291,27 @@ class GuiNotExistsWaiter(Waiter):
             self.success = True
 
 class ObjectExistsWaiter(GuiExistsWaiter):
-    def __init__(self, frame_name, obj_name, timeout):
+    def __init__(self, frame_name, obj_name, timeout, state = ''):
         GuiExistsWaiter.__init__(self, frame_name, timeout)
         self._obj_name = obj_name
+        self._state = state
 
     def poll(self):
         try:
             if re.search(';', self._obj_name):
-                self._get_menu_hierarchy(self._frame_name, self._obj_name)
+                obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
             else:
-                self._get_object(self._frame_name, self._obj_name)
-            self.success = True
+                obj = self._get_object(self._frame_name, self._obj_name)
+            if self._state:
+                _state_inst = obj.getState()
+                _obj_state = _state_inst.getStates()
+                state = 'STATE_%s' % self._state.upper()
+                print self._state, state, self._states
+                if state in self._states and \
+                        self._states[state] in _obj_state:
+                    self.success = True
+            else:
+                self.success = True
         except:
             pass
 
