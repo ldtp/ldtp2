@@ -30,9 +30,12 @@ class Utils:
     cached_apps = None
     def __init__(self):
         lazy_load = True
+        self._states = {}
+        self._state_names = {}
         self._callback = {}
         self._window_uptime = {}
         self._callback_event = []
+        self._get_all_state_names()
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
@@ -42,6 +45,18 @@ class Utils:
                 for app in self._desktop:
                     if app is None: continue
                     self.cached_apps.append(app)
+
+    def _get_all_state_names(self):
+        """
+        This is used by client internally to populate all states
+        Create a dictionary
+        """
+        for state in pyatspi.STATE_VALUE_TO_NAME.keys():
+            self._states[state.__repr__()] = state
+            # Ignore STATE_ string for LDTPv1 compatibility
+            self._state_names[state] = \
+                state.__repr__().lower().partition("state_")[2]
+        return self._states
 
     def _on_window_event(self, event):
         if event.host_application not in self.cached_apps:
@@ -253,7 +268,7 @@ class Utils:
                 return gui
         return None
 
-    def _get_object(self, window_name, obj_name):
+    def _get_object_info(self, window_name, obj_name):
         _window_handle = self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
@@ -262,9 +277,13 @@ class Utils:
             if self._glob_match(obj_name, obj_index) or \
                     self._match_name_to_acc(obj_name, obj) or \
                     self._match_name_to_appmap(obj_name, name):
-                return obj
+                return name, obj, obj_index
         raise LdtpServerException(
             'Unable to find object name "%s" in application map' % obj_name)
+
+    def _get_object(self, window_name, obj_name):
+        name, obj, obj_index = self._get_object_info(window_name, obj_name)
+        return obj
 
     def _grab_focus(self, obj):
         try:
