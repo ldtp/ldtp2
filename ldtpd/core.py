@@ -431,7 +431,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
-    def waittillguinotexist(self, window_name, object_name='', guiTimeOut=30, state = ''):
+    def waittillguinotexist(self, window_name, object_name='', guiTimeOut=30):
         '''
         Wait till a window does not exist.
         
@@ -443,8 +443,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @type object_name: string
         @param guiTimeOut: Wait timeout in seconds
         @type guiTimeOut: integer
-        @param state: Object state used only when object_name is provided.
-        @type object_name: string
 
         @return: 1 if GUI has gone away, 0 if not.
         @rtype: integer
