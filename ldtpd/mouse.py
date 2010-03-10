@@ -19,6 +19,7 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
+import time
 import pyatspi 
 from utils import Utils
 from server_exception import LdtpServerException
@@ -135,7 +136,7 @@ class Mouse(Utils):
                                  _coordinates.y + _coordinates.height / 2,
                                  'b1d')
 
-    def simulatemousemove(self, source_x, source_y, dest_x, dest_y):
+    def simulatemousemove(self, source_x, source_y, dest_x, dest_y, delay = 0.0):
         """
         @param source_x: Source X
         @type source_x: integer
@@ -145,6 +146,8 @@ class Mouse(Utils):
         @type dest_x: integer
         @param dest_y: Dest Y
         @type dest_y: integer
+        @param delay: Sleep time between the mouse move
+        @type delay: double
 
         @return: 1 if simulation was successful, 0 if not.
         @rtype: integer
@@ -185,6 +188,8 @@ class Mouse(Utils):
                     # If source Y equal to dest Y
                     # then don't process Y co-ordinate
                     y_flag = True
+            if delay:
+                time.sleep(delay)
             # Start mouse move from source_x, source_y to dest_x, dest_y
             self.generatemouseevent(source_x, source_y, 'abs')
             if source_x == dest_x and source_y == dest_y:
