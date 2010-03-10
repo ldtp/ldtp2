@@ -397,6 +397,10 @@ class ComboBox(Utils, LayeredPane):
                 index += 1
         raise LdtpServerException('Unable to select item index')
 
+    # Since selectindex and comboselectindex implementation are same,
+    # for backward compatibility let us assign selectindex to comboselectindex
+    comboselectindex = selectindex
+
     def getallitem(self, window_name, object_name):
         '''
         Select combo box item
