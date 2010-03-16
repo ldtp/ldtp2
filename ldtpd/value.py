@@ -497,12 +497,12 @@ class Value(Utils):
             raise LdtpServerException('Value cannot be entered into object.')
 
         i = 0
-        max = valuei.maximumValue / 8;
+        maxValue = valuei.maximumValue / 8;
         flag = False
         while i < iterations:
             if valuei.currentValue >= valuei.maximumValue:
                 raise LdtpServerException('Maximum limit reached')
-            valuei.currentValue += max
+            valuei.currentValue += maxValue
             time.sleep(1.0/100)
             flag = True
             i += 1
@@ -538,12 +538,12 @@ class Value(Utils):
             raise LdtpServerException('Value cannot be entered into object.')
 
         i = 0
-        min = valuei.maximumValue / 8;
+        minValue = valuei.maximumValue / 8
         flag = False
         while i < iterations:
             if valuei.currentValue < valuei.minimumValue:
                 raise LdtpServerException('Minimum limit reached')
-            valuei.currentValue -= min
+            valuei.currentValue -= minValue
             time.sleep(1.0/100)
             flag = True
             i += 1
