@@ -137,7 +137,10 @@ class Utils:
         if obj:
             yield obj
             for child in obj:
-                if child.getRole() == pyatspi.ROLE_TABLE_CELL and not self._handle_table_cell:
+                if child.getRole() == pyatspi.ROLE_TABLE_CELL and \
+                        not self._handle_table_cell:
+                    # In OO.o navigating table cells consumes more time
+                    # resource
                     break
                 for c in self._list_objects(child):
                     yield c
