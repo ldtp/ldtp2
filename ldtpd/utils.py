@@ -36,6 +36,7 @@ class Utils:
         self._window_uptime = {}
         self._callback_event = []
         self._get_all_state_names()
+        self._handle_table_cell = False
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
@@ -136,6 +137,8 @@ class Utils:
         if obj:
             yield obj
             for child in obj:
+                if child.getRole() == pyatspi.ROLE_TABLE_CELL and not self._handle_table_cell:
+                    break
                 for c in self._list_objects(child):
                     yield c
 
