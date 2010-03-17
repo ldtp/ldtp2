@@ -281,7 +281,6 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Text cannot be entered into object.')
 
-        print dir(texti)
         texti.setTextContents('%s%s' % (texti.getText(0, texti.characterCount),
                                         data.encode('utf-8')))
         return 1

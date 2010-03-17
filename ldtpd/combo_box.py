@@ -327,7 +327,7 @@ class ComboBox(Utils, LayeredPane):
 
                 if self._glob_match(item_name, text):
                     selectioni = child_obj.querySelection()
-                    print selectioni.selectChild(index)
+                    selectioni.selectChild(index)
                     try:
                         try:
                             # In Firefox Preferences: Action to select
