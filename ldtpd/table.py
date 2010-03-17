@@ -76,12 +76,23 @@ class Table(Utils):
                 if not cell:
                     continue
                 if cell.childCount > 0:
-                    children = self._list_objects(cell)
-                    for child in children:
-                        if self._match_name_to_acc(row_text, child):
-                            self._grab_focus(child)
-                            cell.unref()
-                            return 1
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if self._match_name_to_acc(row_text, child):
+                                self._grab_focus(child)
+                                cell.unref()
+                                return 1
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                         self._grab_focus(cell)
                         cell.unref()
@@ -118,12 +129,23 @@ class Table(Utils):
                 if not cell:
                     continue
                 if cell.childCount > 0:
-                    children = self._list_objects(cell)
-                    for child in children:
-                        if re.search(row_text, child.name):
-                            self._grab_focus(child)
-                            cell.unref()
-                            return 1
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if re.search(row_text, child.name):
+                                self._grab_focus(child)
+                                cell.unref()
+                                return 1
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                         self._grab_focus(cell)
                         cell.unref()
@@ -211,15 +233,26 @@ class Table(Utils):
         cell = self._get_accessible_at_row_column(obj, row_index, column)
         name = None
         if cell.childCount > 0:
-            children = self._list_objects(cell)
-            for child in children:
-                try:
-                    texti = child.queryText()
-                except NotImplementedError:
-                    continue
-                name = child.name
-                self._grab_focus(cell)
-                break
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
+                    flag = True
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        texti = child.queryText()
+                    except NotImplementedError:
+                        continue
+                    name = child.name
+                    self._grab_focus(cell)
+                    break
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
         else:
             name = cell.name
             self._grab_focus(cell)
@@ -251,17 +284,28 @@ class Table(Utils):
         cell = self._get_accessible_at_row_column(obj, row_index, column)
         flag = None
         if cell.childCount > 0:
-            children = self._list_objects(cell)
-            for child in children:
-                try:
-                    actioni = child.queryAction()
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
                     flag = True
-                    if not self._check_state(child, pyatspi.STATE_CHECKED):
-                        self._click_object(child, 'toggle')
-                except NotImplementedError:
-                    continue
-                self._grab_focus(cell)
-                break
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        actioni = child.queryAction()
+                        flag = True
+                        if not self._check_state(child, pyatspi.STATE_CHECKED):
+                            self._click_object(child, 'toggle')
+                    except NotImplementedError:
+                        continue
+                    self._grab_focus(cell)
+                    break
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
         else:
             try:
                 actioni = cell.queryAction()
@@ -299,16 +343,27 @@ class Table(Utils):
         cell = self._get_accessible_at_row_column(obj, row_index, column)
         flag = None
         if cell.childCount > 0:
-            children = self._list_objects(cell)
-            for child in children:
-                try:
-                    actioni = child.queryAction()
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
                     flag = True
-                    self._click_object(child, 'expand or contract')
-                    self._grab_focus(cell)
-                    break
-                except NotImplementedError:
-                    continue
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        actioni = child.queryAction()
+                        flag = True
+                        self._click_object(child, 'expand or contract')
+                        self._grab_focus(cell)
+                        break
+                    except NotImplementedError:
+                        continue
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
         else:
             try:
                 actioni = cell.queryAction()
@@ -345,17 +400,28 @@ class Table(Utils):
         cell = self._get_accessible_at_row_column(obj, row_index, column)
         flag = None
         if cell.childCount > 0:
-            children = self._list_objects(cell)
-            for child in children:
-                try:
-                    actioni = child.queryAction()
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
                     flag = True
-                    if self._check_state(child, pyatspi.STATE_CHECKED):
-                        self._click_object(child, 'toggle')
-                except NotImplementedError:
-                    continue
-                self._grab_focus(cell)
-                break
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        actioni = child.queryAction()
+                        flag = True
+                        if self._check_state(child, pyatspi.STATE_CHECKED):
+                            self._click_object(child, 'toggle')
+                    except NotImplementedError:
+                        continue
+                    self._grab_focus(cell)
+                    break
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
         else:
             try:
                 actioni = cell.queryAction()
@@ -399,12 +465,23 @@ class Table(Utils):
                 if not cell:
                     continue
                 if cell.childCount > 0:
-                    children = self._list_objects(cell)
-                    for child in children:
-                        if self._match_name_to_acc(row_text, child):
-                            self._grab_focus(child)
-                            cell.unref()
-                            return i
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if self._match_name_to_acc(row_text, child):
+                                self._grab_focus(child)
+                                cell.unref()
+                                return i
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                     self._grab_focus(cell)
                     cell.unref()
@@ -464,16 +541,27 @@ class Table(Utils):
                 if not cell:
                     continue
                 if cell.childCount > 0:
-                    children = self._list_objects(cell)
-                    for child in children:
-                        if self._match_name_to_acc(row_text, child):
-                            self._grab_focus(child)
-                            size = self._get_size(cell)
-                            self._mouse_event(size.x + size.width / 2,
-                                              size.y + size.height / 2,
-                                              'b1c')
-                            cell.unref()
-                            return i
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if self._match_name_to_acc(row_text, child):
+                                self._grab_focus(child)
+                                size = self._get_size(cell)
+                                self._mouse_event(size.x + size.width / 2,
+                                                  size.y + size.height / 2,
+                                                  'b1c')
+                                cell.unref()
+                                return i
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                     self._grab_focus(cell)
                     size = self._get_size(cell)
@@ -514,16 +602,27 @@ class Table(Utils):
                 if not cell:
                     continue
                 if cell.childCount > 0:
-                    children = self._list_objects(cell)
-                    for child in children:
-                        if self._match_name_to_acc(row_text, child):
-                            self._grab_focus(child)
-                            size = self._get_size(cell)
-                            self._mouse_event(size.x + size.width / 2,
-                                              size.y + size.height / 2,
-                                              'b1d')
-                            cell.unref()
-                            return i
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if self._match_name_to_acc(row_text, child):
+                                self._grab_focus(child)
+                                size = self._get_size(cell)
+                                self._mouse_event(size.x + size.width / 2,
+                                                  size.y + size.height / 2,
+                                                  'b1d')
+                                cell.unref()
+                                return i
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                     self._grab_focus(cell)
                     size = self._get_size(cell)
