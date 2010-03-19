@@ -40,7 +40,7 @@ class Utils:
         self._desktop = pyatspi.Registry.getDesktop(0)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
-                self._on_window_event, 'window:create')
+                self._on_window_event, 'window')
             Utils.cached_apps = list()
             if lazy_load:
                 for app in self._desktop:
