@@ -88,8 +88,18 @@ class Utils:
                         relationType == pyatspi.RELATION_CONTROLLED_BY:
                     label_acc = rel.getTarget(i)
                     break
-        return abbreviated_roles.get(acc.getRole(), 'ukn'), \
-            (label_acc or acc).name.replace(' ', '').rstrip(':.')
+        role = acc.getRole()
+        if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
+                role == pyatspi.ROLE_WINDOW or \
+                role == pyatspi.ROLE_FONT_CHOOSER or \
+                role == pyatspi.ROLE_FILE_CHOOSER or \
+                role == pyatspi.ROLE_ALERT or \
+                role == pyatspi.ROLE_COLOR_CHOOSER:
+            strip = '( |\n)'
+        else:
+            strip = '( |:|\.|_|\n)'
+        return abbreviated_roles.get(role, 'ukn'), \
+            re.sub(strip, '', (label_acc or acc).name)
 
     def _glob_match(self, pattern, string):
         return bool(re_match(glob_trans(pattern), string, re.M | re.U | re.L))
