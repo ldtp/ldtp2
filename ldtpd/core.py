@@ -65,7 +65,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def _registered_event_cb(self, event):
         if event and event.source and event.type:
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            try:
+                abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            except:
+                return
             window_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._callback_event.append(u"%s-%s" % (event.type, window_name))
 
@@ -75,12 +78,18 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 if event and event.source and window and \
                         self._match_name_to_acc(window, event.source):
                     self._callback_event.append(u"onwindowcreate-%s" % window)
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            try:
+                abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            except:
+                return
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._window_uptime[win_name] = [event.source_name,
                                              time.strftime("%Y %m %d %H %M %S")]
         elif event and event.type == "window:destroy":
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            try:
+                abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            except:
+                return
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             if win_name in self._window_uptime:
                 self._window_uptime[win_name].append( \
@@ -109,7 +118,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         window_list = []
         window_type = {}
         for gui in self._list_guis():
-            window_name = self._ldtpize_accessible(gui)
+            try:
+                window_name = self._ldtpize_accessible(gui)
+            except:
+                continue
             if window_name[1] == '':
                 if window_name[0] in window_type:
                     window_type[window_name[0]] += 1
@@ -814,7 +826,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                     for pname, pobj in cached_list:
                         if obj in pobj: # avoid double link issues
                             return pname
-                    _parent = self._ldtpize_accessible(obj.parent)
+                    try:
+                        _parent = self._ldtpize_accessible(obj.parent)
+                    except:
+                        continue
                     return u'%s%s' % (_parent[0], _parent[1])
                 cached_list.insert(0, (name, obj))
 
@@ -828,7 +843,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             obj = self._get_object(window_name, object_name)
             for i in range(obj.childCount):
                 child_obj = obj.getChildAtIndex(i)
-                child_name = self._ldtpize_accessible(child_obj)
+                try:
+                    child_name = self._ldtpize_accessible(child_obj)
+                except:
+                    continue
                 child_obj.unref()
                 child_name = u'%s%s' % (child_name[0], child_name[1])
                 if children:

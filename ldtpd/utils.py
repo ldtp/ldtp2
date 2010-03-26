@@ -105,32 +105,35 @@ class Utils:
         return bool(re_match(glob_trans(pattern), string, re.M | re.U | re.L))
 
     def _match_name_to_acc(self, name, acc):
-        if acc.name == name:
-            return 1
-        _ldtpize_accessible_name = self._ldtpize_accessible(acc)
-        _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
-                                  _ldtpize_accessible_name[1])
-        if _object_name == name:
-            return 1
-        if self._glob_match(name, acc.name):
-            return 1
-        if self._glob_match(name, _object_name):
-            return 1
-        role = acc.getRole()
-        if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
-                role == pyatspi.ROLE_WINDOW or \
-                role == pyatspi.ROLE_FONT_CHOOSER or \
-                role == pyatspi.ROLE_FILE_CHOOSER or \
-                role == pyatspi.ROLE_ALERT or \
-                role == pyatspi.ROLE_COLOR_CHOOSER:
-            strip = '( |\n)'
-        else:
-            strip = '( |:|\.|_|\n)'
-        _tmp_name = re.sub(strip, '', name)
-        if self._glob_match(_tmp_name, _object_name):
-            return 1
-        if self._glob_match(_tmp_name, _ldtpize_accessible_name[1]):
-            return 1
+        try:
+            if acc.name == name:
+                return 1
+            _ldtpize_accessible_name = self._ldtpize_accessible(acc)
+            _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
+                                      _ldtpize_accessible_name[1])
+            if _object_name == name:
+                return 1
+            if self._glob_match(name, acc.name):
+                return 1
+            if self._glob_match(name, _object_name):
+                return 1
+            role = acc.getRole()
+            if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
+                    role == pyatspi.ROLE_WINDOW or \
+                    role == pyatspi.ROLE_FONT_CHOOSER or \
+                    role == pyatspi.ROLE_FILE_CHOOSER or \
+                    role == pyatspi.ROLE_ALERT or \
+                    role == pyatspi.ROLE_COLOR_CHOOSER:
+                strip = '( |\n)'
+            else:
+                strip = '( |:|\.|_|\n)'
+            _tmp_name = re.sub(strip, '', name)
+            if self._glob_match(_tmp_name, _object_name):
+                return 1
+            if self._glob_match(_tmp_name, _ldtpize_accessible_name[1]):
+                return 1
+        except:
+            pass
         return 0
 
     def _match_name_to_appmap(self, name, appmap_name):
@@ -147,10 +150,10 @@ class Utils:
         if obj:
             yield obj
             for child in obj:
-                if child.getRole() == pyatspi.ROLE_TABLE_CELL and \
+                if child and child.getRole() == pyatspi.ROLE_TABLE_CELL and \
                         not self._handle_table_cell:
                     # In OO.o navigating table cells consumes more time
-                    # resource
+                    # and resource
                     break
                 for c in self._list_objects(child):
                     yield c
@@ -160,34 +163,42 @@ class Utils:
         This function will check for all levels and returns the first
         matching LIST / MENU type
         """
-        if obj:
-            for child in obj:
-                if not child:
-                    continue
-                if child.childCount > 0:
-                    child_obj = self._get_combo_child_object_type(child)
-                    if child_obj:
-                        return child_obj
-                if child.getRole() == pyatspi.ROLE_LIST:
-                    return child
-                elif child.getRole() == pyatspi.ROLE_MENU:
-                    return child
+        try:
+            if obj:
+                for child in obj:
+                    if not child:
+                        continue
+                    if child.childCount > 0:
+                        child_obj = self._get_combo_child_object_type(child)
+                        if child_obj:
+                            return child_obj
+                    if child.getRole() == pyatspi.ROLE_LIST:
+                        return child
+                    elif child.getRole() == pyatspi.ROLE_MENU:
+                        return child
+        except:
+            pass
+        return None
 
     def _get_child_object_type(self, obj, role_type):
         """
         This function will check for all levels and returns the first
         matching role_type
         """
-        if obj and role_type:
-            for child in obj:
-                if not child:
-                    continue
-                if child.childCount > 0:
-                    child_obj = self._get_child_object_type(child, role_type)
+        try:
+            if obj and role_type:
+                for child in obj:
+                    if not child:
+                        continue
+                    if child.childCount > 0:
+                        child_obj = self._get_child_object_type(child, role_type)
                     if child_obj:
                         return child_obj
-                if child.getRole() == role_type:
-                    return child
+                    if child.getRole() == role_type:
+                        return child
+        except:
+            pass
+        return None
 
     def _appmap_pairs(self, gui):
         ldtpized_list = []
