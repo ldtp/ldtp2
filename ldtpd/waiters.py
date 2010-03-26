@@ -44,7 +44,7 @@ class Waiter(Utils):
 
         if self.success or self.timeout == 0:
             return self.success
-        
+
         gobject.timeout_add_seconds(1, self._timeout_cb)
         if self.events:
             pyatspi.Registry.registerEventListener(
