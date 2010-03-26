@@ -1,3 +1,11 @@
+LDTP 2.0.4 released Download - Thursday March 25 2010
+ LDTPv2 hang in Ubuntu 10.04 is fixed
+ Don't navigate table cell, as it causes more resource and time in OpenOffice calc
+ Added new API simulatemousemove for DnD functionality
+ Patch by Ara Pulido for b.g.o bug # 612311
+ Listen all Window events, else new application like Firefox is not listed
+ waittillguiexist now can wait for state as well
+ hasstate can wait for given time till the state is True
 LDTP 2.0.3 released Download - Wednesday Feb 10 2010
 LDTP 2.0.2 released Download - Tuesday Jan 26 2010
 LDTP 2.0.1 released Download - Monday Jan 18 2010 
