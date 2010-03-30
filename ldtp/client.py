@@ -20,6 +20,8 @@ Headers in this file shall remain intact.
 import os
 import sys
 import time
+import signal
+import traceback
 import xmlrpclib
 import subprocess
 from socket import error as SocketError
@@ -44,9 +46,8 @@ class _Method(xmlrpclib._Method):
         
 class Transport(xmlrpclib.Transport):
     def _spawn_daemon(self):
-        self._daemon = subprocess.Popen(
-            ['python', '-c', 'import ldtpd; ldtpd.main()'],
-            close_fds = True)
+        self._daemon = os.spawnlp(os.P_NOWAIT, 'python',
+                                  'python', '-c', 'import ldtpd; ldtpd.main()')
 
     def request(self, host, handler, request_body, verbose=0):
         try:
@@ -71,7 +72,8 @@ class Transport(xmlrpclib.Transport):
 
     def kill_daemon(self):
         try:
-            self._daemon.kill()
+            # SIGKILL       9       Term    Kill signal
+            os.kill(self._daemon, 9)
         except AttributeError:
             pass
 
