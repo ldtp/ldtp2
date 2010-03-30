@@ -27,10 +27,20 @@ def main(port=4118):
     from twisted.internet import reactor
     from twisted.web import server, xmlrpc
     from xmlrpc_daemon import XMLRPCLdtpd
+    import twisted.internet
+    import socket
     import pyatspi
+    import traceback
 
-    pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
-    r = XMLRPCLdtpd()
-    xmlrpc.addIntrospection(r)
-    reactor.listenTCP(port, server.Site(r))
-    reactor.run()
+    try:
+        pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
+        r = XMLRPCLdtpd()
+        xmlrpc.addIntrospection(r)
+        reactor.listenTCP(port, server.Site(r))
+        reactor.run()
+    except twisted.internet.error.CannotListenError:
+        if os.environ.has_key('LDTP_DEBUG'):
+            print traceback.format_exc()
+    except socket.error:
+        if os.environ.has_key('LDTP_DEBUG'):
+            print traceback.format_exc()

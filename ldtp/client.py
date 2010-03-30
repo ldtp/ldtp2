@@ -50,22 +50,26 @@ class Transport(xmlrpclib.Transport):
                                   'python', '-c', 'import ldtpd; ldtpd.main()')
 
     def request(self, host, handler, request_body, verbose=0):
-        try:
-            return xmlrpclib.Transport.request(
-                self, host, handler, request_body, verbose=0)
-        except SocketError, e:
-            if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
-                self._spawn_daemon()
-                time.sleep(3)
-                # Retry connecting again
+        count = 1
+        while True:
+            try:
                 return xmlrpclib.Transport.request(
                     self, host, handler, request_body, verbose=0)
-            raise
-        except xmlrpclib.Fault, e:
-            if e.faultCode == ERROR_CODE:
-                raise LdtpExecutionError(e.faultString)
-            else:
-                raise e
+            except SocketError, e:
+                if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
+                    self._spawn_daemon()
+                    time.sleep(3 * count)
+                    # Retry connecting again
+                    if count <= 5:
+                        count += 1
+                        continue
+                # else raise exception
+                raise
+            except xmlrpclib.Fault, e:
+                if e.faultCode == ERROR_CODE:
+                    raise LdtpExecutionError(e.faultString)
+                else:
+                    raise e
 
     def __del__(self):
         self.kill_daemon()
