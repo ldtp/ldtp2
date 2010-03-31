@@ -141,7 +141,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def isalive(self):
         return True
 
-    def launchapp(self, cmd, args=[], delay = 5, env = 1):
+    def launchapp(self, cmd, args=[], delay = 0, env = 1):
         '''
         Launch application.
 
