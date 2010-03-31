@@ -50,18 +50,19 @@ class Transport(xmlrpclib.Transport):
                                   'python', '-c', 'import ldtpd; ldtpd.main()')
 
     def request(self, host, handler, request_body, verbose=0):
-        count = 1
+        retry_count = 1
         while True:
             try:
                 return xmlrpclib.Transport.request(
                     self, host, handler, request_body, verbose=0)
             except SocketError, e:
                 if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
-                    self._spawn_daemon()
-                    time.sleep(3 * count)
+                    if retry_count == 1:
+                        self._spawn_daemon()
+                    time.sleep(3 * retry_count)
                     # Retry connecting again
-                    if count <= 5:
-                        count += 1
+                    if retry_count <= 5:
+                        retry_count += 1
                         continue
                 # else raise exception
                 raise
