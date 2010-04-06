@@ -69,18 +69,6 @@ class Context(_Wrapper):
         return args and 'window_name' == args[0]
     _isRelevant = classmethod(_isRelevant)
 
-    def getchild(self, child_name='', role=''):
-        # TODO: Bad API choice. Inconsistent, should return object or list,
-        # not both. UPDATE: Only returns first match.
-        matches = self._remote_getchild(child_name, role, True)
-        if matches: 
-            if role:
-                return [Component(self._window_name, matches[0])]
-            else:
-                return Component(self._window_name, matches[0])
-        else:
-            return None
-    
 class _ContextFuncWrapper:
     def __init__(self, window_name, func):
         self._window_name = window_name
@@ -99,6 +87,18 @@ class Component(_Wrapper):
     def getName(self):
         return self._object_name
 
+    def getchild(self, child_name='', role=''):
+        # TODO: Bad API choice. Inconsistent, should return object or list,
+        # not both. UPDATE: Only returns first match.
+        matches = self._remote_getchild(child_name, role, True)
+        if matches: 
+            if role:
+                return [Component(self._window_name, matches[0])]
+            else:
+                return Component(self._window_name, matches[0])
+        else:
+            return None
+    
     def __repr__(self):
         return 'Component "%s" in "%s"' % \
             (self._object_name, self._window_name)
