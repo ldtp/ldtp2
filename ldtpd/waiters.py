@@ -61,7 +61,13 @@ class Waiter(Utils):
         self._timeout_count += 1
         self.poll()
         if self._timeout_count >= self.timeout or self.success:
-            gtk.main_quit()
+            try:
+                if gtk.main_level():
+                    gtk.main_quit()
+            except RuntimeError:
+                # In Mandriva RuntimeError exception is thrown
+                # If, gtk.main is already quit
+                pass
             return False
         return True
     
@@ -71,7 +77,13 @@ class Waiter(Utils):
     def _event_cb(self, event):
         self.event_cb(event)
         if self.success:
-            gtk.main_quit()
+            try:
+                if gtk.main_level():
+                    gtk.main_quit()
+            except RuntimeError:
+                # In Mandriva RuntimeError exception is thrown
+                # If, gtk.main is already quit
+                pass
 
     def event_cb(self, event):
         pass
