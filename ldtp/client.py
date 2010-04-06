@@ -29,6 +29,10 @@ from socket import error as SocketError
 from client_exception import LdtpExecutionError, ERROR_CODE
 from log import logger
 
+if os.environ.has_key('LDTP_DEBUG'):
+    _ldtp_debug = os.environ['LDTP_DEBUG']
+else:
+    _ldtp_debug = None
 if os.environ.has_key('LDTP_SERVER_ADDR'):
     _ldtp_server_addr = os.environ['LDTP_SERVER_ADDR']
 else:
@@ -49,11 +53,14 @@ class Transport(xmlrpclib.Transport):
     def _handle_signal(self, signum, frame):
         if os.environ.has_key('LDTP_DEBUG'):
             if signum == signal.SIGCHLD:
-                print "ldtpd exited!"
+                if _ldtp_debug:
+                    print "ldtpd exited!"
             elif signum == signal.SIGUSR1:
-                print "SIGUSR1 received. ldtpd ready for requests."
+                if _ldtp_debug:
+                    print "SIGUSR1 received. ldtpd ready for requests."
             elif signum == signal.SIGALRM:
-                print "SIGALRM received. Timeout waiting for SIGUSR1."
+                if _ldtp_debug:
+                    print "SIGALRM received. Timeout waiting for SIGUSR1."
 
     def _spawn_daemon(self):
         pid = os.getpid()
