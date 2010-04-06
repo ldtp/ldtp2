@@ -24,6 +24,7 @@ import signal
 import traceback
 import xmlrpclib
 import subprocess
+import signal
 from socket import error as SocketError
 from client_exception import LdtpExecutionError, ERROR_CODE
 from log import logger
@@ -45,9 +46,20 @@ class _Method(xmlrpclib._Method):
         return self.__send(self.__name, args)
         
 class Transport(xmlrpclib.Transport):
+    def _handle_signal(self, signum, frame):
+        if os.environ.has_key('LDTP_DEBUG'):
+            if signum == signal.SIGCHLD:
+                print "ldtpd exited!"
+            elif signum == signal.SIGUSR1:
+                print "SIGUSR1 received. ldtpd ready for requests."
+            elif signum == signal.SIGALRM:
+                print "SIGALRM received. Timeout waiting for SIGUSR1."
+
     def _spawn_daemon(self):
+        pid = os.getpid()
+        pycmd = 'import ldtpd; ldtpd.main(parentpid=%s)' % pid
         self._daemon = os.spawnlp(os.P_NOWAIT, 'python',
-                                  'python', '-c', 'import ldtpd; ldtpd.main()')
+                                  'python', '-c', pycmd)
 
     def request(self, host, handler, request_body, verbose=0):
         retry_count = 1
@@ -58,12 +70,21 @@ class Transport(xmlrpclib.Transport):
             except SocketError, e:
                 if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
                     if retry_count == 1:
-                        self._spawn_daemon()
-                    time.sleep(3 * retry_count)
-                    # Retry connecting again
-                    if retry_count <= 5:
                         retry_count += 1
+                        sigusr1 = signal.signal(signal.SIGUSR1, self._handle_signal)
+                        sigalrm = signal.signal(signal.SIGALRM, self._handle_signal)
+                        sigchld = signal.signal(signal.SIGCHLD, self._handle_signal)
+                        self._spawn_daemon()
+                        signal.alarm(15) # Wait 15 seconds for ldtpd
+                        signal.pause()
+                        # restore signal handlers
+                        signal.alarm(0)
+                        signal.signal(signal.SIGUSR1, sigusr1)
+                        signal.signal(signal.SIGALRM, sigalrm)
+                        signal.signal(signal.SIGCHLD, sigchld)
                         continue
+                    else:
+                        raise
                 # else raise exception
                 raise
             except xmlrpclib.Fault, e:
@@ -77,8 +98,7 @@ class Transport(xmlrpclib.Transport):
 
     def kill_daemon(self):
         try:
-            # SIGKILL       9       Term    Kill signal
-            os.kill(self._daemon, 9)
+            os.kill(self._daemon, signal.SIGKILL)
         except AttributeError:
             pass
 

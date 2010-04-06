@@ -17,7 +17,22 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
-def main(port=4118):
+class SignalParent:
+    def __init__(self, parentpid):
+        from twisted import internet
+        self.parentpid = parentpid
+        self.reactor = internet.reactor
+
+    def send_later(self):
+        self.reactor.callLater(1, self.send)
+    
+    def send(self):
+        import os
+        import signal
+        
+        os.kill(int(self.parentpid), signal.SIGUSR1)
+        
+def main(port=4118, parentpid=None):
     import os
     os.environ['NO_GAIL'] = '1'
     os.environ['NO_AT_BRIDGE'] = '1'
@@ -36,6 +51,8 @@ def main(port=4118):
         pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
         r = XMLRPCLdtpd()
         xmlrpc.addIntrospection(r)
+        if parentpid:
+            reactor.callWhenRunning(SignalParent(parentpid).send_later)
         reactor.listenTCP(port, server.Site(r))
         reactor.run()
     except twisted.internet.error.CannotListenError:
