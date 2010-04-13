@@ -192,8 +192,8 @@ class Utils:
                         continue
                     if child.childCount > 0:
                         child_obj = self._get_child_object_type(child, role_type)
-                    if child_obj:
-                        return child_obj
+                        if child_obj:
+                            return child_obj
                     if child.getRole() == role_type:
                         return child
         except:
