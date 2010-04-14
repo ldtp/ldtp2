@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='ldtp',
-      version='2.0.5',
+      version='2.0.6',
       description='Linux Desktop Testing Project Version 2',
       maintainer='Nagappan Alagappan',
       maintainer_email='nagappan@gmail.com',
