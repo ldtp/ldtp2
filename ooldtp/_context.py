@@ -32,7 +32,10 @@ class _Wrapper(object):
             d = ldtp.__dict__
             cls._wrapped_methods =[]
             for attr in d:
-                if cls._isRemoteMethod(d[attr]):# and cls._isRelevant(d[attr]):
+                # Don't populate function name in ldtp module
+                # starting with _
+                if type(attr) == str and attr[0] != '_' and \
+                        cls._isRemoteMethod(d[attr]):
                     setted = attr
                     if hasattr(cls, attr):
                         setted = "_remote_"+setted
@@ -48,7 +51,9 @@ class _Wrapper(object):
         return obj
 
     def _isRemoteMethod(cls, obj):
-        return hasattr(obj, '_Method__name')
+        return hasattr(obj, '_Method__name') or \
+            hasattr(obj, 'func_name')
+
     _isRemoteMethod = classmethod(_isRemoteMethod)
 
     def _listArgs(cls, func):
@@ -69,11 +74,6 @@ class Context(_Wrapper):
 
     def _wrapMethod(self, obj):
         return _ContextFuncWrapper(self._window_name, obj)
-
-    def _isRelevant(cls, obj):
-        args = cls._listArgs(obj)
-        return args and 'window_name' == args[0]
-    _isRelevant = classmethod(_isRelevant)
 
     def getchild(self, child_name='', role=''):
         # TODO: Bad API choice. Inconsistent, should return object or list,
@@ -133,12 +133,6 @@ class Component(_Wrapper):
         return _ComponentFuncWrapper(
             self._window_name, self._object_name, func)
 
-    def _isRelevant(cls, obj):
-        args = cls._listArgs(obj)
-        return len(args) >= 2 and \
-            'window_name' == args[0] and 'object_name' == args[1]
-    _isRelevant = classmethod(_isRelevant)
-    
 class _ComponentFuncWrapper:
     def __init__(self, window_name, object_name, func):
         self._window_name = window_name
