@@ -28,6 +28,11 @@ if 'LDTP_COMMAND_DELAY' in os.environ:
 else:
     delay = None
 
+if os.environ.has_key('LDTP_DEBUG'):
+    _ldtp_debug = os.environ['LDTP_DEBUG']
+else:
+    _ldtp_debug = None
+
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __new__(cls, *args, **kwargs):
         for symbol in dir(Ldtpd):
@@ -47,17 +52,19 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         return [a[7:] for a in \
                   filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
 
-    def _ebRender(self, failure):
-        '''Custom error render method (used by our XMLRPC objects)'''
-        if isinstance(failure.value, xmlrpclib.Fault):
-            return failure.value
+    if not _ldtp_debug:
+        # If LDTP_DEBUG env set, then print verbose info on console
+        def _ebRender(self, failure):
+            '''Custom error render method (used by our XMLRPC objects)'''
+            if isinstance(failure.value, xmlrpclib.Fault):
+                return failure.value
 
-        if hasattr(failure, 'getErrorMessage'):
-            value = failure.getErrorMessage()
-        else:
-            value = 'error'
+            if hasattr(failure, 'getErrorMessage'):
+                value = failure.getErrorMessage()
+            else:
+                value = 'error'
 
-        return xmlrpclib.Fault(self.FAILURE, value)
+            return xmlrpclib.Fault(self.FAILURE, value)
 
     def render_POST(self, request):
         request.content.seek(0, 0)
