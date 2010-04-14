@@ -32,14 +32,12 @@ class _Wrapper(object):
             d = ldtp.__dict__
             cls._wrapped_methods =[]
             for attr in d:
-                if cls._isRemoteMethod(d[attr]):
+                if cls._isRemoteMethod(d[attr]):# and cls._isRelevant(d[attr]):
                     setted = attr
                     if hasattr(cls, attr):
                         setted = "_remote_"+setted
                     cls._wrapped_methods.append(setted)
                     setattr(cls, setted, d[attr])
-                elif _ldtp_debug:
-                    print '*NOT* RELEVANT method', attr
         return object.__new__(cls)
 
     def __getattribute__(self, name):
@@ -51,7 +49,6 @@ class _Wrapper(object):
 
     def _isRemoteMethod(cls, obj):
         return hasattr(obj, '_Method__name')
-
     _isRemoteMethod = classmethod(_isRemoteMethod)
 
     def _listArgs(cls, func):
@@ -59,7 +56,6 @@ class _Wrapper(object):
         l = filter(lambda x: x.startswith('@param '), l)
         l = [x[7:].split(':')[0] for x in l]
         return l
-
     _listArgs = classmethod(_listArgs)
 
 class Context(_Wrapper):            
@@ -77,21 +73,24 @@ class Context(_Wrapper):
     def _isRelevant(cls, obj):
         args = cls._listArgs(obj)
         return args and 'window_name' == args[0]
-
     _isRelevant = classmethod(_isRelevant)
 
     def getchild(self, child_name='', role=''):
         # TODO: Bad API choice. Inconsistent, should return object or list,
         # not both. UPDATE: Only returns first match.
-        matches = self._remote_getchild(child_name, role, True)
-        if matches: 
+        matches = self._remote_getchild(child_name, role)
+        if matches:
             if role:
-                return [Component(self._window_name, matches[0])]
+                component_list = []
+                for matched_obj in matches:
+                    component_list.append(Component(self._window_name,
+                                                    matched_obj))
+                return component_list
             else:
                 return Component(self._window_name, matches[0])
         else:
             return None
-
+    
 class _ContextFuncWrapper:
     def __init__(self, window_name, func):
         self._window_name = window_name
@@ -110,6 +109,22 @@ class Component(_Wrapper):
     def getName(self):
         return self._object_name
 
+    def getchild(self, child_name='', role=''):
+        # TODO: Bad API choice. Inconsistent, should return object or list,
+        # not both. UPDATE: Only returns first match.
+        matches = self._remote_getchild(child_name, role, self._object_name)
+        if matches: 
+            if role:
+                component_list = []
+                for matched_obj in matches:
+                    component_list.append(Component(self._window_name,
+                                                    matched_obj))
+                return component_list
+            else:
+                return Component(self._window_name, matches[0])
+        else:
+            return None
+    
     def __repr__(self):
         return 'Component "%s" in "%s"' % \
             (self._object_name, self._window_name)
@@ -122,9 +137,8 @@ class Component(_Wrapper):
         args = cls._listArgs(obj)
         return len(args) >= 2 and \
             'window_name' == args[0] and 'object_name' == args[1]
-
     _isRelevant = classmethod(_isRelevant)
-
+    
 class _ComponentFuncWrapper:
     def __init__(self, window_name, object_name, func):
         self._window_name = window_name
@@ -132,8 +146,12 @@ class _ComponentFuncWrapper:
         self._func = func
 
     def __call__(self, *args, **kwargs):
-        return self._func(
-            self._window_name, self._object_name, *args, **kwargs)
+        if self._func._Method__name == 'getchild':
+            return self._func(
+                self._window_name, *args, **kwargs)
+        else:
+            return self._func(
+                self._window_name, self._object_name, *args, **kwargs)
 
 if __name__ == "__main__":
     c = Component('Calculator', 'btnNumeric1')
