@@ -66,7 +66,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def _registered_event_cb(self, event):
         if event and event.source and event.type:
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
+                event.source)
             window_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._callback_event.append(u"%s-%s" % (event.type, window_name))
 
@@ -76,12 +77,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 if event and event.source and window and \
                         self._match_name_to_acc(window, event.source):
                     self._callback_event.append(u"onwindowcreate-%s" % window)
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
+                event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._window_uptime[win_name] = [event.source_name,
                                              time.strftime("%Y %m %d %H %M %S")]
         elif event and event.type == "window:destroy":
-            abbrev_role, abbrev_name = self._ldtpize_accessible(event.source)
+            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
+                event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             if win_name in self._window_uptime:
                 self._window_uptime[win_name].append( \
@@ -130,7 +133,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def isalive(self):
         return True
 
-    def launchapp(self, cmd, args=[], delay = 0, env = 1):
+    def launchapp(self, cmd, args = [], delay = 0, env = 1):
         '''
         Launch application.
 
@@ -836,6 +839,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                         child_list)
 
             matches = _get_all_children_under_obj(obj, [])
+            if not matches:
+                raise LdtpServerException('Could not find a child.')
+
             return matches
 
         _window_handle = self._get_window_handle(window_name)
