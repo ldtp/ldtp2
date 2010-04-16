@@ -66,7 +66,7 @@ class Waiter(Utils):
                     gtk.main_quit()
             except RuntimeError:
                 # In Mandriva RuntimeError exception is thrown
-                # If, gtk.main is already quit
+                # If, gtk.main was already quit
                 pass
             return False
         return True
@@ -82,7 +82,7 @@ class Waiter(Utils):
                     gtk.main_quit()
             except RuntimeError:
                 # In Mandriva RuntimeError exception is thrown
-                # If, gtk.main is already quit
+                # If, gtk.main was already quit
                 pass
 
     def event_cb(self, event):
