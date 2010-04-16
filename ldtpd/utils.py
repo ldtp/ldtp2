@@ -85,7 +85,7 @@ class Utils:
                 self.cached_apps.remove(app)
 
     def _ldtpize_accessible(self, acc):
-        label_acc = None
+        label_by = label_acc = None
         rel_set = acc.getRelationSet()
         if rel_set:
             for i, rel in enumerate(rel_set):
@@ -104,8 +104,11 @@ class Utils:
             strip = '( |\n)'
         else:
             strip = '( |:|\.|_|\n)'
+        if label_acc:
+            label_by = label_acc.name
         return abbreviated_roles.get(role, 'ukn'), \
-            re.sub(strip, '', (label_acc or acc).name)
+            re.sub(strip, '', (label_acc or acc).name), \
+            label_by
 
     def _glob_match(self, pattern, string):
         return bool(re_match(glob_trans(pattern), string, re.M | re.U | re.L))
@@ -220,7 +223,7 @@ class Utils:
                     return child
 
     def _add_appmap_data(self, obj, parent):
-        abbrev_role, abbrev_name = self._ldtpize_accessible(obj)
+        abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(obj)
         if abbrev_role in self.ldtpized_obj_index:
             self.ldtpized_obj_index[abbrev_role] += 1
         else:
@@ -238,6 +241,8 @@ class Utils:
             ldtpized_name = u'%s%d' % (ldtpized_name_base, i)
         if parent in self.ldtpized_list:
             self.ldtpized_list[parent]['children'].append(ldtpized_name)
+        if not label_by:
+            label_by = ''
         self.ldtpized_list[ldtpized_name] = {'key' : ldtpized_name,
                                              'parent' : parent,
                                              'class' : obj.getRoleName().replace(' ', '_'),
@@ -246,7 +251,7 @@ class Utils:
                                              'obj_index' : '%s#%d' % (abbrev_role,
                                                                       self.ldtpized_obj_index[abbrev_role]),
                                              'label' : obj.name,
-                                             'label_by' : '',
+                                             'label_by' : label_by,
                                              'description' : obj.description
                                              }
         return ldtpized_name
@@ -269,9 +274,9 @@ class Utils:
             for key in self._appmap.keys():
                 if self._match_name_to_acc(key, gui):
                     return self._appmap[key]
-        abbrev_role, abbrev_name = self._ldtpize_accessible(gui)
+        abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui)
         _window_name = u'%s%s' % (abbrev_role, abbrev_name)
-        abbrev_role, abbrev_name = self._ldtpize_accessible(gui.parent)
+        abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui.parent)
         _parent = abbrev_name
         self._populate_appmap(gui, _parent, gui.getIndexInParent())
         self._appmap[_window_name] = self.ldtpized_list
