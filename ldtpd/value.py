@@ -184,6 +184,9 @@ class Value(Utils):
 
         return valuei.maximumValue
 
+    # Name compatibility with setmax
+    getmax = getmaxvalue
+
     def verifyslidervertical(self, window_name, object_name):
         '''
         Verify slider is vertical
