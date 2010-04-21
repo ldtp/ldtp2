@@ -366,39 +366,76 @@ class Utils:
                                           window_name)
         appmap = self._appmap_pairs(_window_handle)
         obj = self._get_object_in_window(appmap, obj_name)
-        # while time_diff < 3
         if not obj:
             appmap = self._appmap_pairs(_window_handle, force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
         if not obj:
             raise LdtpServerException(
                 'Unable to find object name "%s" in application map' % obj_name)
-            
-        def _traverse_parent(gui, window_name, obj, parent_list):
-            if obj and window_name:
-                parent = obj['parent']
-                if parent not in appmap:
-                    return parent_list
-                parent_list.append(parent)
-                if self._match_name_to_acc(parent, gui):
-                    return parent_list
-                return _traverse_parent(gui, window_name,
-                                        appmap[parent],
-                                        parent_list)
+        def _internal_get_object(window, obj_name, obj):
+            """
+            window: Window handle in pyatspi format
+            obj_name: In appmap format
+            obj: Current object hash index in appmap
+            """
+            def _traverse_parent(gui, window_name, obj, parent_list):
+                """
+                Traverse from current object to parent object, this is done
+                later to get the object a11y handle from window to child object
+                gui: Window handle
+                window_name: Window name in appmap format
+                obj: Current object hash index in appmap
+                parent_list: List of object names in appmap format
+                """
+                if obj and window_name:
+                    parent = obj['parent']
+                    if parent not in appmap:
+                        return parent_list
+                    parent_list.append(parent)
+                    if self._match_name_to_acc(parent, gui):
+                        return parent_list
+                    return _traverse_parent(gui, window_name,
+                                            appmap[parent],
+                                            parent_list)
 
-        _parent_list = _traverse_parent(_window_handle, window_name, obj, [])
-        if not _parent_list:
-            raise LdtpServerException(
-                'Unable to find object name "%s" in application map' % obj_name)
-        _parent_list.reverse()
-        key = obj['key']
-        if key:
-            _parent_list.append(key)
-        obj = _window_handle
-        for key in _parent_list[1:]:
-            if key in appmap and obj:
-                obj = obj.getChildAtIndex(appmap[key]['child_index'])
-        return obj
+            _parent_list = _traverse_parent(_window_handle, window_name, obj, [])
+            if not _parent_list:
+                raise LdtpServerException(
+                    'Unable to find object name "%s" in application map' % obj_name)
+            _parent_list.reverse()
+            key = obj['key']
+            if key:
+                _parent_list.append(key)
+            obj = _window_handle
+            for key in _parent_list[1:]:
+                _appmap_obj = appmap[key]
+                _appmap_role = re.sub('_', ' ', _appmap_obj['class'])
+                if key in appmap and obj:
+                    tmp_obj = obj.getChildAtIndex(_appmap_obj['child_index'])
+                    if not tmp_obj:
+                        if obj.getRoleName() != _appmap_role:
+                            # Traversing object role and appmap role doesn't match
+                            if self._ldtp_debug:
+                                print "Traversing object role and appmap role doesn't match"
+                            return None
+                        break
+                    obj = tmp_obj
+                    if obj.getRoleName() != _appmap_role:
+                        # Traversing object role and appmap role doesn't match
+                        if self._ldtp_debug:
+                            print "Traversing object role and appmap role doesn't match"
+                        return None
+            return obj
+        _current_obj = _internal_get_object(window_name, obj_name, obj)
+        if not _current_obj:
+            # retry once, before giving up
+            appmap = self._appmap_pairs(_window_handle, force_remap = True)
+            obj = self._get_object_in_window(appmap, obj_name)
+            if not obj:
+                raise LdtpServerException(
+                    'Unable to find object name "%s" in application map' % obj_name)
+            _current_obj = _internal_get_object(window_name, obj_name, obj)
+        return _current_obj
 
     def _grab_focus(self, obj):
         try:
