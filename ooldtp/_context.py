@@ -141,6 +141,7 @@ class _ComponentFuncWrapper:
 
     def __call__(self, *args, **kwargs):
         if self._func._Method__name == 'getchild':
+            # Hack
             return self._func(
                 self._window_name, *args, **kwargs)
         else:
