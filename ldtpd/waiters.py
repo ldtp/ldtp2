@@ -27,6 +27,12 @@ import gobject
 import pyatspi
 import traceback
 
+_main_loop = None
+_gtk_vers = gtk.ver
+if _gtk_vers[0] <= 2 and _gtk_vers[1] <= 15:
+    # Required for SLED11
+    _main_loop = gobject.MainLoop()
+
 class Waiter(Utils):
     events = []
     def __init__(self, timeout):
@@ -49,7 +55,10 @@ class Waiter(Utils):
         if self.events:
             pyatspi.Registry.registerEventListener(
                 self._event_cb, *self.events)
-        gtk.main()
+        if _main_loop:
+            _main_loop.run()
+        else:
+            gtk.main()
         if self.events:
             pyatspi.Registry.deregisterEventListener(
                 self._event_cb, *self.events)
@@ -62,8 +71,11 @@ class Waiter(Utils):
         self.poll()
         if self._timeout_count >= self.timeout or self.success:
             try:
-                if gtk.main_level():
-                    gtk.main_quit()
+                if _main_loop:
+                    _main_loop.quit()
+                else:
+                    if gtk.main_level():
+                        gtk.main_quit()
             except RuntimeError:
                 # In Mandriva RuntimeError exception is thrown
                 # If, gtk.main was already quit
@@ -78,8 +90,11 @@ class Waiter(Utils):
         self.event_cb(event)
         if self.success:
             try:
-                if gtk.main_level():
-                    gtk.main_quit()
+                if _main_loop:
+                    _main_loop.quit()
+                else:
+                    if gtk.main_level():
+                        gtk.main_quit()
             except RuntimeError:
                 # In Mandriva RuntimeError exception is thrown
                 # If, gtk.main was already quit
