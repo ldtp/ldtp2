@@ -43,6 +43,8 @@ class Utils:
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
+            pyatspi.Registry.registerEventListener(
+                self._on_window_event, 'window:destroy')
             Utils.cached_apps = list()
             if lazy_load:
                 for app in self._desktop:
@@ -66,6 +68,14 @@ class Utils:
         return self._states
 
     def _on_window_event(self, event):
+        if self._ldtp_debug:
+            print event
+        if event and event.type == "window:destroy":
+            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
+                event.source)
+            win_name = u'%s%s' % (abbrev_role, abbrev_name)
+            if win_name in self._appmap:
+                del self._appmap[win_name]
         if event.host_application not in self.cached_apps:
             self.cached_apps.append(event.host_application)
 
@@ -240,14 +250,19 @@ class Utils:
             i += 1
             ldtpized_name = u'%s%d' % (ldtpized_name_base, i)
         if parent in self.ldtpized_list:
-            self.ldtpized_list[parent]['children'].append(ldtpized_name)
+            _current_children = self.ldtpized_list[parent]['children']
+            if _current_children:
+                _current_children = u'%s %s' % (_current_children, ldtpized_name)
+            else:
+                _current_children = ldtpized_name
+            self.ldtpized_list[parent]['children'] = _current_children
         if not label_by:
             label_by = ''
         self.ldtpized_list[ldtpized_name] = {'key' : ldtpized_name,
                                              'parent' : parent,
                                              'class' : obj.getRoleName().replace(' ', '_'),
                                              'child_index' : obj.getIndexInParent(),
-                                             'children' : [],
+                                             'children' : '',
                                              'obj_index' : '%s#%d' % (abbrev_role,
                                                                       self.ldtpized_obj_index[abbrev_role]),
                                              'label' : obj.name,
@@ -398,10 +413,14 @@ class Utils:
                                             appmap[parent],
                                             parent_list)
 
-            _parent_list = _traverse_parent(_window_handle, window_name, obj, [])
-            if not _parent_list:
-                raise LdtpServerException(
-                    'Unable to find object name "%s" in application map' % obj_name)
+            if obj['key'] == window_name:
+                # If window name and object name are same
+                _parent_list = []
+            else:
+                _parent_list = _traverse_parent(_window_handle, window_name, obj, [])
+                if not _parent_list:
+                    raise LdtpServerException(
+                        'Unable to find object name "%s" in application map' % obj_name)
             _parent_list.reverse()
             key = obj['key']
             if key:
