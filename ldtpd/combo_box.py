@@ -341,7 +341,7 @@ class ComboBox(Utils, LayeredPane):
                         return 1
                 index += 1
         elif child_obj.getRole() == pyatspi.ROLE_MENU:
-            for child in self._list_objects (child_obj):
+            for child in self._list_objects(child_obj):
                 if child == child_obj:
                     # As the _list_objects gives the current object as well
                     # ignore it
@@ -386,7 +386,7 @@ class ComboBox(Utils, LayeredPane):
             return 1
         elif child_obj.getRole() == pyatspi.ROLE_MENU:
             index = 0
-            for child in self._list_objects (child_obj):
+            for child in self._list_objects(child_obj):
                 if child == child_obj:
                     # As the _list_objects gives the current object as well
                     # ignore it
@@ -423,7 +423,7 @@ class ComboBox(Utils, LayeredPane):
             raise LdtpServerException('Unable to get combo box children')
         item_list = []
         if child_obj.getRole() == pyatspi.ROLE_LIST:
-            for child in self._list_objects (child_obj):
+            for child in self._list_objects(child_obj):
                 if child == child_obj:
                     # As the _list_objects gives the current object as well
                     # ignore it
@@ -437,7 +437,7 @@ class ComboBox(Utils, LayeredPane):
                 item_list.append(text)
             return item_list
         elif child_obj.getRole() == pyatspi.ROLE_MENU:
-            for child in self._list_objects (child_obj):
+            for child in self._list_objects(child_obj):
                 if child == child_obj:
                     # As the _list_objects gives the current object as well
                     # ignore it
@@ -604,7 +604,7 @@ class ComboBox(Utils, LayeredPane):
             if not child_obj:
                 return 0
             if child_obj.getRole() == pyatspi.ROLE_LIST:
-                for child in self._list_objects (child_obj):
+                for child in self._list_objects(child_obj):
                     if child == child_obj:
                         # As the _list_objects gives the current object as well
                         # ignore it
@@ -618,7 +618,7 @@ class ComboBox(Utils, LayeredPane):
                     if self._glob_match(item_name, text):
                         return 1
             elif child_obj.getRole() == pyatspi.ROLE_MENU:
-                for child in self._list_objects (child_obj):
+                for child in self._list_objects(child_obj):
                     if child == child_obj:
                         # As the _list_objects gives the current object as well
                         # ignore it
