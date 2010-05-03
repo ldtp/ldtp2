@@ -99,8 +99,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         app_list = []
         for app in self._list_apps():
-            if app.name != '<unknown>':
-                app_list.append(app.name)
+            try:
+                app = app[0] # Just use the application handle
+                if app.name != '<unknown>':
+                    app_list.append(app.name)
+            except LookupError:
+                # A11Y lookup error
+                continue
         return app_list
 
     def getwindowlist(self):
@@ -731,12 +736,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: list
         '''
         obj_list = []
-        gui = self._get_window_handle(window_name)
+        gui, _window_name = self._get_window_handle(window_name)
         if not gui:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
 
-        for name in self._appmap_pairs(gui).keys():
+        for name in self._appmap_pairs(gui, _window_name, True).keys():
             obj_list.append(name)
         return obj_list
 
@@ -754,17 +759,19 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: list of properties
         @rtype: list
         '''
-        _window_handle = self._get_window_handle(window_name)
+        _window_handle, _window_name = \
+            self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle)
+        appmap = self._appmap_pairs(_window_handle, _window_name, True)
 
         obj_info = self._get_object_in_window(appmap, object_name)
         props = []
-        for obj_prop in obj_info.keys():
-            if obj_info[obj_prop]:
-                props.append(obj_prop)
+        if obj_info:
+            for obj_prop in obj_info.keys():
+                if obj_info[obj_prop]:
+                    props.append(obj_prop)
         return props
 
     def getobjectproperty(self, window_name, object_name, prop):
@@ -783,14 +790,15 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: list of properties
         @rtype: list
         '''
-        _window_handle = self._get_window_handle(window_name)
+        _window_handle, _window_name = \
+            self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle)
+        appmap = self._appmap_pairs(_window_handle, _window_name, True)
 
         obj_info = self._get_object_in_window(appmap, object_name)
-        if prop in obj_info:
+        if obj_info and prop in obj_info:
             return obj_info[prop]
         raise LdtpServerException('Unknown property "%s" in %s' % \
                                       (prop, object_name))
@@ -817,11 +825,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if role:
             role = re.sub(' ', '_', role)
         if parent and (child_name or role):
-            _window_handle = self._get_window_handle(window_name)
+            _window_handle, _window_name = \
+                self._get_window_handle(window_name)
             if not _window_handle:
                 raise LdtpServerException('Unable to find window "%s"' % \
                                               window_name)
-            appmap = self._appmap_pairs(_window_handle)
+            appmap = self._appmap_pairs(_window_handle, _window_name, True)
             obj = self._get_object_in_window(appmap, parent)
             obj_name = appmap[obj['key']]
             def _get_all_children_under_obj(obj, child_list):
@@ -844,11 +853,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
             return matches
 
-        _window_handle = self._get_window_handle(window_name)
+        _window_handle, _window_name = \
+            self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle)
+        appmap = self._appmap_pairs(_window_handle, _window_name, True)
         for name in appmap.keys():
             obj = appmap[name]
             # When only role arg is passed
@@ -880,11 +890,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1
         @rtype: integer
         '''
-        _window_handle = self._get_window_handle(window_name)
+        _window_handle, _window_name = \
+            self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        self._appmap_pairs(_window_handle, force_remap = True)
+        self._appmap_pairs(_window_handle, _window_name, True)
         return 1
 
     def wait(self, timeout=5):
@@ -930,7 +941,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         locale.setlocale(locale.LC_ALL, locale_str)
         return 1
 
-    def getwindowsize (self, window_name):
+    def getwindowsize(self, window_name):
         '''
         Get window size.
         
@@ -940,7 +951,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: list of dimensions [x, y, w, h]
         @rtype: list
         '''
-        obj_list = []
         for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
                 size = self._get_size(gui)
