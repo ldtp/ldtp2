@@ -45,11 +45,21 @@ class Utils:
                 self._on_window_event, 'window')
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window:destroy')
+            pyatspi.Registry.registerEventListener(self._obj_changed, 
+                                                   'object:children-changed')
+
+            pyatspi.Registry.registerEventListener(
+                self._obj_changed, 'object:property-change:accessible-name')
+
             Utils.cached_apps = list()
             if lazy_load:
                 for app in self._desktop:
                     if app is None: continue
-                    self.cached_apps.append(app)
+                    # app - Current open application a11y handle
+                    # True - It has to appmap'ed on need basis
+                    # (Means: On accessing window based on user request,
+                    # force remap)
+                    self.cached_apps.append([app, True])
         if os.environ.has_key('LDTP_DEBUG'):
             self._ldtp_debug = os.environ['LDTP_DEBUG']
         else:
@@ -67,17 +77,35 @@ class Utils:
                 state.__repr__().lower().partition("state_")[2]
         return self._states
 
+    def _obj_changed(self, event):
+        if self._ldtp_debug:
+            print event, event.type, event.source, event.source.parent
+        for app in self.cached_apps:
+            try:
+                if not app or not app[0]: continue
+                # Force remap for this application, as some object is
+                # either added / removed / changed
+                index = self.cached_apps.index(app)
+                self.cached_apps[index][1] = True
+            except LookupError:
+                # A11Y lookup error
+                continue
+            except ValueError:
+                # Index error
+                continue
+
     def _on_window_event(self, event):
         if self._ldtp_debug:
-            print event
-        if event and event.type == "window:destroy":
+            print event, event.type, event.source, event.source.parent
+        if event and (event.type == "window:destroy" or \
+                          event.type == "window:deactivate"):
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             if win_name in self._appmap:
                 del self._appmap[win_name]
         if event.host_application not in self.cached_apps:
-            self.cached_apps.append(event.host_application)
+            self.cached_apps.append([event.host_application, True])
 
     def _list_apps(self):
         for app in self.cached_apps:
@@ -86,9 +114,11 @@ class Utils:
 
     def _list_guis(self):
         for app in self.cached_apps:
-            if not app: continue
+            if not app or not app[0]: continue
             try:
-                for gui in app:
+                # application handle will be in app[0]
+                # app[1] will hold, whether remap should be done or not
+                for gui in app[0]:
                     if not gui: continue
                     yield gui
             except LookupError:
@@ -153,6 +183,8 @@ class Utils:
         return 0
 
     def _match_name_to_appmap(self, name, acc):
+        if not name:
+            return 0
         if self._glob_match(name, acc['key']):
             return 1
         if self._glob_match(name, acc['obj_index']):
@@ -190,8 +222,8 @@ class Utils:
         if obj:
             yield obj
             for child in obj:
-                if child.getRole() == pyatspi.ROLE_TABLE_CELL and \
-                        not self._handle_table_cell:
+                if not self._handle_table_cell and \
+                        child.getRole() == pyatspi.ROLE_TABLE_CELL:
                     # In OO.o navigating table cells consumes more time
                     # resource
                     break
@@ -282,19 +314,34 @@ class Utils:
                     break
                 self._populate_appmap(child, parent, child.getIndexInParent())
 
-    def _appmap_pairs(self, gui, force_remap = False):
+    def _appmap_pairs(self, gui, window_name, force_remap = False):
         self.ldtpized_list = {}
         self.ldtpized_obj_index = {}
         if not force_remap:
-            for key in self._appmap.keys():
-                if self._match_name_to_acc(key, gui):
-                    return self._appmap[key]
-        abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui)
-        _window_name = u'%s%s' % (abbrev_role, abbrev_name)
+            for app in self.cached_apps:
+                try:
+                    if app[0] and gui and app[0] == gui.parent and \
+                            app[1] == True:
+                        # Means force_remap
+                        force_remap = True
+                        index = self.cached_apps.index(app)
+                        if index != -1:
+                            # Reset force_remap to False
+                            self.cached_apps[index][1] = False
+                        break
+                except NameError:
+                    continue
+            # If force_remap set in the above condition, skip the
+            # following lookup and do force remap
+            if not force_remap:
+                for key in self._appmap.keys():
+                    if self._match_name_to_acc(key, gui):
+                        return self._appmap[key]
+
         abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui.parent)
         _parent = abbrev_name
         self._populate_appmap(gui, _parent, gui.getIndexInParent())
-        self._appmap[_window_name] = self.ldtpized_list
+        self._appmap[window_name] = self.ldtpized_list
         return self.ldtpized_list
 
     def _get_menu_hierarchy(self, window_name, object_name):
@@ -331,6 +378,17 @@ class Utils:
             raise LdtpServerException('Object does not have a "%s" action' % action)
 
     def _get_object_in_window(self, appmap, obj_name):
+        """
+        Get object in appmap dict format, eg: {'class' : 'menu', 'key': 'mnu0'}
+
+        @param appmap: application map of window (list of dict)
+        @type appmap: object
+        @param obj_name: Object name
+        @type obj_name: string
+
+        @return: object in appmap dict format
+        @rtype: object
+        """
         for name in appmap.keys():
             obj = appmap[name]
             if self._match_name_to_appmap(obj_name, obj):
@@ -338,51 +396,72 @@ class Utils:
         return None
 
     def _get_window_handle(self, window_name):
+        """
+        Get window handle of given window name
+
+        @param window_name: window name, as provided by the caller
+        @type window_name: string
+
+        @return: window handle, window name in appmap format
+        @rtype: object, string
+        """
         window_list = []
         window_type = {}
 
-        # Search with accessible name
         for gui in self._list_guis():
-            if self._match_name_to_acc(window_name, gui):
-                return gui
-
-        # Search with LDTP appmap format
-        for gui in self._list_guis():
-            w_name = self._ldtpize_accessible(gui)
-            if w_name[1] == '':
-                if w_name[0] in window_type:
-                    window_type[w_name[0]] += 1
+            obj_name = self._ldtpize_accessible(gui)
+            if obj_name[1] == '':
+                # If label / label_by is empty string
+                # use index
+                if obj_name[0] in window_type:
+                    # If the same window type repeats
+                    # eg: multiple dialog window with empty title
+                    # then use, dlg0, dlg1, dlg2 etc
+                    window_type[obj_name[0]] += 1
                 else:
-                    window_type[w_name[0]] = 0
-                tmp_name = '%d' % window_type[w_name[0]]
+                    # Initialize the first window in a type as 0
+                    # and increment this counter
+                    window_type[obj_name[0]] = 0
+                tmp_name = '%d' % window_type[obj_name[0]]
             else:
-                tmp_name = w_name[1]
-            w_name = tmp_name = u'%s%s' % (w_name[0], tmp_name)
+                # If window has title, use that
+                tmp_name = obj_name[1]
+            # Append window type and window title
+            w_name = name = '%s%s' % (obj_name[0], tmp_name)
+            # If multiple window with same title, increment the index
             index = 1
-            while w_name in window_list:
-                w_name = u'%s%d' % (tmp_name, index)
+            while name in window_list:
+                # If window name already exist in list, increase
+                # the index, so that we will have the window name
+                # always unique
+                name = '%s%d' % (w_name, index)
                 index += 1
-            window_list.append(w_name)
-            if window_name == w_name:
-                return gui
-            if self._glob_match(window_name, w_name):
-                return gui
-            if self._glob_match(window_name, w_name):
-                return gui
+            window_list.append(name)
+
+            if self._match_name_to_acc(window_name, gui):
+                return gui, name
+
+            # Search with LDTP appmap format
+            if window_name == name:
+                return gui, name
+            if self._glob_match(window_name, name):
+                return gui, name
             if self._glob_match(re.sub(' ', '', window_name),
-                                re.sub(' ', '', w_name)):
-                return gui
-        return None
+                                re.sub(' ', '', name)):
+                return gui, name
+        return None, None
 
     def _get_object(self, window_name, obj_name):
-        _window_handle = self._get_window_handle(window_name)
+        _window_handle, _window_name = \
+            self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle)
+        appmap = self._appmap_pairs(_window_handle, _window_name)
         obj = self._get_object_in_window(appmap, obj_name)
         if not obj:
-            appmap = self._appmap_pairs(_window_handle, force_remap = True)
+            appmap = self._appmap_pairs(_window_handle, _window_name,
+                                        force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
         if not obj:
             raise LdtpServerException(
@@ -448,7 +527,8 @@ class Utils:
         _current_obj = _internal_get_object(window_name, obj_name, obj)
         if not _current_obj:
             # retry once, before giving up
-            appmap = self._appmap_pairs(_window_handle, force_remap = True)
+            appmap = self._appmap_pairs(_window_handle, _window_name,
+                                        force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
             if not obj:
                 raise LdtpServerException(
