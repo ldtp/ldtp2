@@ -47,7 +47,6 @@ class Utils:
                 self._on_window_event, 'window:destroy')
             pyatspi.Registry.registerEventListener(self._obj_changed, 
                                                    'object:children-changed')
-
             pyatspi.Registry.registerEventListener(
                 self._obj_changed, 'object:property-change:accessible-name')
 
@@ -492,7 +491,7 @@ class Utils:
                                             appmap[parent],
                                             parent_list)
 
-            if obj['key'] == window_name:
+            if self._match_name_to_appmap(window_name, obj):
                 # If window name and object name are same
                 _parent_list = []
             else:
