@@ -101,9 +101,28 @@ class Utils:
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
-            if win_name in self._appmap:
-                del self._appmap[win_name]
-        if event.host_application not in self.cached_apps:
+            if (abbrev_role == 'dlg' or abbrev_role == 'frm') and \
+                    abbrev_name == '':
+                for win_name in self._appmap.keys():
+                    # When window doesn't have a title, destroy all the
+                    # window info from appmap, which doesn't haven't title
+                    if re.search('%s\d*$' % abbrev_role, win_name):
+                        del self._appmap[win_name]
+            else:
+                for name in self._appmap.keys():
+                    # When multiple window have same title, destroy all the
+                    # window info from appmap, which have same title
+                    if re.search('%s%s\d*$' % (abbrev_role, abbrev_name),
+                                 win_name) or \
+                                 re.search('%s%s*$' % (abbrev_role, abbrev_name),
+                                           win_name):
+                        del self._appmap[name]
+            return
+        cache = True
+        for app in self.cached_apps:
+            if event.host_application == app[0]:
+                cache = False
+        if cache:
             self.cached_apps.append([event.host_application, True])
 
     def _list_apps(self):
