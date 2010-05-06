@@ -43,8 +43,12 @@ class Utils:
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
+            # Above window event doesn't get called for
+            # 'window:destroy', so registering it individually
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window:destroy')
+            # Notify on any changes in all windows, based on this info,
+            # its decided, whether force_remap is required or not
             pyatspi.Registry.registerEventListener(self._obj_changed, 
                                                    'object:children-changed')
             pyatspi.Registry.registerEventListener(
@@ -97,12 +101,13 @@ class Utils:
         if self._ldtp_debug:
             print event, event.type, event.source, event.source.parent
         if event and (event.type == "window:destroy" or \
-                          event.type == "window:deactivate"):
+                          event.type == "window:deactivate") and \
+                          event.source:
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
-            if (abbrev_role == 'dlg' or abbrev_role == 'frm') and \
-                    abbrev_name == '':
+            # Empty window name
+            if abbrev_name == '':
                 for win_name in self._appmap.keys():
                     # When window doesn't have a title, destroy all the
                     # window info from appmap, which doesn't haven't title
@@ -122,7 +127,12 @@ class Utils:
         for app in self.cached_apps:
             if event.host_application == app[0]:
                 cache = False
+                break
         if cache:
+            # If app doesn't exist in cached apps, then add it
+            # adding app and True flag as list - This flag indicates that the
+            # object in application either got added / removed
+            # so remap should be forced
             self.cached_apps.append([event.host_application, True])
 
     def _list_apps(self):
@@ -172,6 +182,8 @@ class Utils:
         return bool(re_match(glob_trans(pattern), string, re.M | re.U | re.L))
 
     def _match_name_to_acc(self, name, acc):
+        if not acc:
+            return 0
         if acc.name == name:
             return 1
         _ldtpize_accessible_name = self._ldtpize_accessible(acc)
@@ -283,6 +295,8 @@ class Utils:
                     return child
 
     def _add_appmap_data(self, obj, parent):
+        if not obj:
+            return None
         abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(obj)
         if abbrev_role in self.ldtpized_obj_index:
             self.ldtpized_obj_index[abbrev_role] += 1
@@ -356,8 +370,11 @@ class Utils:
                     if self._match_name_to_acc(key, gui):
                         return self._appmap[key]
 
-        abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui.parent)
-        _parent = abbrev_name
+        if gui and gui.parent:
+            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(gui.parent)
+            _parent = abbrev_name
+        else:
+            _parent = ''
         self._populate_appmap(gui, _parent, gui.getIndexInParent())
         self._appmap[window_name] = self.ldtpized_list
         return self.ldtpized_list
@@ -369,7 +386,9 @@ class Utils:
         obj = self._get_object(window_name, _menu_hierarchy[0])
         for _menu in _menu_hierarchy[1:]:
             _flag = False
+            print 'obj', obj
             for _child in self._list_objects(obj):
+                print '_child', _child
                 if obj == _child:
                     # if the given object and child object matches
                     continue
@@ -427,6 +446,8 @@ class Utils:
         window_type = {}
 
         for gui in self._list_guis():
+            if not gui:
+                continue
             obj_name = self._ldtpize_accessible(gui)
             if obj_name[1] == '':
                 # If label / label_by is empty string
