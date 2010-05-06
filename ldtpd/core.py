@@ -72,17 +72,16 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             self._callback_event.append(u"%s-%s" % (event.type, window_name))
 
     def _event_cb(self, event):
-        if event and event.type == "window:create":
+        if event and event.type == "window:create" and event.source:
             for window in self._callback:
-                if event and event.source and window and \
-                        self._match_name_to_acc(window, event.source):
+                if window and self._match_name_to_acc(window, event.source):
                     self._callback_event.append(u"onwindowcreate-%s" % window)
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._window_uptime[win_name] = [event.source_name,
                                              time.strftime("%Y %m %d %H %M %S")]
-        elif event and event.type == "window:destroy":
+        elif event and event.type == "window:destroy" and event.source:
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
@@ -118,6 +117,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         window_list = []
         window_type = {}
         for gui in self._list_guis():
+            if not gui:
+                continue
             window_name = self._ldtpize_accessible(gui)
             if window_name[1] == '':
                 if window_name[0] in window_type:
