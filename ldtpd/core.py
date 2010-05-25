@@ -850,7 +850,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
             matches = _get_all_children_under_obj(obj, [])
             if not matches:
-                raise LdtpServerException('Could not find a child.')
+                if child_name:
+                    _name = 'name "%s" ' % child_name
+                if role:
+                    _role = 'role "%s" ' % role
+                if parent:
+                    _parent = 'parent "%s"' % parent
+                exception = 'Could not find a child %s%s%s' % (_name, _role, _parent)
+                raise LdtpServerException(exception)
 
             return matches
 
@@ -878,7 +885,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 matches.append(name)
 
         if not matches:
-            raise LdtpServerException('Could not find a child.')
+            if child_name:
+                _name = 'name "%s" ' % child_name
+            if role:
+                _role = 'role "%s" ' % role
+            if parent:
+                _parent = 'parent "%s"' % parent
+            exception = 'Could not find a child %s%s%s' % (_name, _role, _parent)
+            raise LdtpServerException(exception)
 
         return matches
 
