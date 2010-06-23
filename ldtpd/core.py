@@ -143,8 +143,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         '''
         Launch application.
 
-        @param cmdline: Command line string to execute.
-        @type cmdline: string
+        @param cmd: Command line string to execute.
+        @type cmd: string
         @param args: Arguments to the application
         @type args: list
         @param delay: Delay after the application is launched
@@ -885,6 +885,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 matches.append(name)
 
         if not matches:
+            _name = ''
+            _role = ''
+            _parent = ''
             if child_name:
                 _name = 'name "%s" ' % child_name
             if role:
