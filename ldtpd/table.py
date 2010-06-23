@@ -210,6 +210,91 @@ class Table(Utils):
         cell.unref()
         return 1
 
+    def setcellvalue(self, window_name, object_name, row_index,
+                     column = 0, data = None):
+        '''
+        Set cell value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+        @param data: data, default value None
+                None, used for toggle button
+        @type data: string
+
+        @return: 1 on success.
+        @rtype: integer
+        '''
+        obj = self._get_object(window_name, object_name)
+
+        cell = self._get_accessible_at_row_column(obj, row_index, column)
+        print cell
+        name = None
+        if cell.childCount > 0:
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
+                    flag = True
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        iaction = child.queryAction()
+                    except NotImplementedError:
+                        iaction = None
+                    if iaction:
+                        for i in xrange(iaction.nActions):
+                            # If the cell is toggle type
+                            if re.match('toggle', iaction.getName(i), re.I):
+                                iaction.doAction(i)
+                                self._grab_focus(child)
+                                return 1
+                            elif re.match('edit', iaction.getName(i), re.I):
+                                try:
+                                    texti = cell.queryEditableText()
+                                except NotImplementedError:
+                                    continue
+                                self._grab_focus(child)
+                                if not data:
+                                    raise LdtpServerException('data cannot be empty string.')
+                                return int(texti.setTextContents(data.encode('utf-8')))
+                else:
+                    raise LdtpServerException('Text cannot be entered into object.')
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
+        else:
+            try:
+                iaction = cell.queryAction()
+            except NotImplementedError:
+                iaction = None
+            self._grab_focus(cell)
+            if iaction:
+                for i in xrange(iaction.nActions):
+                    # If the cell is toggle type
+                    if re.match('toggle', iaction.getName(i), re.I):
+                        iaction.doAction(i)
+                        return 1
+                    elif re.match('edit', iaction.getName(i), re.I):
+                        try:
+                            texti = cell.queryEditableText()
+                        except NotImplementedError:
+                            raise LdtpServerException('Text cannot be entered into object.')
+                        if not data:
+                            raise LdtpServerException('data cannot be empty string.')
+                        return int(texti.setTextContents(data.encode('utf-8')))
+        raise LdtpServerException('Text cannot be entered into object.')
+
     def getcellvalue(self, window_name, object_name, row_index, column = 0):
         '''
         Get cell value
