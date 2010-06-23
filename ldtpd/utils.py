@@ -179,7 +179,8 @@ class Utils:
             label_by
 
     def _glob_match(self, pattern, string):
-        return bool(re_match(glob_trans(pattern), string, re.M | re.U | re.L))
+        return bool(re_match(glob_trans(pattern), string,
+                             re.M | re.U | re.L))
 
     def _match_name_to_acc(self, name, acc):
         if not acc:
@@ -386,9 +387,7 @@ class Utils:
         obj = self._get_object(window_name, _menu_hierarchy[0])
         for _menu in _menu_hierarchy[1:]:
             _flag = False
-            print 'obj', obj
             for _child in self._list_objects(obj):
-                print '_child', _child
                 if obj == _child:
                     # if the given object and child object matches
                     continue
@@ -401,7 +400,7 @@ class Utils:
                     'Menu item "%s" doesn\'t exist in hierarchy' % _menu)
         return obj
 
-    def _click_object(self, obj, action = 'click'):
+    def _click_object(self, obj, action = '(click|press|activate)'):
         try:
             iaction = obj.queryAction()
         except NotImplementedError:
