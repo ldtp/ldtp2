@@ -47,6 +47,11 @@ def main(port=4118, parentpid=None):
     import pyatspi
     import traceback
 
+    if 'LDTP_DEBUG' in os.environ:
+        _ldtp_debug = os.environ['LDTP_DEBUG']
+    else:
+        _ldtp_debug = None
+
     try:
         pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
         r = XMLRPCLdtpd()
@@ -56,8 +61,8 @@ def main(port=4118, parentpid=None):
         reactor.listenTCP(port, server.Site(r))
         reactor.run()
     except twisted.internet.error.CannotListenError:
-        if os.environ.has_key('LDTP_DEBUG'):
+        if _ldtp_debug:
             print traceback.format_exc()
     except socket.error:
-        if os.environ.has_key('LDTP_DEBUG'):
+        if _ldtp_debug:
             print traceback.format_exc()

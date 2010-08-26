@@ -28,7 +28,7 @@ if 'LDTP_COMMAND_DELAY' in os.environ:
 else:
     delay = None
 
-if os.environ.has_key('LDTP_DEBUG'):
+if 'LDTP_DEBUG' in os.environ:
     _ldtp_debug = os.environ['LDTP_DEBUG']
 else:
     _ldtp_debug = None

@@ -9,7 +9,7 @@ log_level = getattr(logging, env.get(ENV_LOG_LEVEL, 'NOTSET'), logging.NOTSET)
 
 logger = logging.getLogger(AREA)
 
-if not env.has_key(ENV_LOG_OUT):
+if ENV_LOG_OUT not in env:
     handler = logging.StreamHandler()
     handler.setFormatter(
         logging.Formatter('%(name)-11s %(levelname)-8s %(message)s'))

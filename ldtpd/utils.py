@@ -63,7 +63,7 @@ class Utils:
                     # (Means: On accessing window based on user request,
                     # force remap)
                     self.cached_apps.append([app, True])
-        if os.environ.has_key('LDTP_DEBUG'):
+        if 'LDTP_DEBUG' in os.environ:
             self._ldtp_debug = os.environ['LDTP_DEBUG']
         else:
             self._ldtp_debug = None
