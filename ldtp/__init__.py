@@ -60,7 +60,7 @@ def _populateNamespace(d):
     for method in client._client.system.listMethods():
         if method.startswith('system.'):
             continue
-        if d.has_key(method):
+        if method in d:
             local_name = '_remote_' + method
         else:
             local_name = method
