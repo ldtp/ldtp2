@@ -182,8 +182,14 @@ class Utils:
         return bool(re_match(glob_trans(pattern), string,
                              re.M | re.U | re.L))
 
-    def _match_name_to_acc(self, name, acc):
+    def _match_name_to_acc(self, name, acc, classType = None):
         if not acc:
+            return 0
+        if classType:
+            roleName = acc.getRoleName().replace(' ', '_')
+        else:
+            roleName = None
+        if roleName != classType:
             return 0
         if acc.name == name:
             return 1
@@ -295,7 +301,7 @@ class Utils:
                 if child.getRole() == role_type:
                     return child
 
-    def _add_appmap_data(self, obj, parent):
+    def _add_appmap_data(self, obj, parent, child_index):
         if not obj:
             return None
         abbrev_role, abbrev_name, label_by = self._ldtpize_accessible(obj)
@@ -326,7 +332,7 @@ class Utils:
         self.ldtpized_list[ldtpized_name] = {'key' : ldtpized_name,
                                              'parent' : parent,
                                              'class' : obj.getRoleName().replace(' ', '_'),
-                                             'child_index' : obj.getIndexInParent(),
+                                             'child_index' : child_index,
                                              'children' : '',
                                              'obj_index' : '%s#%d' % (abbrev_role,
                                                                       self.ldtpized_obj_index[abbrev_role]),
@@ -337,15 +343,19 @@ class Utils:
         return ldtpized_name
 
     def _populate_appmap(self, obj, parent, child_index):
+        index = -1
         if obj:
             if child_index != -1:
-                parent = self._add_appmap_data(obj, parent)
+                parent = self._add_appmap_data(obj, parent, child_index)
+            # Have noticed using obj.getIndexInParent()
+            # returns -1, let the loop counts the child index
             for child in obj:
+                index += 1
                 if not child:
                     continue
                 if child.getRole() == pyatspi.ROLE_TABLE_CELL:
                     break
-                self._populate_appmap(child, parent, child.getIndexInParent())
+                self._populate_appmap(child, parent, index)
 
     def _appmap_pairs(self, gui, window_name, force_remap = False):
         self.ldtpized_list = {}
@@ -524,7 +534,7 @@ class Utils:
                     if parent not in appmap:
                         return parent_list
                     parent_list.append(parent)
-                    if self._match_name_to_acc(parent, gui):
+                    if self._match_name_to_acc(parent, gui, appmap[parent]['class']):
                         return parent_list
                     return _traverse_parent(gui, window_name,
                                             appmap[parent],
@@ -552,14 +562,16 @@ class Utils:
                         if obj.getRoleName() != _appmap_role:
                             # Traversing object role and appmap role doesn't match
                             if self._ldtp_debug:
-                                print "Traversing object role and appmap role doesn't match"
+                                print "Traversing object role and appmap role " \
+                                      "doesn't match", obj.getRoleName(), _appmap_role
                             return None
                         break
                     obj = tmp_obj
                     if obj.getRoleName() != _appmap_role:
                         # Traversing object role and appmap role doesn't match
                         if self._ldtp_debug:
-                            print "Traversing object role and appmap role doesn't match"
+                            print "Traversing object role and appmap role " \
+                                  "doesn't match", obj.getRoleName(), _appmap_role
                         return None
             return obj
         _current_obj = _internal_get_object(window_name, obj_name, obj)

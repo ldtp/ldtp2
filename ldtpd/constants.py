@@ -70,4 +70,5 @@ abbreviated_roles = {
     pyatspi.ROLE_TOOL_TIP : 'ttip',
     pyatspi.ROLE_CHECK_BOX : 'chk',
     pyatspi.ROLE_TABLE_CELL : 'tblc',
+    pyatspi.ROLE_OPTION_PANE : 'opane',
     pyatspi.ROLE_EMBEDDED : 'emb'}
