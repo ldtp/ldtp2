@@ -93,7 +93,7 @@ class Transport(xmlrpclib.Transport):
                 raise
             except xmlrpclib.Fault, e:
                 if e.faultCode == ERROR_CODE:
-                    raise LdtpExecutionError(e.faultString)
+                    raise LdtpExecutionError(e.faultString.encode('utf-8'))
                 else:
                     raise e
 
