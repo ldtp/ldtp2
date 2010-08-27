@@ -111,16 +111,16 @@ class Utils:
                 for win_name in self._appmap.keys():
                     # When window doesn't have a title, destroy all the
                     # window info from appmap, which doesn't haven't title
-                    if re.search('%s\d*$' % abbrev_role, win_name):
+                    if re.search('%s\d*$' % abbrev_role, win_name, re.M | re.U):
                         del self._appmap[win_name]
             else:
                 for name in self._appmap.keys():
                     # When multiple window have same title, destroy all the
                     # window info from appmap, which have same title
                     if re.search('%s%s\d*$' % (abbrev_role, abbrev_name),
-                                 win_name) or \
+                                 win_name, re.M | re.U) or \
                                  re.search('%s%s*$' % (abbrev_role, abbrev_name),
-                                           win_name):
+                                           win_name, re.M | re.U):
                         del self._appmap[name]
             return
         cache = True
@@ -392,7 +392,7 @@ class Utils:
 
     def _get_menu_hierarchy(self, window_name, object_name):
         _menu_hierarchy = re.split(';', object_name)
-        if not re.search('^mnu', _menu_hierarchy[0]):
+        if not re.search('^mnu', _menu_hierarchy[0], re.M | re.U):
             _menu_hierarchy[0] = 'mnu%s' % _menu_hierarchy[0]
         obj = self._get_object(window_name, _menu_hierarchy[0])
         for _menu in _menu_hierarchy[1:]:
