@@ -35,6 +35,7 @@ class Utils:
         self._appmap = {}
         self._callback = {}
         self._state_names = {}
+        self._ldtp_debug = None
         self._window_uptime = {}
         self._callback_event = []
         self._get_all_state_names()
@@ -65,8 +66,6 @@ class Utils:
                     self.cached_apps.append([app, True])
         if 'LDTP_DEBUG' in os.environ:
             self._ldtp_debug = os.environ['LDTP_DEBUG']
-        else:
-            self._ldtp_debug = None
 
     def _get_all_state_names(self):
         """
