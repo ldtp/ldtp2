@@ -256,7 +256,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: cpu stat list on success, else empty list
                 If same process name, running multiple instance,
                 get the stat of all the process CPU usage
-        @rtype: string
+        @rtype: list
         """
         # Create an instance of process stat
         _stat_inst = ProcessStats(process_name)
