@@ -21,11 +21,138 @@ Headers in this file shall remain intact.
 
 import os
 import re
+import time
+import logging
 import pyatspi
+import threading
+import traceback
+import logging.handlers
 from re import match as re_match
 from constants import abbreviated_roles
 from fnmatch import translate as glob_trans
 from server_exception import LdtpServerException
+
+importStatGrab = False
+try:
+    import statgrab
+    importStatGrab = True
+except ImportError:
+    pass
+
+class LdtpCustomLog(logging.Handler):
+    """
+    Custom LDTP log, inherit logging.Handler and implement
+    required API
+    """
+    def __init__(self):
+        # Call base handler
+        logging.Handler.__init__(self)
+        # Log all the events in list
+        self.log_events = []
+
+    def emit(self, record):
+        # Get the message and add to the list
+        # Later the list element can be poped out
+        self.log_events.append(u'%s-%s' % (record.levelname, record.getMessage()))
+
+# Add LdtpCustomLog handler
+logging.handlers.LdtpCustomLog = LdtpCustomLog
+# Create instance of LdtpCustomLog handler
+_custom_logger = logging.handlers.LdtpCustomLog()
+# Set default log level as ERROR
+_custom_logger.setLevel(logging.ERROR)
+# Add handler to root logger
+logger = logging.getLogger('')
+# Add custom logger to the root logger
+logger.addHandler(_custom_logger)
+
+LDTP_LOG_MEMINFO = 60
+LDTP_LOG_CPUINFO = 61
+logging.addLevelName(LDTP_LOG_MEMINFO, 'MEMINFO')
+logging.addLevelName(LDTP_LOG_CPUINFO, 'CPUINFO')
+
+class ProcessStats(threading.Thread):
+    """
+    Capturing Memory and CPU Utilization statistics for an application and its related processes
+    NOTE: You have to install python-statgrab package
+    EXAMPLE USAGE:
+
+    xstats = pstats('evolution', 2)
+    # Start Logging by calling start
+    xstats.start()
+    # Stop the process statistics gathering thread by calling the stopstats method
+    xstats.stop()
+    """
+
+    def __init__(self, appname, interval = 2):
+        if not importStatGrab:
+            raise LdtpServerException('python-statgrab package is not installed')
+        threading.Thread.__init__(self)
+        self._appname = appname
+        self._interval = interval
+        self._stop = False
+        self.running = True
+
+    def __del__(self):
+        self._stop = False
+        self.running = False
+
+    def get_cpu_memory_stat(self):
+        proc_list = []
+        for i in statgrab.sg_get_process_stats():
+            if self._stop:
+                self.running = False
+                return proc_list
+            # If len(i['process_name']) > 15, then the string is truncated by
+            # statgrab module, so in re.search use i['process_name'] as search
+            # criteria
+            if not re.search(str(i['process_name']), self._appname,
+                             re.U | re.L):
+                # If process name doesn't match, continue
+                continue
+            # If process name matches
+            # Get process title
+            # ex output (string):
+            # /usr/lib/gnome-panel/clock-applet --oaf-activate-iid= \
+            #        OAFIID:GNOME_ClockApplet_Factory --oaf-ior-fd=32
+            title = str(i['proctitle'])
+            # Split the title to get exact string
+            # ex output (list of string):
+            # ['/usr/lib/gnome-panel/clock-applet',
+            # '--oaf-activate-iid=OAFIID:GNOME_ClockApplet_Factory \
+            #        --oaf-ior-fd=32 ']
+            # Just split the first separater
+            proctitle = re.split(" ", title, 1) # Split by space
+            # ex output (list of string)
+            # ['', 'usr', 'lib', 'gnome-panel', 'clock-applet']
+             # Split by / and use the last string, which is process name
+            procname = re.split("/", proctitle[0])[-1]
+            if not re.match(self._appname, procname):
+                # If process name and application name doesn't match
+                # continue, don't add it to the list
+                continue
+            proc_list.append([i, procname])
+        return proc_list
+
+    def run(self):
+        while not self._stop:
+            for i, procname in self.get_cpu_memory_stat():
+                # Add the stats into ldtp log
+                # Resident memory will be in bytes, to convert it to MB
+                # divide it by 1024*1024
+                logger.log(LDTP_LOG_MEMINFO, procname + ' - ' + \
+                           str(i['proc_resident'] / (1024*1024)))
+                # CPU percent returned with 14 decimal values
+                # ex: 0.0281199122531, round it to 2 decimal values
+                # as 0.03
+                logger.log(LDTP_LOG_CPUINFO, procname + ' - ' + \
+                           str(round(i['cpu_percent'], 2)))
+            # Wait for interval seconds before gathering stats again
+            time.sleep(self._interval)
+
+    def stop(self):
+        self._stop = True
+        self.running = False
 
 class Utils:
     cached_apps = None
@@ -34,13 +161,15 @@ class Utils:
         self._states = {}
         self._appmap = {}
         self._callback = {}
+        self._logger = logger
         self._state_names = {}
-        self._ldtp_debug = None
         self._window_uptime = {}
         self._callback_event = []
         self._get_all_state_names()
         self._handle_table_cell = False
+        self._custom_logger = _custom_logger
         self._desktop = pyatspi.Registry.getDesktop(0)
+        self._ldtp_debug = os.environ.get('LDTP_DEBUG', None)
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
@@ -64,13 +193,14 @@ class Utils:
                     # (Means: On accessing window based on user request,
                     # force remap)
                     self.cached_apps.append([app, True])
-        if 'LDTP_DEBUG' in os.environ:
-            self._ldtp_debug = os.environ['LDTP_DEBUG']
+        if self._ldtp_debug:
+            _custom_logger.setLevel(logging.DEBUG)
 
     def _get_all_state_names(self):
         """
         This is used by client internally to populate all states
         Create a dictionary
+        NOTE: Just called once, internally
         """
         for state in pyatspi.STATE_VALUE_TO_NAME.keys():
             self._states[state.__repr__()] = state
@@ -80,15 +210,22 @@ class Utils:
         return self._states
 
     def _obj_changed(self, event):
+        """
+        If window already in cached list, then mark for remap,
+        as the children have changed
+        """
         if self._ldtp_debug:
             print event, event.type, event.source, event.source.parent
         for app in self.cached_apps:
             try:
-                if not app or not app[0]: continue
+                if not app or not app[0] or app[0] != event.host_application:
+                    continue
                 # Force remap for this application, as some object is
                 # either added / removed / changed
                 index = self.cached_apps.index(app)
                 self.cached_apps[index][1] = True
+                # Just break, as the remap flag is set to true
+                break
             except LookupError:
                 # A11Y lookup error
                 continue
@@ -99,13 +236,15 @@ class Utils:
     def _on_window_event(self, event):
         if self._ldtp_debug:
             print event, event.type, event.source, event.source.parent
+        # Proceed only for window destry and deactivate event
         if event and (event.type == "window:destroy" or \
                           event.type == "window:deactivate") and \
                           event.source:
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
+            # LDTPized name
             win_name = u'%s%s' % (abbrev_role, abbrev_name)
-            # Empty window name
+            # Window title is empty
             if abbrev_name == '':
                 for win_name in self._appmap.keys():
                     # When window doesn't have a title, destroy all the
@@ -125,6 +264,7 @@ class Utils:
         cache = True
         for app in self.cached_apps:
             if event.host_application == app[0]:
+                # Application already in cached list
                 cache = False
                 break
         if cache:
@@ -135,11 +275,17 @@ class Utils:
             self.cached_apps.append([event.host_application, True])
 
     def _list_apps(self):
+        """
+        List all the applications
+        """
         for app in self.cached_apps:
             if not app: continue
             yield app
 
     def _list_guis(self):
+        """
+        List all the windows that are currently open
+        """
         for app in self.cached_apps:
             if not app or not app[0]: continue
             try:
@@ -149,16 +295,31 @@ class Utils:
                     if not gui: continue
                     yield gui
             except LookupError:
+                # If the window doesn't exist, remove from the cached list
                 self.cached_apps.remove(app)
 
     def _ldtpize_accessible(self, acc):
+        """
+        Get LDTP format accessibile name
+
+        @param acc: Accessible handle
+        @type acc: object
+
+        @return: object type, stripped object name (associated / direct),
+                        associated label
+        @rtype: tuple
+        """
         label_by = label_acc = None
+        # Get accessible relation set
         rel_set = acc.getRelationSet()
         if rel_set:
             for i, rel in enumerate(rel_set):
                 relationType = rel.getRelationType()
+                # If object relation is labelled by or controlled by,
+                # then give that importance, rather than the direct object label
                 if relationType == pyatspi.RELATION_LABELLED_BY or \
                         relationType == pyatspi.RELATION_CONTROLLED_BY:
+                    # Get associated label
                     label_acc = rel.getTarget(i)
                     break
         role = acc.getRole()
@@ -168,38 +329,78 @@ class Utils:
                 role == pyatspi.ROLE_FILE_CHOOSER or \
                 role == pyatspi.ROLE_ALERT or \
                 role == pyatspi.ROLE_COLOR_CHOOSER:
+            # Strip space and new line from window title
             strip = '( |\n)'
         else:
+            # Strip space, colon, dot, underscore and new line from
+            # all other object types
             strip = '( |:|\.|_|\n)'
         if label_acc:
+            # Priority to associated label
             label_by = label_acc.name
+        # Return the role type (if, not in the know list of roles,
+        # return ukn - unknown), strip the above characters from name
+        # also return labely_by string
         return abbreviated_roles.get(role, 'ukn'), \
             re.sub(strip, '', (label_acc or acc).name), \
             label_by
 
     def _glob_match(self, pattern, string):
+        """
+        Match given string, by escaping regex characters
+        """
+        # regex flags Multi-line, Unicode, Locale
         return bool(re_match(glob_trans(pattern), string,
                              re.M | re.U | re.L))
 
     def _match_name_to_acc(self, name, acc, classType = None):
+        """
+        Match given name with acc.name / acc.associate name
+        and also class type
+
+        @param name: Label to be matched
+        @type name: string
+        @param acc: Accessibility handle
+        @type acc: object
+        @param classType: role name
+        @type classType: string
+
+        @return: Return 0 on failure, 1 on successful match
+        @rtype: integer
+        """
         if not acc:
             return 0
         if classType:
+            # Accessibility role type returns space, when multiple
+            # words exist in object type. ex: 'push button'
+            # User might mistype with multiple space, to avoid
+            # any confusion, using _. So, user will be inputing
+            # push_button
             roleName = acc.getRoleName().replace(' ', '_')
         else:
             roleName = None
         if roleName != classType:
+            # If type doesn't match, don't proceed further
             return 0
         if acc.name == name:
+            # Since, type already matched and now the given name
+            # and accessibile name matched, mission accomplished
             return 1
+        # Get LDTP format accessibile name
         _ldtpize_accessible_name = self._ldtpize_accessible(acc)
+        # Concat object type and object name
+        # ex: 'frmUnsavedDocument1-gedit' for Gedit application
+        # frm - Frame, Window title - 'Unsaved Document 1 - gedit'
         _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
                                   _ldtpize_accessible_name[1])
         if _object_name == name:
+            # If given name equal LDTPized name format
             return 1
         if self._glob_match(name, acc.name):
+            # If given name match object name with regexp
             return 1
         if self._glob_match(name, _object_name):
+            # If given name match LDTPized name format with regexp
             return 1
         role = acc.getRole()
         if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
@@ -208,14 +409,21 @@ class Utils:
                 role == pyatspi.ROLE_FILE_CHOOSER or \
                 role == pyatspi.ROLE_ALERT or \
                 role == pyatspi.ROLE_COLOR_CHOOSER:
+            # If window type, strip using this format
             strip = '( |\n)'
         else:
+            # If any other type, strip using this format
             strip = '( |:|\.|_|\n)'
+        # Strip given name too, as per window type or other type
         _tmp_name = re.sub(strip, '', name)
         if self._glob_match(_tmp_name, _object_name):
+            # Match stripped given name and LDTPized name
             return 1
         if self._glob_match(_tmp_name, _ldtpize_accessible_name[1]):
+            # Match stripped given name and LDTPized name, without object type
+            # ex: UnsavedDocument1-gedit, without frm at start
             return 1
+        # If nothing matches, the search criteria fails, to find the object
         return 0
 
     def _match_name_to_appmap(self, name, acc):
@@ -405,7 +613,7 @@ class Utils:
                     obj = _child
                     break
             if not _flag:
-                raise LdtpServerException (
+                raise LdtpServerException(
                     'Menu item "%s" doesn\'t exist in hierarchy' % _menu)
         return obj
 
