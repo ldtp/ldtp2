@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 Core.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-10 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -14,15 +14,15 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
-from utils import Utils
+from utils import Utils, ProcessStats
 from constants import abbreviated_roles
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
     GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter, \
@@ -48,9 +48,9 @@ from page_tab_list import PageTabList
 
 class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             Text, Mouse, Generic, Value):
-    '''
+    """
     Core LDTP class.
-    '''
+    """
     def __init__(self):
         Utils.__init__(self)
         # Window up time and onwindowcreate events
@@ -58,11 +58,17 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         # User registered events
         self._registered_events = []
         pyatspi.Registry.registerEventListener(self._event_cb, *self._events)
+        self._process_stats = {}
 
     def __del__(self):
-        pyatspi.Registry.deregisterEventListener(self._event_cb, *self._events)
-        pyatspi.Registry.deregisterEventListener(self._registered_event_cb,
-                                                 *self._registered_events)
+        if '_events' in dir(self):
+            # De-register all registered events
+            pyatspi.Registry.deregisterEventListener(self._event_cb, *self._events)
+            pyatspi.Registry.deregisterEventListener(self._registered_event_cb,
+                                                     *self._registered_events)
+        for key in self._process_stats.keys():
+            # Stop all process monitoring instances
+            self._process_stats[key].stop()
 
     def _registered_event_cb(self, event):
         if event and event.source and event.type:
@@ -90,12 +96,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                     time.strftime("%Y %m %d %H %M %S"))
 
     def getapplist(self):
-        '''
+        """
         Get all accessibility application name that are currently running
         
         @return: list of appliction name of string type on success.
         @rtype: list
-        '''
+        """
         app_list = []
         for app in self._list_apps():
             try:
@@ -108,12 +114,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return app_list
 
     def getwindowlist(self):
-        '''
+        """
         Get all accessibility window that are currently open
         
         @return: list of window names in LDTP format of string type on success.
         @rtype: list
-        '''
+        """
         window_list = []
         window_type = {}
         for gui in self._list_guis():
@@ -140,7 +146,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return True
 
     def launchapp(self, cmd, args = [], delay = 0, env = 1):
-        '''
+        """
         Launch application.
 
         @param cmd: Command line string to execute.
@@ -156,7 +162,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
 
         @raise LdtpServerException: When command fails
-        '''
+        """
         os.environ['NO_GAIL'] = '0'
         os.environ['NO_AT_BRIDGE'] = '0'
         if env:
@@ -176,30 +182,127 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return process.pid
 
     def poll_events(self):
-        '''
+        """
         Poll for any registered events or window create events
 
         @return: window name
         @rtype: string
-        '''
+        """
 
         if not self._callback_event:
             return ''
 
         return self._callback_event.pop()
 
+    def getlastlog(self):
+        """
+        Returns one line of log at any time, if any available, else empty string
+
+        @return: log as string
+        @rtype: string
+        """
+
+        if not self._custom_logger.log_events:
+            return ''
+        
+        return self._custom_logger.log_events.pop()
+
+    def startprocessmonitor(self, process_name, interval = 2):
+        """
+        Start memory and CPU monitoring, with the time interval between
+        each process scan
+
+        @param process_name: Process name, ex: firefox-bin.
+        @type process_name: string
+        @param interval: Time interval between each process scan
+        @type interval: int
+
+        @return: 1 on success
+        @rtype: integer
+        """
+        if self._process_stats.has_key(process_name):
+            # Stop previously running instance
+            # At any point, only one process name can be tracked
+            # If an instance already exist, then stop it
+            self._process_stats[process_name].stop()
+        # Create an instance of process stat
+        self._process_stats[process_name] = ProcessStats(process_name, interval)
+        # start monitoring the process
+        self._process_stats[process_name].start()
+        return 1
+
+    def stopprocessmonitor(self, process_name):
+        """
+        Stop memory and CPU monitoring
+
+        @param process_name: Process name, ex: firefox-bin.
+        @type process_name: string
+
+        @return: 1 on success
+        @rtype: integer
+        """
+        if self._process_stats.has_key(process_name):
+            # Stop monitoring process
+            self._process_stats[process_name].stop()
+        return 1
+
+    def getcpustat(self, process_name):
+        """
+        get CPU stat for the give process name
+
+        @param process_name: Process name, ex: firefox-bin.
+        @type process_name: string
+
+        @return: cpu stat list on success, else empty list
+                If same process name, running multiple instance,
+                get the stat of all the process CPU usage
+        @rtype: string
+        """
+        # Create an instance of process stat
+        _stat_inst = ProcessStats(process_name)
+        _stat_list = []
+        for i, procname in _stat_inst.get_cpu_memory_stat():
+            # CPU percent returned with 14 decimal values
+            # ex: 0.0281199122531, round it to 2 decimal values
+            # as 0.03
+            _stat_list.append(u'%s - %s' % (procname,
+                                            str(round(i['cpu_percent'], 2))))
+        return _stat_list
+
+    def getmemorystat(self, process_name):
+        """
+        get memory stat
+
+        @param process_name: Process name, ex: firefox-bin.
+        @type process_name: string
+
+        @return: memory stat list on success, else empty list
+                If same process name, running multiple instance,
+                get the stat of all the process memory usage
+        @rtype: list
+        """
+        # Create an instance of process stat
+        _stat_inst = ProcessStats(process_name)
+        _stat_list = []
+        for i, procname in _stat_inst.get_cpu_memory_stat():
+            # Resident memory will be in bytes, to convert it to MB
+            # divide it by 1024*1024
+            _stat_list.append(u'%s - %s' % (procname,
+                                            str(i['proc_resident'] / (1024*1024))))
+        return _stat_list
+
     def windowuptime(self, window_name):
-        '''
+        """
         Get window uptime
 
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
 
-        @return: "starttime - endtime" in string format
+        @return: 'starttime - endtime' in string format
         ex: '2010 01 12 14 21 13 - 2010 01 12 14 23 05'
         @rtype: string
-        '''
+        """
 
         if window_name in self._window_uptime and \
                 len(self._window_uptime[window_name]) == 3:
@@ -216,7 +319,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return ''
 
     def onwindowcreate(self, window_name):
-        '''
+        """
         Raise event on window create
 
         @param window_name: Window name to look for, either full name,
@@ -225,14 +328,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if registration was successful, 0 if not.
         @rtype: integer
-        '''
+        """
 
         self._callback[window_name] = window_name
 
         return 1
 
     def removecallback(self, window_name):
-        '''
+        """
         Remove callback of window create
 
         @param window_name: Window name to look for, either full name,
@@ -241,7 +344,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if remove was successful, 0 if not.
         @rtype: integer
-        '''
+        """
 
         if window_name in self._callback:
             del self._callback[window_name]
@@ -249,7 +352,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
 
     def registerevent(self, event_name):
-        '''
+        """
         Register at-spi event
 
         @param event_name: Event name in at-spi format.
@@ -257,7 +360,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if registration was successful, 0 if not.
         @rtype: integer
-        '''
+        """
 
         pyatspi.Registry.deregisterEventListener( \
             self._registered_event_cb, *self._registered_events)
@@ -268,7 +371,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
 
     def removeevent(self, event_name):
-        '''
+        """
         Remove callback of registered event
 
         @param event_name: Event name in at-spi format.
@@ -276,7 +379,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if remove was successful, 0 if not.
         @rtype: integer
-        '''
+        """
 
         for event in self._registered_events:
             if event_name == event:
@@ -290,7 +393,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
 
     def objectexist(self, window_name, object_name):
-        '''
+        """
         Checks whether a window or component exists.
         
         @param window_name: Window name to look for, either full name,
@@ -302,11 +405,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if GUI was found, 0 if not.
         @rtype: integer
-        '''
+        """
         return self.guiexist(window_name, object_name)
 
     def maximizewindow(self, window_name = None):
-        '''
+        """
         Maximize a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -315,13 +418,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window maximized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = MaximizeWindow(window_name)
 
         return int(waiter.run())
 
     def minimizewindow(self, window_name = None):
-        '''
+        """
         Minimize a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -330,13 +433,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window minimized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = MinimizeWindow(window_name)
 
         return int(waiter.run())
 
     def unmaximizewindow(self, window_name = None):
-        '''
+        """
         Unmaximize a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -345,13 +448,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window unmaximized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = UnmaximizeWindow(window_name)
 
         return int(waiter.run())
 
     def unminimizewindow(self, window_name = None):
-        '''
+        """
         Unminimize a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -360,13 +463,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = UnminimizeWindow(window_name)
 
         return int(waiter.run())
 
     def activatewindow(self, window_name):
-        '''
+        """
         Activate a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -375,13 +478,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = ActivateWindow(window_name)
 
         return int(waiter.run())
 
     def closewindow(self, window_name = None):
-        '''
+        """
         Close a window using wnck
         
         @param window_name: Window name to look for, either full name,
@@ -390,13 +493,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
-        '''
+        """
         waiter = CloseWindow(window_name)
 
         return int(waiter.run())
 
     def guiexist(self, window_name, object_name=''):
-        '''
+        """
         Checks whether a window or component exists.
         
         @param window_name: Window name to look for, either full name,
@@ -408,7 +511,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if GUI was found, 0 if not.
         @rtype: integer
-        '''
+        """
         if object_name:
             waiter = ObjectExistsWaiter(window_name, object_name, 0)
         else:
@@ -418,7 +521,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def waittillguiexist(self, window_name, object_name = '',
                          guiTimeOut = 30, state = ''):
-        '''
+        """
         Wait till a window or component exists.
         
         @param window_name: Window name to look for, either full name,
@@ -434,7 +537,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if GUI was found, 0 if not.
         @rtype: integer
-        '''
+        """
         if object_name:
             waiter = ObjectExistsWaiter(window_name, object_name, guiTimeOut, state)
         else:
@@ -443,7 +546,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return int(waiter.run())
 
     def waittillguinotexist(self, window_name, object_name = '', guiTimeOut = 30):
-        '''
+        """
         Wait till a window does not exist.
         
         @param window_name: Window name to look for, either full name,
@@ -457,7 +560,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 if GUI has gone away, 0 if not.
         @rtype: integer
-        '''
+        """
         if object_name:
             waiter = \
                 ObjectNotExistsWaiter(window_name, object_name, guiTimeOut)
@@ -467,7 +570,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return int(waiter.run())
 
     def getobjectsize(self, window_name, object_name):
-        '''
+        """
         Get object size
         
         @param window_name: Window name to look for, either full name,
@@ -479,7 +582,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: x, y, width, height on success.
         @rtype: list
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         _coordinates = self._get_size(obj)
@@ -487,7 +590,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                     _coordinates.width, _coordinates.height]
 
     def getallstates(self, window_name, object_name):
-        '''
+        """
         Get all states of given object
         
         @param window_name: Window name to look for, either full name,
@@ -499,7 +602,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of string on success.
         @rtype: list
-        '''
+        """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
@@ -513,7 +616,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return _obj_states
 
     def hasstate(self, window_name, object_name, state, guiTimeOut = 0):
-        '''
+        """
         has state
         
         @param window_name: Window name to look for, either full name,
@@ -527,7 +630,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             waiter = \
                 ObjectExistsWaiter(window_name, object_name, guiTimeOut, state)
@@ -537,7 +640,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 0
 
     def grabfocus(self, window_name, object_name):
-        '''
+        """
         Grab focus.
         
         @param window_name: Window name to look for, either full name,
@@ -549,14 +652,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
         return 1
 
     def click(self, window_name, object_name):
-        '''
+        """
         Click item.
         
         @param window_name: Window name to look for, either full name,
@@ -568,7 +671,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -582,7 +685,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
     
     def press(self, window_name, object_name):
-        '''
+        """
         Press item.
         
         @param window_name: Window name to look for, either full name,
@@ -594,7 +697,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -603,7 +706,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
     
     def check(self, window_name, object_name):
-        '''
+        """
         Check item.
         
         @param window_name: Window name to look for, either full name,
@@ -615,7 +718,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -625,7 +728,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
 
     def uncheck(self, window_name, object_name):
-        '''
+        """
         Uncheck item.
         
         @param window_name: Window name to look for, either full name,
@@ -637,7 +740,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -647,7 +750,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
     
     def verifytoggled(self, window_name, object_name):
-        '''
+        """
         Verify toggle item toggled.
         
         @param window_name: Window name to look for, either full name,
@@ -659,11 +762,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         return self.verifycheck(window_name, object_name)
 
     def verifycheck(self, window_name, object_name):
-        '''
+        """
         Verify check item.
         
         @param window_name: Window name to look for, either full name,
@@ -675,7 +778,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
 
@@ -684,7 +787,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             return 0
 
     def verifyuncheck(self, window_name, object_name):
-        '''
+        """
         Verify uncheck item.
         
         @param window_name: Window name to look for, either full name,
@@ -696,7 +799,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
 
@@ -705,7 +808,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             return 0
 
     def stateenabled(self, window_name, object_name):
-        '''
+        """
         Check whether an object state is enabled or not
         
         @param window_name: Window name to look for, either full name,
@@ -717,7 +820,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
 
@@ -726,7 +829,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             return 0
 
     def getobjectlist(self, window_name):
-        '''
+        """
         Get list of items in given GUI.
         
         @param window_name: Window name to look for, either full name,
@@ -735,7 +838,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of items in LDTP naming convention.
         @rtype: list
-        '''
+        """
         obj_list = []
         gui, _window_name = self._get_window_handle(window_name)
         if not gui:
@@ -747,7 +850,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return obj_list
 
     def getobjectinfo(self, window_name, object_name):
-        '''
+        """
         Get object properties.
         
         @param window_name: Window name to look for, either full name,
@@ -759,7 +862,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of properties
         @rtype: list
-        '''
+        """
         _window_handle, _window_name = \
             self._get_window_handle(window_name)
         if not _window_handle:
@@ -776,7 +879,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return props
 
     def getobjectproperty(self, window_name, object_name, prop):
-        '''
+        """
         Get object property value.
         
         @param window_name: Window name to look for, either full name,
@@ -790,7 +893,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of properties
         @rtype: list
-        '''
+        """
         _window_handle, _window_name = \
             self._get_window_handle(window_name)
         if not _window_handle:
@@ -805,7 +908,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                                       (prop, object_name))
 
     def getchild(self, window_name, child_name = '', role = '', parent = ''):
-        '''
+        """
         Gets the list of object available in the window, which matches 
         component name or role name or both.
         
@@ -821,7 +924,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of matched children names
         @rtype: list
-        '''
+        """
         matches = []
         if role:
             role = re.sub(' ', '_', role)
@@ -900,14 +1003,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return matches
 
     def remap(self, window_name):
-        '''
+        """
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
 
         @return: 1
         @rtype: integer
-        '''
+        """
         _window_handle, _window_name = \
             self._get_window_handle(window_name)
         if not _window_handle:
@@ -917,7 +1020,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return 1
 
     def wait(self, timeout=5):
-        '''
+        """
         Wait a given amount of seconds.
 
         @param timeout: Wait timeout in seconds
@@ -925,13 +1028,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1
         @rtype: integer
-        '''
+        """
         waiter = NullWaiter(1, timeout)
 
         return waiter.run()
 
     def getstatusbartext(self, window_name, object_name):
-        '''
+        """
         Get text value
         
         @param window_name: Window name to type in, either full name,
@@ -943,11 +1046,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: text on success.
         @rtype: string
-        '''
+        """
         return self.gettextvalue(window_name, object_name)
 
     def setlocale(self, locale_str):
-        '''
+        """
         Set the locale to the given value.
 
         @param locale_str: locale to set to.
@@ -955,12 +1058,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: 1
         @rtype: integer
-        '''
+        """
         locale.setlocale(locale.LC_ALL, locale_str)
         return 1
 
     def getwindowsize(self, window_name):
-        '''
+        """
         Get window size.
         
         @param window_name: Window name to get size of.
@@ -968,7 +1071,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         @return: list of dimensions [x, y, w, h]
         @rtype: list
-        '''
+        """
         for gui in self._list_guis():
             if self._match_name_to_acc(window_name, gui):
                 size = self._get_size(gui)
