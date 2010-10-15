@@ -47,10 +47,7 @@ def main(port=4118, parentpid=None):
     import pyatspi
     import traceback
 
-    if 'LDTP_DEBUG' in os.environ:
-        _ldtp_debug = os.environ['LDTP_DEBUG']
-    else:
-        _ldtp_debug = None
+    _ldtp_debug = os.environ.get('LDTP_DEBUG', None)
 
     try:
         pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
