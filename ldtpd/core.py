@@ -265,8 +265,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             # CPU percent returned with 14 decimal values
             # ex: 0.0281199122531, round it to 2 decimal values
             # as 0.03
-            _stat_list.append(u'%s - %s' % (procname,
-                                            str(round(i['cpu_percent'], 2))))
+            _stat_list.append(round(i['cpu_percent'], 2))
         return _stat_list
 
     def getmemorystat(self, process_name):
@@ -287,8 +286,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         for i, procname in _stat_inst.get_cpu_memory_stat():
             # Resident memory will be in bytes, to convert it to MB
             # divide it by 1024*1024
-            _stat_list.append(u'%s - %s' % (procname,
-                                            str(i['proc_resident'] / (1024*1024))))
+            _stat_list.append(i['proc_resident'] / (1024*1024))
         return _stat_list
 
     def windowuptime(self, window_name):
