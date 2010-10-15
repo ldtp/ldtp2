@@ -1,4 +1,4 @@
-'''
+"""
 LDTP v2 client init file
 
 @author: Eitan Isaacson <eitan@ascender.com>
@@ -15,7 +15,7 @@ merchantability or fitness for a particular purpose.
 See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import os
 import re
@@ -25,14 +25,21 @@ import client
 import atexit
 import thread
 import gobject
+import logging
 import datetime
 import tempfile
+import warnings
 import traceback
 from base64 import b64decode
 from fnmatch import translate as glob_trans
 from client_exception import LdtpExecutionError
 
 _pollEvents = None
+_ldtp_debug = None
+_file_logger = None
+
+if 'LDTP_DEBUG' in os.environ:
+    _ldtp_debug = os.environ['LDTP_DEBUG']
 
 def setHost(host):
     client._client.setHost(host)
@@ -40,20 +47,149 @@ def setHost(host):
 def whoismyhost():
     return client._client._ServerProxy__host
 
-def log(self, *args):
-    # Do nothing. For backward compatability
-    pass
+LDTP_LOG_MEMINFO = 60
+LDTP_LOG_CPUINFO = 61
+logging.addLevelName(LDTP_LOG_MEMINFO, 'MEMINFO')
+logging.addLevelName(LDTP_LOG_CPUINFO, 'CPUINFO')
 
-def startlog(self, *args):
-    # Do nothing. For backward compatability
-    pass
+# Add handler to root logger
+logger = logging.getLogger('')
 
-def stoplog(self):
-    # Do nothing. For backward compatability
-    pass
+def log(message, level = logging.DEBUG):
+    """
+    Logs the message in the root logger with the log level
+    @param message: Message to be logged
+    @type message: string
+    @param level: Log level, defaul DEBUG
+    @type level: integer
 
-def logFailures(self, *args):
+    @return: 1 on success and 0 on error
+    @rtype: integer
+    """
+
+    if _ldtp_debug:
+        print message
+    logger.log(level, str(message))
+    return 1
+
+def startlog(filename, overwrite = True):
+    """
+    @param filename: Start logging on the specified file
+    @type filename: string
+    @param overwrite: Overwrite or append
+        False - Append log to an existing file
+        True - Write log to a new file. If file already exist, 
+        then erase existing file content and start log
+    @type overwrite: boolean
+
+    @return: 1 on success and 0 on error
+    @rtype: integer
+    """
+
+    if not filename:
+        return 0
+
+    if overwrite:
+        # Create new file, by overwriting existing file
+        _mode = 'w'
+    else:
+        # Append existing file
+        _mode = 'a'
+    global _file_logger
+    # Create logging file handler
+    _file_logger = logging.FileHandler(filename, _mode)
+    # Log 'Levelname: Messages', eg: 'ERROR: Logged message'
+    _formatter = logging.Formatter(u'%(levelname)-8s: %(message)s')
+    _file_logger.setFormatter(_formatter)
+    logger.addHandler(_file_logger)
+    if _ldtp_debug:
+        # On debug, change the default log level to DEBUG
+        _file_logger.setLevel(logging.DEBUG)
+    else:
+        # else log in case of ERROR level and above
+        _file_logger.setLevel(logging.ERROR)
+
+    return 1
+
+def stoplog():
+    """ Stop logging.
+
+    @return: 1 on success and 0 on error
+    @rtype: integer
+    """
+
+    global _file_logger
+    if _file_logger:
+        logger.removeHandler(_file_logger)
+        _file_logger = None
+    return 1
+
+class PollLogs:
+    """
+    Class to poll logs, NOTE: *NOT* for external use
+    """
+    global _file_logger
+    def __init__(self):
+        self._stop = False
+
+    def __del__(self):
+        """
+        Stop polling when destroying this class
+        """
+        self._stop = True
+
+    def run(self):
+        while not self._stop:
+            try:
+                if not self.poll_server():
+                    # Socket error
+                    break
+            except:
+                log(traceback.format_exc())
+                self._stop = False
+                break
+
+    def poll_server(self):
+        if not logger.handlers:
+            # If no handlers registered don't call the getlastlog
+            # as it will flush out all the logs
+            time.sleep(1)
+            return True
+        try:
+            message = getlastlog()
+        except socket.error:
+            t = traceback.format_exc()
+            log(t)
+            # Connection to server might be failed
+            return False
+
+        if not message:
+            # No log in queue, sleep a second
+            time.sleep(1)
+            return True
+        # Split message type and message
+        message_type, message = re.split('-', message, 1)
+        if re.match('MEMINFO', message_type, re.I):
+            level = LDTP_LOG_MEMINFO
+        elif re.match('CPUINFO', message_type, re.I):
+            level = LDTP_LOG_CPUINFO
+        elif re.match('INFO', message_type, re.I):
+            level = logging.INFO
+        elif re.match('WARNING', message_type, re.I):
+            level = logging.WARNING
+        elif re.match('ERROR', message_type, re.I):
+            level = logging.ERROR
+        elif re.match('CRITICAL', message_type, re.I):
+            level = logging.CRITICAL
+        else:
+            level = logging.DEBUG
+        # Log the messsage with the attained level
+        log(message, level)
+        return True
+
+def logFailures(*args):
     # Do nothing. For backward compatability
+    warnings.warn('Use Mago framework - http://mago.ubuntu.com', DeprecationWarning)
     pass
 
 def _populateNamespace(d):
@@ -68,70 +204,87 @@ def _populateNamespace(d):
         d[local_name].__doc__ = client._client.system.methodHelp(method)
 
 class PollEvents:
+    """
+    Class to poll callback events, NOTE: *NOT* for external use
+    """
     def __init__(self):
         self._stop = False
+        # Initialize callback dictionary
         self._callback = {}
 
     def __del__(self):
+        """
+        Stop callback when destroying this class
+        """
         self._stop = True
 
     def run(self):
         while not self._stop:
             try:
-                status = self.poll_server()
-                if status is False:
+                if not self.poll_server():
                     # Socket error
                     break
-                elif status is None:
-                    # No event in queue, sleep a second
-                    time.sleep(1)
             except:
+                log(traceback.format_exc())
                 self._stop = False
                 break
 
     def poll_server(self):
         if not self._callback:
-            return
+            # If callback not registered, don't proceed further
+            # Sleep a second and then return
+            time.sleep(1)
+            return True
         try:
             event = poll_events()
         except socket.error:
+            log(traceback.format_exc())
+            # Connection to server might be failed
             return False
 
         if not event:
-            return None
+            # No event in queue, sleep a second
+            time.sleep(1)
+            return True
 
         # Event format:
         # window:create-Untitled Document 1 - gedit
         event = event.split('-', 1) # Split first -
-        window_name = event[1]
-        event = event[0] # Just event type
-        # self._callback[window][0] - Event type
-        # self._callback[window][1] - Callback function
-        # self._callback[window][2] - Arguments to callback function
-        for window in self._callback:
-            if (event == "onwindowcreate" and \
-                    re.match(glob_trans(window),
-                             window_name, re.M | re.U | re.L)) or \
-                             (event != "onwindowcreate" and \
-                                  self._callback[window][0] == event):
-                             callback = self._callback[window][1]
-                             if callable(callback):
-                                 try:
-                                     args = self._callback[window][2]
-                                     if len(args) and args[0]:
-                                         # If one or more args
-                                         thread.start_new_thread(callback, args)
-                                     else:
-                                         # No args to the callback function
-                                         thread.start_new_thread(callback, ())
-                                         #callback()
-                                 except:
-                                     pass
+        data = event[1] # Rest of data
+        event_type = event[0] # event type
+        # self._callback[name][0] - Event type
+        # self._callback[name][1] - Callback function
+        # self._callback[name][2] - Arguments to callback function
+        for name in self._callback:
+            if (event_type == "onwindowcreate" and \
+                re.match(glob_trans(name), data, re.M | re.U | re.L)) or \
+                (event_type != "onwindowcreate" and \
+                 self._callback[name][0] == event_type):
+                # Get the callback function
+                callback = self._callback[name][1]
+                if not callable(callback):
+                    # If not callable, ignore the event
+                    continue
+                try:
+                    args = self._callback[name][2]
+                    if len(args) and args[0]:
+                        # Spawn a new thread, for each event
+                        # If one or more arguments to the callback function
+                        thread.start_new_thread(callback, args)
+                    else:
+                        # Spawn a new thread, for each event
+                        # No arguments to the callback function
+                        thread.start_new_thread(callback, ())
+                except:
+                    # Log trace incase of exception
+                    log(traceback.format_exc())
+                    # Silently ignore !?! any exception thrown
+                    pass
         return True
 
 def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
                  width = None, height = None):
-    '''
+    """
     Captures screenshot of the whole desktop or given window
 
     @param window_name: Window name to look for, either full name,
@@ -148,7 +301,7 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
 
     @return: screenshot filename
     @rtype: string
-    '''
+    """
     if not out_file:
         out_file = tempfile.mktemp('.png', 'ldtp_')
     else:
@@ -162,7 +315,7 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
     return out_file
 
 def onwindowcreate(window_name, fn_name, *args):
-    '''
+    """
     On window create, call the function with given arguments
 
     @param window_name: Window name to look for, either full name,
@@ -175,13 +328,13 @@ def onwindowcreate(window_name, fn_name, *args):
 
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
-    '''
+    """
 
     _pollEvents._callback[window_name] = ["onwindowcreate", fn_name, args]
     return _remote_onwindowcreate(window_name)
 
 def removecallback(window_name):
-    '''
+    """
     Remove registered callback on window create
 
     @param window_name: Window name to look for, either full name,
@@ -190,14 +343,14 @@ def removecallback(window_name):
 
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
-    '''
+    """
 
     if window_name in _pollEvents._callback:
         del _pollEvents._callback[window_name]
     return _remote_removecallback(window_name)
 
 def registerevent(event_name, fn_name, *args):
-    '''
+    """
     Register at-spi event
 
     @param event_name: Event name in at-spi format.
@@ -209,13 +362,13 @@ def registerevent(event_name, fn_name, *args):
 
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
-    '''
+    """
 
     _pollEvents._callback[event_name] = [event_name, fn_name, args]
     return _remote_registerevent(event_name)
 
 def removeevent(event_name):
-    '''
+    """
     Remove callback of registered event
 
     @param event_name: Event name in at-spi format.
@@ -223,14 +376,14 @@ def removeevent(event_name):
 
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
-    '''
+    """
 
     if event_name in _pollEvents._callback:
         del _pollEvents._callback[event_name]
     return _remote_removeevent(event_name)
 
 def windowuptime(window_name):
-    '''
+    """
     Get window uptime
     
     @param window_name: Window name to look for, either full name,
@@ -238,7 +391,7 @@ def windowuptime(window_name):
     @type window_name: string
 
     @return: "starttime, endtime" as datetime python object
-    '''
+    """
 
     tmp_time = _remote_windowuptime(window_name)
     if tmp_time:
@@ -257,5 +410,7 @@ def windowuptime(window_name):
 _populateNamespace(globals())
 _pollEvents = PollEvents()
 thread.start_new_thread(_pollEvents.run, ())
+_pollLogs = PollLogs()
+thread.start_new_thread(_pollLogs.run, ())
 
 atexit.register(client._client.kill_daemon)
