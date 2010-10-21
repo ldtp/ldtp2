@@ -48,7 +48,7 @@ class _Method(xmlrpclib._Method):
                          (self.__name, ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()])))
         args += (kwargs,)
         return self.__send(self.__name, args)
-        
+
 class Transport(xmlrpclib.Transport):
     def _handle_signal(self, signum, frame):
         if _ldtp_debug:
