@@ -2,7 +2,9 @@
 LDTP v2 xml rpc daemon.
 
 @author: Eitan Isaacson <eitan@ascender.com>
+@author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
+@copyright: Copyright (c) 2009-10 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -45,7 +47,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         return object.__new__(cls, *args, **kwargs)
 
     def __init__(self):
-        xmlrpc.XMLRPC.__init__(self)
+        xmlrpc.XMLRPC.__init__(self, allowNone = True)
         Ldtpd.__init__(self)
 
     def _listFunctions(self):
