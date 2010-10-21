@@ -171,7 +171,6 @@ class PageTabList(Utils):
         try:
             child = obj.getChildAtIndex(int (tab_index))
             name = child.name
-            child.unref()
         except NotImplementedError:
             raise LdtpServerException('Not selectable object.')
 

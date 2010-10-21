@@ -88,16 +88,13 @@ class Table(Utils):
                         for child in children:
                             if self._match_name_to_acc(row_text, child):
                                 self._grab_focus(child)
-                                cell.unref()
                                 return 1
                     finally:
                         if not flag:
                             self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                         self._grab_focus(cell)
-                        cell.unref()
                         return 1
-                cell.unref()
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowpartialmatch(self, window_name, object_name, row_text):
@@ -141,16 +138,13 @@ class Table(Utils):
                         for child in children:
                             if re.search(row_text, child.name):
                                 self._grab_focus(child)
-                                cell.unref()
                                 return 1
                     finally:
                         if not flag:
                             self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                         self._grab_focus(cell)
-                        cell.unref()
                         return 1
-                cell.unref()
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowindex(self, window_name, object_name, row_index):
@@ -181,7 +175,6 @@ class Table(Utils):
 
         cell = tablei.getAccessibleAt(row_index, 0)
         self._grab_focus(cell)
-        cell.unref()
         return 1
 
     def selectlastrow(self, window_name, object_name):
@@ -207,7 +200,6 @@ class Table(Utils):
 
         cell = tablei.getAccessibleAt(tablei.nRows - 1, 0)
         self._grab_focus(cell)
-        cell.unref()
         return 1
 
     def setcellvalue(self, window_name, object_name, row_index,
@@ -341,7 +333,6 @@ class Table(Utils):
         else:
             name = cell.name
             self._grab_focus(cell)
-        cell.unref()
         if not name:
             raise LdtpServerException('Unable to get row text')
         return name
@@ -400,7 +391,6 @@ class Table(Utils):
             except NotImplementedError:
                 raise LdtpServerException('Unable to check row')
             self._grab_focus(cell)
-        cell.unref()
         if not flag:
             raise LdtpServerException('Unable to check row')
         return 1
@@ -457,7 +447,6 @@ class Table(Utils):
             except NotImplementedError:
                 raise LdtpServerException('Unable to check row')
             self._grab_focus(cell)
-        cell.unref()
         if not flag:
             raise LdtpServerException('Unable to check row')
         return 1
@@ -516,7 +505,6 @@ class Table(Utils):
             except NotImplementedError:
                 raise LdtpServerException('Unable to check row')
             self._grab_focus(cell)
-        cell.unref()
         if not flag:
             raise LdtpServerException('Unable to check row')
         return 1
@@ -562,16 +550,13 @@ class Table(Utils):
                         for child in children:
                             if self._match_name_to_acc(row_text, child):
                                 self._grab_focus(child)
-                                cell.unref()
                                 return i
                     finally:
                         if not flag:
                             self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
                     self._grab_focus(cell)
-                    cell.unref()
                     return i
-                cell.unref()
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
     def getrowcount(self, window_name, object_name):
@@ -642,7 +627,6 @@ class Table(Utils):
                                 self._mouse_event(size.x + size.width / 2,
                                                   size.y + size.height / 2,
                                                   'b1c')
-                                cell.unref()
                                 return i
                     finally:
                         if not flag:
@@ -653,9 +637,7 @@ class Table(Utils):
                     self._mouse_event(size.x + size.width / 2,
                                       size.y + size.height / 2,
                                       'b1c')
-                    cell.unref()
                     return i
-                cell.unref()
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
     def doubleclickrow(self, window_name, object_name, row_text):
@@ -703,7 +685,6 @@ class Table(Utils):
                                 self._mouse_event(size.x + size.width / 2,
                                                   size.y + size.height / 2,
                                                   'b1d')
-                                cell.unref()
                                 return i
                     finally:
                         if not flag:
@@ -714,9 +695,7 @@ class Table(Utils):
                     self._mouse_event(size.x + size.width / 2,
                                       size.y + size.height / 2,
                                       'b1d')
-                    cell.unref()
                     return i
-                cell.unref()
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
     def verifytablecell(self, window_name, object_name, row_index,
