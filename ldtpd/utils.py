@@ -77,7 +77,7 @@ class ProcessStats(threading.Thread):
     NOTE: You have to install python-statgrab package
     EXAMPLE USAGE:
 
-    xstats = pstats('evolution', 2)
+    xstats = ProcessStats('evolution', 2)
     # Start Logging by calling start
     xstats.start()
     # Stop the process statistics gathering thread by calling the stopstats method
@@ -85,6 +85,15 @@ class ProcessStats(threading.Thread):
     """
 
     def __init__(self, appname, interval = 2):
+        """
+        Start memory and CPU monitoring, with the time interval between
+        each process scan
+
+        @param appname: Process name, ex: firefox-bin.
+        @type appname: string
+        @param interval: Time interval between each process scan
+        @type interval: float
+        """
         if not importStatGrab:
             raise LdtpServerException('python-statgrab package is not installed')
         threading.Thread.__init__(self)
