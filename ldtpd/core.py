@@ -215,7 +215,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @param process_name: Process name, ex: firefox-bin.
         @type process_name: string
         @param interval: Time interval between each process scan
-        @type interval: int
+        @type interval: float
 
         @return: 1 on success
         @rtype: integer
