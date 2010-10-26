@@ -149,13 +149,15 @@ class ProcessStats(threading.Thread):
                 # Add the stats into ldtp log
                 # Resident memory will be in bytes, to convert it to MB
                 # divide it by 1024*1024
-                logger.log(LDTP_LOG_MEMINFO, procname + ' - ' + \
-                           str(i['proc_resident'] / (1024*1024)))
+                logger.log(LDTP_LOG_MEMINFO, '%s(%s) - %s' % \
+                           (procname, str(i['pid']),
+                            str(i['proc_resident'] / (1024*1024))))
                 # CPU percent returned with 14 decimal values
                 # ex: 0.0281199122531, round it to 2 decimal values
                 # as 0.03
-                logger.log(LDTP_LOG_CPUINFO, procname + ' - ' + \
-                           str(round(i['cpu_percent'], 2)))
+                logger.log(LDTP_LOG_CPUINFO, '%s(%s) - %s' % \
+                           (procname, str(i['pid']),
+                            str(round(i['cpu_percent'], 2))))
             # Wait for interval seconds before gathering stats again
             time.sleep(self._interval)
 
