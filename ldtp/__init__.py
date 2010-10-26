@@ -55,6 +55,32 @@ logging.addLevelName(LDTP_LOG_CPUINFO, 'CPUINFO')
 # Add handler to root logger
 logger = logging.getLogger('')
 
+def addloghandler(handler):
+    """
+    Add custom log handler
+    @param handler: Handler instance
+    @type handler: object
+
+    @return: 1 on success and 0 on error
+    @rtype: integer
+    """
+
+    logger.addHandler(handler)
+    return 1
+
+def removeloghandler(handler):
+    """
+    Remove custom log handler
+    @param handler: Handler instance
+    @type handler: object
+
+    @return: 1 on success and 0 on error
+    @rtype: integer
+    """
+
+    logger.removeHandler(handler)
+    return 1
+
 def log(message, level = logging.DEBUG):
     """
     Logs the message in the root logger with the log level
@@ -97,7 +123,7 @@ def startlog(filename, overwrite = True):
         _mode = 'a'
     global _file_logger
     # Create logging file handler
-    _file_logger = logging.FileHandler(filename, _mode)
+    _file_logger = logging.FileHandler(os.path.expanduser(filename), _mode)
     # Log 'Levelname: Messages', eg: 'ERROR: Logged message'
     _formatter = logging.Formatter(u'%(levelname)-8s: %(message)s')
     _file_logger.setFormatter(_formatter)
