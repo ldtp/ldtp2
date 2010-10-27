@@ -1017,19 +1017,19 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._appmap_pairs(_window_handle, _window_name, True)
         return 1
 
-    def wait(self, timeout=5):
+    def wait(self, timeout=5.0):
         """
         Wait a given amount of seconds.
 
         @param timeout: Wait timeout in seconds
-        @type timeout: integer
+        @type timeout: float
 
         @return: 1
         @rtype: integer
         """
-        waiter = NullWaiter(1, timeout)
+        time.sleep(timeout)
 
-        return waiter.run()
+        return 1
 
     def getstatusbartext(self, window_name, object_name):
         """
