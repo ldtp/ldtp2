@@ -26,6 +26,7 @@ import fnmatch
 import gobject
 import pyatspi
 import traceback
+import datetime
 
 _main_loop = None
 _gtk_vers = gtk.ver
@@ -38,10 +39,11 @@ class Waiter(Utils):
     def __init__(self, timeout):
         Utils.__init__(self)
         self.timeout = timeout
+        self.timeout_seconds = 1
 
     def run(self):
         self.success = False
-        self._timeout_count = 0
+        self._timeout_count = 1
 
         try:
             self.poll()
@@ -51,7 +53,7 @@ class Waiter(Utils):
         if self.success or self.timeout == 0:
             return self.success
 
-        gobject.timeout_add_seconds(1, self._timeout_cb)
+        gobject.timeout_add_seconds(self.timeout_seconds, self._timeout_cb)
         if self.events:
             pyatspi.Registry.registerEventListener(
                 self._event_cb, *self.events)
@@ -69,7 +71,8 @@ class Waiter(Utils):
             return False
         self._timeout_count += 1
         self.poll()
-        if self._timeout_count >= self.timeout or self.success:
+        if self._timeout_count * self.timeout_seconds > self.timeout or \
+               self.success:
             try:
                 if _main_loop:
                     _main_loop.quit()
@@ -318,6 +321,7 @@ class GuiNotExistsWaiter(Waiter):
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
         GuiExistsWaiter.__init__(self, frame_name, timeout)
+        self.timeout_seconds = 2
         self._obj_name = obj_name
         self._state = state
 
@@ -346,6 +350,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
 class ObjectNotExistsWaiter(GuiNotExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout):
         GuiNotExistsWaiter.__init__(self, frame_name, timeout)
+        self.timeout_seconds = 2
         self._obj_name = obj_name
 
     def poll(self):
