@@ -349,6 +349,16 @@ class ComboBox(Utils, LayeredPane):
                 if self._glob_match(item_name, child.name):
                     self._click_object(child)
                     return 1
+                # Get LDTP format accessibile name
+                _ldtpize_accessible_name = self._ldtpize_accessible(child)
+                # Concat object type and object name
+                # ex: 'frmUnsavedDocument1-gedit' for Gedit application
+                # frm - Frame, Window title - 'Unsaved Document 1 - gedit'
+                _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
+                                          _ldtpize_accessible_name[1])
+                if self._glob_match(item_name, _object_name):
+                    self._click_object(child)
+                    return 1
         raise LdtpServerException('Unable to select item')
 
     # Since selectitem and comboselect implementation are same,
