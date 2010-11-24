@@ -4,7 +4,7 @@ LDTP v2 utils.
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-10 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -277,6 +277,10 @@ class Utils:
             if event.host_application == app[0]:
                 # Application already in cached list
                 cache = False
+                # Force remap for this application, as some object is
+                # either added / removed / changed
+                index = self.cached_apps.index(app)
+                self.cached_apps[index][1] = True
                 break
         if cache:
             # If app doesn't exist in cached apps, then add it
