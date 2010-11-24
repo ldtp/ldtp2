@@ -843,7 +843,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
 
-        for name in self._appmap_pairs(gui, _window_name, True).keys():
+        for name in self._appmap_pairs(gui, _window_name).keys():
             obj_list.append(name)
         return obj_list
 
@@ -866,7 +866,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle, _window_name, True)
+        appmap = self._appmap_pairs(_window_handle, _window_name)
 
         obj_info = self._get_object_in_window(appmap, object_name)
         props = []
@@ -897,7 +897,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle, _window_name, True)
+        appmap = self._appmap_pairs(_window_handle, _window_name)
 
         obj_info = self._get_object_in_window(appmap, object_name)
         if obj_info and prop in obj_info:
@@ -932,7 +932,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             if not _window_handle:
                 raise LdtpServerException('Unable to find window "%s"' % \
                                               window_name)
-            appmap = self._appmap_pairs(_window_handle, _window_name, True)
+            appmap = self._appmap_pairs(_window_handle, _window_name)
             obj = self._get_object_in_window(appmap, parent)
             obj_name = appmap[obj['key']]
             def _get_all_children_under_obj(obj, child_list):
@@ -967,7 +967,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle, _window_name, True)
+        appmap = self._appmap_pairs(_window_handle, _window_name)
         for name in appmap.keys():
             obj = appmap[name]
             # When only role arg is passed
