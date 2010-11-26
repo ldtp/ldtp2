@@ -32,7 +32,9 @@ from server_exception import LdtpServerException
 import os
 import re
 import sys
+import gtk
 import time
+import wnck
 import pyatspi
 import traceback
 from fnmatch import translate as glob_trans
@@ -1027,9 +1029,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1
         @rtype: integer
         """
-        time.sleep(timeout)
-
-        return 1
+        if isinstance(timeout, float):
+            time.sleep(timeout)
+            return 1
+        if isinstance(timeout, int):
+            waiter = NullWaiter(1, timeout)
+            return waiter.run()
 
     def getstatusbartext(self, window_name, object_name):
         """
@@ -1075,4 +1080,98 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 size = self._get_size(gui)
                 return [size.x, size.y, size.width, size.height]
 
-        raise LdtpServerException('Window does not exist')
+        raise LdtpServerException(u'Window "%s" does not exist' % window_name)
+
+    def _getComponentAtCoords(self, parent, x, y):
+        """
+        Gets any child accessible that resides under given desktop coordinates.
+
+        @param parent: Top-level accessible.
+        @type parent: L{Accessibility.Accessible}
+        @param x: X coordinate.
+        @type x: integer
+        @param y: Y coordinate.
+        @type y: integer
+
+        @return: Child accessible at given coordinates, or None.
+        @rtype: L{Accessibility.Accessible}
+        """
+        # Following lines from Accerciser, _getComponentAtCoords method
+        # quick_select.py file
+        container = parent
+        while True:
+            container_role = container.getRole()
+            if container_role == pyatspi.ROLE_PAGE_TAB_LIST:
+                try:
+                    si = container.querySelection()
+                    container = si.getSelectedChild(0)[0]
+                except NotImplementedError:
+                    pass
+            try:
+                ci = container.queryComponent()
+            except:
+                break
+            else:
+                inner_container = container
+            container =  ci.getAccessibleAtPoint(x, y, pyatspi.DESKTOP_COORDS)
+            if not container or container.queryComponent() == ci:
+                # The gecko bridge simply has getAccessibleAtPoint return itself
+                # if there are no further children
+                break
+        if inner_container == parent:
+            return None
+        else:
+            return inner_container
+
+    def getobjectnameatcoords(self):
+        """
+        Get object name at coordinates
+        
+        @return: window name as string and all possible object names
+                matching name and type as list of string [objectname]
+        @rtype: (string, list)
+        """
+        # Following lines from Accerciser, _inspectUnderMouse method
+        # quick_select.py file
+        # Inspect accessible under mouse
+        display = gtk.gdk.Display(gtk.gdk.get_display())
+        screen, x, y, flags =  display.get_pointer()
+        del screen # A workaround http://bugzilla.gnome.org/show_bug.cgi?id=593732
+        wnck_screen = wnck.screen_get_default()
+        # Bug in wnck, if the following 2 lines are not called
+        # wnck returns empty list
+        while gtk.events_pending():
+            gtk.main_iteration()
+
+        window_order = [w.get_name() for w in wnck_screen.get_windows_stacked()]
+        top_window = (None, -1)
+        for gui in self._list_guis():
+            acc = self._getComponentAtCoords(gui, x, y)
+            if acc:
+                try:
+                    # wnck returns empty window name as "Untitled window"
+                    # also gui.name doesn't match wnck window name in some cases
+                    # eg: Gedit Question dialog, when you try to close
+                    # unsaved document
+                    z_order = window_order.index(gui.name)
+                except ValueError:
+                    # It's possibly a popup menu, so it would not be in our frame name
+                    # list. And if it is, it is probably the top-most component.
+                    try:
+                        if acc.queryComponent().getLayer() == pyatspi.LAYER_POPUP:
+                            return None
+                    except:
+                        pass
+                else:
+                    if z_order > top_window[1]:
+                        top_window = (acc, z_order)
+        if top_window[0]:
+            window_name = window_order[top_window[1]]
+            child_object = top_window[0]
+            # NOTE: Bug, when a window title is empty
+            # the accessibility window in the list matching the
+            # x, y coordinates is returned !
+            return (self._get_window_handle(window_name)[1],
+                    self.getchild(window_name, child_object.name,
+                                  child_object.getRoleName()))
+        return (None, None)
