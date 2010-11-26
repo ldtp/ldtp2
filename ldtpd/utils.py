@@ -227,6 +227,9 @@ class Utils:
         """
         if self._ldtp_debug:
             print event, event.type, event.source, event.source.parent
+        if not self.cached_apps:
+            # If not initialized as list, don't process further
+            return
         for app in self.cached_apps:
             try:
                 if not app or not app[0] or app[0] != event.host_application:
@@ -273,6 +276,9 @@ class Utils:
                         del self._appmap[name]
             return
         cache = True
+        if not self.cached_apps:
+            # If not initialized as list, don't process further
+            return
         for app in self.cached_apps:
             if event.host_application == app[0]:
                 # Application already in cached list
