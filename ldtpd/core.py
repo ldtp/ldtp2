@@ -229,7 +229,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @param process_name: Process name, ex: firefox-bin.
         @type process_name: string
         @param interval: Time interval between each process scan
-        @type interval: float
+        @type interval: double
 
         @return: 1 on success
         @rtype: integer
@@ -1075,17 +1075,19 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         Wait a given amount of seconds.
 
         @param timeout: Wait timeout in seconds
-        @type timeout: float
+        @type timeout: double
 
         @return: 1
         @rtype: integer
         """
-        if isinstance(timeout, float):
+        if timeout < 1:
+            # If timeout < 1, like 0.5 then use
+            # time.sleep, using > 1 its not recommended to use
+            # this, as it hangs the desktop for the sleep time
             time.sleep(timeout)
             return 1
-        if isinstance(timeout, int):
-            waiter = NullWaiter(1, timeout)
-            return waiter.run()
+        waiter = NullWaiter(1, timeout)
+        return waiter.run()
 
     def getstatusbartext(self, window_name, object_name):
         """
@@ -1179,7 +1181,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         Get object name at coordinates
 
         @param timeout: Wait timeout in seconds
-        @type timeout: float
+        @type timeout: double
 
         
         @return: window name as string and all possible object names
@@ -1203,42 +1205,45 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                         for w in wnck_screen.get_windows_stacked()]
         tmp_window_order = []
         for w in window_order:
-            if w[0] == 'Untitled window':
-                # Get PID
-                pid = w[1].get_pid()
-                if not pid:
-                    # PID not found
-                    continue
-                # Get process name
-                ps = subprocess.Popen('ps ch -o %%c %d' % pid, shell=True,
-                                      stdout = subprocess.PIPE,
-                                      stderr = subprocess.PIPE)
-                stdout, stderr = ps.communicate()
-                # Strip \n
-                stdout = re.sub('\n', '', stdout)
-                # Get child_windows of current application
-                child_windows = [child_window.get_name() for child_window in \
-                                 w[1].get_application().get_windows()]
-                for app in self._list_apps():
-                    if not app[0]:
-                        continue
-                    if stdout == app[0].name:
-                        for gui in app[0]:
-                            if not gui: continue
-                            # If current a11y gui.name doesn't match the
-                            # Wnck window names, let us assume, its the window
-                            # name, replace 'Untitled window' with gui.name
-                            if gui.name not in child_windows:
-                                # Direct tuple assignment is not possible
-                                # and so assigning in tmp tuple list
-                                tmp_window_order.append((gui.name, w[1]))
-                                # Let us assume, just only one window
-                                # with 'Untitled window'
-                                break
-            else:
+            if w[0] != 'Untitled window':
                 # If not 'Untitled window', just assign it directly to
                 # tmp_window_order
                 tmp_window_order.append(w)
+                continue
+            # Get PID
+            pid = w[1].get_pid()
+            if not pid:
+                # PID not found
+                continue
+            # Get process name
+            ps = subprocess.Popen('ps ch -o %%c %d' % pid, shell=True,
+                                  stdout = subprocess.PIPE,
+                                  stderr = subprocess.PIPE)
+            stdout, stderr = ps.communicate()
+            # Strip \n
+            stdout = re.sub('\n', '', stdout)
+            # Get child_windows of current application
+            child_windows = [child_window.get_name() for child_window in \
+                             w[1].get_application().get_windows()]
+            for app in self._list_apps():
+                if not app[0]:
+                    continue
+                if stdout != app[0].name:
+                    continue
+                # if stdout == app[0].name:
+                for gui in app[0]:
+                    if not gui: continue
+                    # If current a11y gui.name doesn't match the
+                    # Wnck window names, let us assume, its the window
+                    # name, replace 'Untitled window' with gui.name
+                    if gui.name not in child_windows:
+                        # Direct tuple assignment is not possible
+                        # and so assigning in tmp tuple list
+                        tmp_window_order.append((gui.name, w[1]))
+                        # Let us assume, just only one window
+                        # with 'Untitled window'
+                        break
+
         # Assign back tmp_window_order to window_order, after all the iteration
         window_order = tmp_window_order
 
@@ -1279,6 +1284,3 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                     self.getchild(window_name, child_object.name,
                                   child_object.getRoleName()))
         return (None, None)
-
-    getobjectnameatcoords.signature = [["string", "string"], "double"]
-    getobjectnameatcoords.help = "Get object name at coordinates"

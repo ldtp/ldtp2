@@ -62,7 +62,7 @@ class Value(Utils):
         @type object_name: string
 
         @return: value on success.
-        @rtype: float
+        @rtype: double
         '''
         obj = self._get_object(window_name, object_name)
 
@@ -85,7 +85,7 @@ class Value(Utils):
         @type object_name: string
 
         @return: value on success.
-        @rtype: float
+        @rtype: double
         '''
         return self.getvalue(window_name, object_name)
 
@@ -127,7 +127,7 @@ class Value(Utils):
         @type object_name: string
 
         @return: float value on success.
-        @rtype: float
+        @rtype: double
         '''
         obj = self._get_object(window_name, object_name)
 
@@ -150,7 +150,7 @@ class Value(Utils):
         @type object_name: string
 
         @return: float value on success.
-        @rtype: float
+        @rtype: double
         '''
         obj = self._get_object(window_name, object_name)
 
@@ -173,7 +173,7 @@ class Value(Utils):
         @type object_name: string
 
         @return: float value on success.
-        @rtype: float
+        @rtype: double
         '''
         obj = self._get_object(window_name, object_name)
 
