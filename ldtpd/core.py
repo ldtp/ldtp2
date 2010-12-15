@@ -24,6 +24,7 @@ import locale
 import subprocess
 from utils import Utils, ProcessStats
 from constants import abbreviated_roles
+from keypress_actions import KeyboardOp
 from waiters import ObjectExistsWaiter, GuiExistsWaiter, \
     GuiNotExistsWaiter, ObjectNotExistsWaiter, NullWaiter, \
     MaximizeWindow, MinimizeWindow, UnmaximizeWindow, UnminimizeWindow, \
@@ -57,6 +58,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         Utils.__init__(self)
         # Window up time and onwindowcreate events
         self._events = ["window:create", "window:destroy"]
+        # Registered keyboard events
+        self._kb_entries = []
+        self._kb_modifiers = 0
         # User registered events
         self._registered_events = []
         pyatspi.Registry.registerEventListener(self._event_cb, *self._events)
@@ -78,6 +82,14 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 event.source)
             window_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._callback_event.append(u"%s-%s" % (event.type, window_name))
+
+    def _registered_kb_event_cb(self, event):
+        if not event:
+            return
+        if event.modifiers & self._kb_modifiers and \
+               event.hw_code in self._kb_entries:
+            #print event.hw_code, event.modifiers, event.event_string
+            self._callback_event.append(u"kbevent-%s" % event.event_string)
 
     def _event_cb(self, event):
         if event and event.type == "window:create" and event.source:
@@ -367,10 +379,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._registered_events.append(event_name)
         pyatspi.Registry.registerEventListener(self._registered_event_cb,
                                                *self._registered_events)
-
         return 1
 
-    def removeevent(self, event_name):
+    def deregisterevent(self, event_name):
         """
         Remove callback of registered event
 
@@ -389,7 +400,47 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 pyatspi.Registry.registerEventListener( \
                     self._registered_event_cb, *self._registered_events)
                 break
+        return 1
 
+    def registerkbevent(self, keys, modifiers = 0):
+        """
+        Register keyboard event
+
+        @param keys: Key board entries
+        @type keys: string
+        @param modifiers: GTK based modifiers
+        @type modifiers: int
+
+        @return: 1 if registration was successful, 0 if not.
+        @rtype: integer
+        """
+
+        key_op = KeyboardOp()
+        key_vals = key_op.get_keyval_id(keys)
+        self._kb_entries = []
+        self._kb_modifiers = modifiers
+        for key_val in key_vals:
+            self._kb_entries.append(key_val.value)
+        masks = [mask for mask in pyatspi.allModifiers()]
+        pyatspi.Registry.registerKeystrokeListener(self._registered_kb_event_cb,
+                                                   mask = masks,
+                                                   kind=(pyatspi.KEY_PRESSED_EVENT,))
+        return 1
+
+    def deregisterkbevent(self):
+        """
+        Remove callback of registered keyboard event
+
+        @return: 1 if remove was successful, 0 if not.
+        @rtype: integer
+        """
+
+        self._kb_entries = []
+        self._kb_modifiers = 0
+        masks = [mask for mask in pyatspi.allModifiers()]
+        pyatspi.Registry.deregisterKeystrokeListener(self._registered_kb_event_cb,
+                                                     mask = masks,
+                                                     kind=(pyatspi.KEY_PRESSED_EVENT,))
         return 1
 
     def objectexist(self, window_name, object_name):
@@ -1123,14 +1174,19 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         else:
             return inner_container
 
-    def getobjectnameatcoords(self):
+    def getobjectnameatcoords(self, wait_time = 0.0):
         """
         Get object name at coordinates
+
+        @param timeout: Wait timeout in seconds
+        @type timeout: float
+
         
         @return: window name as string and all possible object names
                 matching name and type as list of string [objectname]
         @rtype: (string, list)
         """
+        self.wait(wait_time)
         # Following lines from Accerciser, _inspectUnderMouse method
         # quick_select.py file
         # Inspect accessible under mouse
@@ -1143,30 +1199,78 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         while gtk.events_pending():
             gtk.main_iteration()
 
-        window_order = [w.get_name() for w in wnck_screen.get_windows_stacked()]
+        window_order = [(w.get_name(), w) \
+                        for w in wnck_screen.get_windows_stacked()]
+        tmp_window_order = []
+        for w in window_order:
+            if w[0] == 'Untitled window':
+                # Get PID
+                pid = w[1].get_pid()
+                if not pid:
+                    # PID not found
+                    continue
+                # Get process name
+                ps = subprocess.Popen('ps ch -o %%c %d' % pid, shell=True,
+                                      stdout = subprocess.PIPE,
+                                      stderr = subprocess.PIPE)
+                stdout, stderr = ps.communicate()
+                # Strip \n
+                stdout = re.sub('\n', '', stdout)
+                # Get child_windows of current application
+                child_windows = [child_window.get_name() for child_window in \
+                                 w[1].get_application().get_windows()]
+                for app in self._list_apps():
+                    if not app[0]:
+                        continue
+                    if stdout == app[0].name:
+                        for gui in app[0]:
+                            if not gui: continue
+                            # If current a11y gui.name doesn't match the
+                            # Wnck window names, let us assume, its the window
+                            # name, replace 'Untitled window' with gui.name
+                            if gui.name not in child_windows:
+                                # Direct tuple assignment is not possible
+                                # and so assigning in tmp tuple list
+                                tmp_window_order.append((gui.name, w[1]))
+                                # Let us assume, just only one window
+                                # with 'Untitled window'
+                                break
+            else:
+                # If not 'Untitled window', just assign it directly to
+                # tmp_window_order
+                tmp_window_order.append(w)
+        # Assign back tmp_window_order to window_order, after all the iteration
+        window_order = tmp_window_order
+
         top_window = (None, -1)
+        z_order = -1
         for gui in self._list_guis():
             acc = self._getComponentAtCoords(gui, x, y)
             if acc:
                 try:
-                    # wnck returns empty window name as "Untitled window"
-                    # also gui.name doesn't match wnck window name in some cases
-                    # eg: Gedit Question dialog, when you try to close
-                    # unsaved document
-                    z_order = window_order.index(gui.name)
+                    for w in window_order:
+                        if gui.name == w[0]:
+                            # wnck returns empty window name as "Untitled window"
+                            # also gui.name doesn't match wnck window name in some cases
+                            # eg: Gedit Question dialog, when you try to close
+                            # unsaved document
+                            z_order = window_order.index(w)
+                            break
                 except ValueError:
                     # It's possibly a popup menu, so it would not be in our frame name
                     # list. And if it is, it is probably the top-most component.
                     try:
                         if acc.queryComponent().getLayer() == pyatspi.LAYER_POPUP:
-                            return None
+                            return (None, None)
                     except:
                         pass
                 else:
                     if z_order > top_window[1]:
                         top_window = (acc, z_order)
         if top_window[0]:
-            window_name = window_order[top_window[1]]
+            # top_window[1] holds the window name and Wnck window info
+            # [0] holds the window name
+            window_name = window_order[top_window[1]][0]
             child_object = top_window[0]
             # NOTE: Bug, when a window title is empty
             # the accessibility window in the list matching the
@@ -1175,3 +1279,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                     self.getchild(window_name, child_object.name,
                                   child_object.getRoleName()))
         return (None, None)
+
+    getobjectnameatcoords.signature = [["string", "string"], "double"]
+    getobjectnameatcoords.help = "Get object name at coordinates"
