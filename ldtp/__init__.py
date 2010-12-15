@@ -282,10 +282,14 @@ class PollEvents:
         # self._callback[name][1] - Callback function
         # self._callback[name][2] - Arguments to callback function
         for name in self._callback:
+            # Window created event
+            # User registered window events
+            # Keyboard event
             if (event_type == "onwindowcreate" and \
                 re.match(glob_trans(name), data, re.M | re.U | re.L)) or \
                 (event_type != "onwindowcreate" and \
-                 self._callback[name][0] == event_type):
+                 self._callback[name][0] == event_type) or \
+                 event_type == 'kbevent':
                 # Get the callback function
                 callback = self._callback[name][1]
                 if not callable(callback):
@@ -389,11 +393,12 @@ def registerevent(event_name, fn_name, *args):
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
     """
-
+    if not isinstance(event_name, str):
+        raise ValueError, "event_name should be string"
     _pollEvents._callback[event_name] = [event_name, fn_name, args]
     return _remote_registerevent(event_name)
 
-def removeevent(event_name):
+def deregisterevent(event_name):
     """
     Remove callback of registered event
 
@@ -406,7 +411,39 @@ def removeevent(event_name):
 
     if event_name in _pollEvents._callback:
         del _pollEvents._callback[event_name]
-    return _remote_removeevent(event_name)
+    return _remote_deregisterevent(event_name)
+
+def registerkbevent(keys, modifiers, fn_name, *args):
+    """
+    Register keystroke events
+
+    @param event_name: Event name in at-spi format.
+    @type event_name: string
+    @param fn_name: Callback function
+    @type fn_name: function
+    @param *args: arguments to be passed to the callback function
+    @type *args: var args
+
+    @return: 1 if registration was successful, 0 if not.
+    @rtype: integer
+    """
+    _pollEvents._callback['kbevent'] = ['kbevent', fn_name, args]
+    return _remote_registerkbevent(keys, modifiers)
+
+def deregisterkbevent():
+    """
+    Remove callback of registered event
+
+    @param event_name: Event name in at-spi format.
+    @type event_name: string
+
+    @return: 1 if registration was successful, 0 if not.
+    @rtype: integer
+    """
+
+    if 'kbevent' in _pollEvents._callback:
+        del _pollEvents._callback['kbevent']
+    return _remote_deregisterkbevent()
 
 def windowuptime(window_name):
     """
