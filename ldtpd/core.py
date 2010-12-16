@@ -1277,10 +1277,17 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             # [0] holds the window name
             window_name = window_order[top_window[1]][0]
             child_object = top_window[0]
+            child_list = self.getchild(window_name, child_object.name,
+                                       child_object.getRoleName())
+            if len(child_list) > 1:
+                # If child list is more than 1 child, then
+                # return the list to the caller
+                possible_child = child_list
+            else:
+                # else, just return the only element
+                possible_child = child_list[0]
             # NOTE: Bug, when a window title is empty
             # the accessibility window in the list matching the
             # x, y coordinates is returned !
-            return (self._get_window_handle(window_name)[1],
-                    self.getchild(window_name, child_object.name,
-                                  child_object.getRoleName()))
+            return (self._get_window_handle(window_name)[1], possible_child)
         return (None, None)
