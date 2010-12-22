@@ -1070,7 +1070,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._appmap_pairs(_window_handle, _window_name, True)
         return 1
 
-    def wait(self, timeout=5.0):
+    def wait(self, timeout=5):
         """
         Wait a given amount of seconds.
 
