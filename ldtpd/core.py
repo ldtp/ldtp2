@@ -59,8 +59,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         # Window up time and onwindowcreate events
         self._events = ["window:create", "window:destroy"]
         # Registered keyboard events
+        self._kb_timestamp = None
         self._kb_entries = []
-        self._kb_modifiers = 0
+        self._kb_modifiers = []
         # User registered events
         self._registered_events = []
         pyatspi.Registry.registerEventListener(self._event_cb, *self._events)
@@ -86,10 +87,18 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def _registered_kb_event_cb(self, event):
         if not event:
             return
-        if event.modifiers & self._kb_modifiers and \
+        if event.timestamp == self._kb_timestamp:
+            # If multiple keyboard events registered
+            # then multiple times, the callback is called
+            # but with same timestamp, so let us ignore the
+            # repeated callbacks
+            return
+        # Store the current timestamp
+        self._kb_timestamp = event.timestamp
+        if event.modifiers in self._kb_modifiers and \
                event.hw_code in self._kb_entries:
-            #print event.hw_code, event.modifiers, event.event_string
-            self._callback_event.append(u"kbevent-%s" % event.event_string)
+            self._callback_event.append(u"kbevent-%s-%d" % (event.event_string,
+                                                            event.modifiers))
 
     def _event_cb(self, event):
         if event and event.type == "window:create" and event.source:
@@ -205,7 +214,6 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         if not self._callback_event:
             return ''
-
         return self._callback_event.pop()
 
     def getlastlog(self):
@@ -417,8 +425,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         key_op = KeyboardOp()
         key_vals = key_op.get_keyval_id(keys)
-        self._kb_entries = []
-        self._kb_modifiers = modifiers
+        if modifiers:
+            self._kb_modifiers.append(modifiers)
         for key_val in key_vals:
             self._kb_entries.append(key_val.value)
         masks = [mask for mask in pyatspi.allModifiers()]
@@ -427,16 +435,26 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                                                    kind=(pyatspi.KEY_PRESSED_EVENT,))
         return 1
 
-    def deregisterkbevent(self):
+    def deregisterkbevent(self, keys, modifiers = 0):
         """
         Remove callback of registered keyboard event
+
+        @param keys: Key board entries
+        @type keys: string
+        @param modifiers: GTK based modifiers
+        @type modifiers: int
 
         @return: 1 if remove was successful, 0 if not.
         @rtype: integer
         """
 
-        self._kb_entries = []
-        self._kb_modifiers = 0
+        key_op = KeyboardOp()
+        key_vals = key_op.get_keyval_id(keys)
+        if modifiers in self._kb_modifiers:
+            del self._kb_modifiers[self._kb_modifiers.index(modifiers)]
+        for key_val in key_vals:
+            if key_val.value in self._kb_entries:
+                del self._kb_entries[self._kb_entries.index(key_val.value)]
         masks = [mask for mask in pyatspi.allModifiers()]
         pyatspi.Registry.deregisterKeystrokeListener(self._registered_kb_event_cb,
                                                      mask = masks,
