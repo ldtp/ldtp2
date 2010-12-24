@@ -290,13 +290,19 @@ class PollEvents:
                 (event_type != "onwindowcreate" and \
                  self._callback[name][0] == event_type) or \
                  event_type == 'kbevent':
+                if event_type == 'kbevent':
+                    # Special case
+                    keys, modifiers = data.split('-')
+                    fname = 'kbevent%s%s' % (keys, modifiers)
+                else:
+                    fname = name
                 # Get the callback function
-                callback = self._callback[name][1]
+                callback = self._callback[fname][1]
                 if not callable(callback):
                     # If not callable, ignore the event
                     continue
+                args = self._callback[fname][2]
                 try:
-                    args = self._callback[name][2]
                     if len(args) and args[0]:
                         # Spawn a new thread, for each event
                         # If one or more arguments to the callback function
@@ -310,6 +316,9 @@ class PollEvents:
                     log(traceback.format_exc())
                     # Silently ignore !?! any exception thrown
                     pass
+                # When multiple kb events registered, the for
+                # loop keeps iterating, so just break the loop
+                break
         return True
 
 def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
@@ -417,8 +426,10 @@ def registerkbevent(keys, modifiers, fn_name, *args):
     """
     Register keystroke events
 
-    @param event_name: Event name in at-spi format.
-    @type event_name: string
+    @param keys: key to listen
+    @type keys: string
+    @param modifiers: control / alt combination using gtk MODIFIERS
+    @type modifiers: int
     @param fn_name: Callback function
     @type fn_name: function
     @param *args: arguments to be passed to the callback function
@@ -427,23 +438,27 @@ def registerkbevent(keys, modifiers, fn_name, *args):
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
     """
-    _pollEvents._callback['kbevent'] = ['kbevent', fn_name, args]
+    event_name = u"kbevent%s%s" % (keys, modifiers)
+    _pollEvents._callback[event_name] = [event_name, fn_name, args]
     return _remote_registerkbevent(keys, modifiers)
 
-def deregisterkbevent():
+def deregisterkbevent(keys, modifiers):
     """
     Remove callback of registered event
 
-    @param event_name: Event name in at-spi format.
-    @type event_name: string
+    @param keys: key to listen
+    @type keys: string
+    @param modifiers: control / alt combination using gtk MODIFIERS
+    @type modifiers: int
 
     @return: 1 if registration was successful, 0 if not.
     @rtype: integer
     """
 
-    if 'kbevent' in _pollEvents._callback:
-        del _pollEvents._callback['kbevent']
-    return _remote_deregisterkbevent()
+    event_name = u"kbevent%s%s" % (keys, modifiers)
+    if event_name in _pollEvents._callback:
+        del _pollEvents._callback[event_name]
+    return _remote_deregisterkbevent(keys, modifiers)
 
 def windowuptime(window_name):
     """
