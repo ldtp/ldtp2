@@ -23,6 +23,7 @@ import time
 import state
 import client
 import atexit
+import socket
 import thread
 import gobject
 import logging
