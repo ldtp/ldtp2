@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
+import os
 from distutils.core import setup
 
+if not os.system('which doxygen'):
+    os.system('doxygen')
+
 setup(name='ldtp',
-      version='2.0.6',
+      version='2.1.0',
       description='Linux Desktop Testing Project Version 2',
       maintainer='Nagappan Alagappan',
       maintainer_email='nagappan@gmail.com',
