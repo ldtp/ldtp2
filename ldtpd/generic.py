@@ -31,7 +31,7 @@ from server_exception import LdtpServerException
 class Generic(Utils):
     def imagecapture(self, window_name = None, x = 0, y = 0,
                      width = None, height = None):
-        '''
+        """
         Captures screenshot of the whole desktop or given window
         
         @param window_name: Window name to look for, either full name,
@@ -48,7 +48,7 @@ class Generic(Utils):
 
         @return: screenshot with base64 encoded for the client
         @rtype: string
-        '''
+        """
         if window_name:
             acc = None
             for gui in self._list_guis():
