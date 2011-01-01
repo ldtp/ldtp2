@@ -2,3 +2,5 @@ include examples/*.py
 include scripts/ldtp
 include AUTHORS
 include COPYING
+include Doxyfile
+include doc/ldtp-*
