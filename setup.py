@@ -3,8 +3,8 @@
 import os
 from distutils.core import setup
 
-if not os.system('which doxygen'):
-    os.system('doxygen')
+if not os.system('which doxygen > /dev/null 2>&1'):
+    os.system('doxygen > /dev/null 2>&1')
 
 setup(name='ldtp',
       version='2.1.0',
