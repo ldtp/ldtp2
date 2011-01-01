@@ -5317,6 +5317,7 @@
  * 
  * @code
  *
+ * import os
  * import logging
  * import datetime
  * import logging.handlers
@@ -5359,6 +5360,7 @@
  * _custom_logger.setLevel(LDTP_LOG_MEMINFO)
  * 
  * addloghandler(_custom_logger)
+ * os.system('mkdir -p ~/tmp')
  * startlog('~/tmp/test.log', False)
  * startprocessmonitor('gedit')
  * _custom_logger.name = 'launchapp'
@@ -5389,6 +5391,9 @@
  * if not waittillguiexist('dlgOpenFiles'):
  *     raise AssertionError('Open Files window does not appear')
  * 
+ * if not verifytoggled('dlgOpenFiles', 'tbtnTypeafilename'):
+ *     click('dlgOpenFiles', 'tbtnTypeafilename')
+ *     wait(1)
  * settextvalue('dlgOpenFiles', 'txtLocation', '/tmp/test.py')
  * 
  * click('dlgOpenFiles', 'btnOpen')
@@ -5477,6 +5482,7 @@
  * _custom_logger.setLevel(LDTP_LOG_MEMINFO)
  * 
  * addloghandler(_custom_logger)
+ * os.system('mkdir -p ~/tmp')
  * startlog('~/tmp/test.log', False)
  * startprocessmonitor('gedit')
  * _custom_logger.name = 'launchapp'
@@ -5507,6 +5513,9 @@
  * if not waittillguiexist('dlgOpenFiles'):
  *     raise AssertionError('Open Files window does not appear')
  * 
+ * if not verifytoggled('dlgOpenFiles', 'tbtnTypeafilename'):
+ *     click('dlgOpenFiles', 'tbtnTypeafilename')
+ *     wait(1)
  * settextvalue('dlgOpenFiles', 'txtLocation', '/tmp/test.py')
  * 
  * click('dlgOpenFiles', 'btnOpen')
