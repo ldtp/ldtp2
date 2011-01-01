@@ -28,6 +28,7 @@ import signal
 from socket import error as SocketError
 from client_exception import LdtpExecutionError, ERROR_CODE
 from log import logger
+from httplib import CannotSendRequest
 
 if 'LDTP_DEBUG' in os.environ:
     _ldtp_debug = os.environ['LDTP_DEBUG']
@@ -97,6 +98,16 @@ class Transport(xmlrpclib.Transport):
                     raise LdtpExecutionError(e.faultString.encode('utf-8'))
                 else:
                     raise e
+            except CannotSendRequest:
+                # Use a clean connection and retry
+                if retry_count < 10:
+                    # In python 2.7 / Ubuntu Natty 11.04
+                    # it fails, if this is not handled
+                    # bug 638229
+                    self.close()
+                    retry_count += 1
+                else:
+                    raise
 
     def __del__(self):
         self.kill_daemon()
