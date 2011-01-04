@@ -1,8 +1,10 @@
-'''
+"""
 LDTP v2 ldtputils init file
 
-@author: Eitan Isaacson <eitan@ascender.com>, Nagappan Alagappan <nagappan@gmail.com>
-@copyright: Copyright (c) 2009 Eitan Isaacson, Nagappan Alagappan
+@author: Eitan Isaacson <eitan@ascender.com>
+@author: Nagappan Alagappan <nagappan@gmail.com>
+@copyright: Copyright (c) 2009 Eitan Isaacson
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -12,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 import ldtp
 from ldtp import imagecapture
 import xml.dom.minidom
