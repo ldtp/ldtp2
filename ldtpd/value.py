@@ -139,6 +139,9 @@ class Value(Utils):
 
         return valuei.minimumValue
 
+    # Name compatibility with setmin
+    getmin = getminvalue
+
     def getminincrement(self, window_name, object_name):
         """
         Get object min increment value

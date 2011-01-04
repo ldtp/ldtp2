@@ -637,6 +637,12 @@
  * \subpage decrease - Decrease the slider
  * \n
  * \n
+ * \subpage getmax - Get the slider to max value
+ * \n
+ * \n
+ * \subpage getmin - Get the slider to min value
+ * \n
+ * \n
  * \subpage getminincrement - Get min increment value of slider
  * \n
  * \n
@@ -3128,6 +3134,30 @@
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
+/** \page getmax getmax
+ * \section Syntax
+ *
+ * getmax ('\<window name\>', '\<spinbutton name\>')
+ *
+ * \section Description
+ *
+ * Gets the max value of the spin button.
+ *
+ * \section ImplementationDetails
+ *
+ * \retval max value of the spin button on success, else LdtpExecutionError exception
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ *
+ * \section Example
+ *
+ * Creation of Appointment in Evolution:
+ * 
+ * getmax('dlgAppointment-Nosummary', 'sbtnOccurence')
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
+ */
+
 /** \page getminvalue getminvalue
  * \section Syntax
  *
@@ -3148,6 +3178,30 @@
  * Creation of Appointment in Evolution:
  * 
  * getminvalue ('dlgAppointment-Nosummary', 'sbtnOccurence')
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
+ */
+
+/** \page getmin getmin
+ * \section Syntax
+ *
+ * getmin('\<window name\>', '\<spinbutton name\>')
+ *
+ * \section Description
+ *
+ * Gets the min value of the spin button.
+ *
+ * \section ImplementationDetails
+ *
+ * \retval min value of the spin button on success, else LdtpExecutionError exception
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ *
+ * \section Example
+ *
+ * Creation of Appointment in Evolution:
+ * 
+ * getmin('dlgAppointment-Nosummary', 'sbtnOccurence')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
