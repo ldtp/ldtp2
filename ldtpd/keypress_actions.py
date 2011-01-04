@@ -1,8 +1,10 @@
-'''
+"""
 Keypress actions.
 
-@author: Eitan Isaacson
+@author: Eitan Isaacson <eitan@ascender.com>
+@author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2007 - 2009 Eitan Isaacson
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -12,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import re
 import time
@@ -193,11 +195,11 @@ class KeyboardOp:
     return key_vals
 
 class KeyPressAction(AtomicAction):
-  '''
+  """
   A key press step. Emulates a keyboard key press.
-  '''
+  """
   def __init__(self, key_code=None, key_name=None, delta_time=0):
-    '''
+    """
     Initialize L{KeyPressAction}. Could use either a hardware keycode, 
     a key name, or both.
     
@@ -207,7 +209,7 @@ class KeyPressAction(AtomicAction):
     @type key_code: integer.
     @param key_name: Key name.
     @type key_name: string.
-    '''
+    """
     if (None, None) == (key_name, key_code):
       raise TypeError("Need either a key code or a key name")
     if delta_time > release_max: delta_time = release_max
@@ -223,29 +225,29 @@ class KeyPressAction(AtomicAction):
       AtomicAction.__init__(self, delta_time, self._keyPress, key_code)
 
   def _keyPress(self, key_code):
-    '''
+    """
     Perform actual key press.
     
     @param key_code: Hardware key code.
     @type key_code: integer
-    '''
+    """
     pyatspi.Registry.generateKeyboardEvent(key_code, None, pyatspi.KEY_PRESS)
 
   def __str__(self):
-    '''
+    """
     String representation of instance.
 
     @return: String representation of instance.
     @rtype: string
-    '''
+    """
     return _('Key press %s') % self._key_name or 'a key'
 
 class KeyReleaseAction(AtomicAction):
-  '''
+  """
   A key release step. Emulates a keyboard key release.
-  '''
+  """
   def __init__(self, key_code=None, key_name=None, delta_time=0):
-    '''
+    """
     Initialize L{KeyReleaseAction}. Could use either a hardware keycode, 
     a key name, or both.
     
@@ -255,7 +257,7 @@ class KeyReleaseAction(AtomicAction):
     @type key_code: integer.
     @param key_name: Key name.
     @type key_name: string.
-    '''
+    """
     if (None, None) == (key_name, key_code):
       raise TypeError("Need either a key code or a key name")
     if delta_time > release_max: delta_time = release_max
@@ -271,21 +273,21 @@ class KeyReleaseAction(AtomicAction):
       AtomicAction.__init__(self, delta_time, self._keyRelease, key_code)
 
   def _keyRelease(self, key_code):
-    '''
+    """
     Perform actual key release.
     
     @param key_code: Hardware key code.
     @type key_code: integer
-    '''
+    """
     pyatspi.Registry.generateKeyboardEvent(key_code, None, pyatspi.KEY_RELEASE)
 
   def __str__(self):
-    '''
+    """
     String representation of instance.
 
     @return: String representation of instance.
     @rtype: string
-    '''
+    """
     return _('Key release %s') % self._key_name or 'a key'
 
 # A bit smarter about common interactions.
@@ -299,21 +301,21 @@ mod_key_code_mappings = {
   }
 
 class KeyComboAction(AtomicAction):
-  '''
+  """
   Key combo action. Performs a press and release of a single or key combination.
 
   @ivar _key_combo: Name of key combination or single key press-release.
   @type _key_combo: string
-  '''
+  """
   def __init__(self, key_combo, delta_time=0):    
-    '''
+    """
     Initialize L{KeyComboAction}.
     
     @param key_combo: Name of key combination or single key press-release.
     @type key_combo: string
     @param delta_time: Time to wait before performing step.
     @type delta_time: integer
-    '''
+    """
     self.key_op = KeyboardOp()
     key_vals = self.key_op.get_keyval_id(key_combo)
     if not key_vals:
@@ -323,20 +325,20 @@ class KeyComboAction(AtomicAction):
     AtomicAction.__init__(self, delta_time, self._doCombo)
 
   def __call__(self):
-    '''
+    """
     Perform step. Overridden to omit L{SequenceStep.stepDone}.
-    '''
+    """
     self._func(*self._args)
 
   def _doCombo(self):
-    '''
+    """
     Perform combo operation.
     
     @param key_code: Key code to press.
     @type key_code: integer
     @param modifiers: Modifier mask to press with.
     @type modifiers: integer
-    '''
+    """
     interval = 0
     for key_val in self._key_combo:
       if key_val.non_print_key == True:
@@ -392,43 +394,43 @@ class KeyComboAction(AtomicAction):
     gobject.timeout_add(interval, self.stepDone)
 
   def _keyPress(self, hw_code):
-    '''
+    """
     Press modifier key.
     
     @param hw_code: Hardware code for key.
     @type hw_code: integer
-    '''
+    """
     pyatspi.Registry.generateKeyboardEvent(hw_code, None, pyatspi.KEY_PRESS)
     return False
 
   def _keyRelease(self, hw_code):
-    '''
+    """
     Release modifier key.
     
     @param hw_code: Hardware code for key.
     @type hw_code: integer
-    '''
+    """
     pyatspi.Registry.generateKeyboardEvent(hw_code, None, pyatspi.KEY_RELEASE)
     return False
 
   def _keyPressRelease(self, keyval):
-    '''
+    """
     Press and release non-modifier key.
     
     @param key_code: Key code.
     @type key_code: integer
-    '''
+    """
     pyatspi.Registry.generateKeyboardEvent(keyval, None, 
                                            pyatspi.KEY_PRESSRELEASE)
     return False
 
   def __str__(self):
-    '''
+    """
     String representation of instance.
 
     @return: String representation of instance.
     @rtype: string
-    '''
+    """
     return _('Press %s') % self._key_combo
 
 if __name__ == "__main__":

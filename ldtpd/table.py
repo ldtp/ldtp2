@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 Core Table.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -14,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 import re
 import pyatspi 
 from utils import Utils
@@ -25,7 +25,7 @@ from server_exception import LdtpServerException
 
 class Table(Utils):
     def getrowcount(self, window_name, object_name):
-        '''
+        """
         Get count of rows in table object.
         
         @param window_name: Window name to look for, either full name,
@@ -37,7 +37,7 @@ class Table(Utils):
 
         @return: Number of rows.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -48,7 +48,7 @@ class Table(Utils):
         return itable.nRows
 
     def selectrow(self, window_name, object_name, row_text):
-        '''
+        """
         Select row
         
         @param window_name: Window name to type in, either full name,
@@ -62,7 +62,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -98,7 +98,7 @@ class Table(Utils):
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowpartialmatch(self, window_name, object_name, row_text):
-        '''
+        """
         Select row partial match
         
         @param window_name: Window name to type in, either full name,
@@ -112,7 +112,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -148,7 +148,7 @@ class Table(Utils):
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowindex(self, window_name, object_name, row_index):
-        '''
+        """
         Select row index
         
         @param window_name: Window name to type in, either full name,
@@ -162,7 +162,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -178,7 +178,7 @@ class Table(Utils):
         return 1
 
     def selectlastrow(self, window_name, object_name):
-        '''
+        """
         Select last row
         
         @param window_name: Window name to type in, either full name,
@@ -190,7 +190,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -204,7 +204,7 @@ class Table(Utils):
 
     def setcellvalue(self, window_name, object_name, row_index,
                      column = 0, data = None):
-        '''
+        """
         Set cell value
         
         @param window_name: Window name to type in, either full name,
@@ -223,7 +223,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         cell = self._get_accessible_at_row_column(obj, row_index, column)
@@ -288,7 +288,7 @@ class Table(Utils):
         raise LdtpServerException('Text cannot be entered into object.')
 
     def getcellvalue(self, window_name, object_name, row_index, column = 0):
-        '''
+        """
         Get cell value
         
         @param window_name: Window name to type in, either full name,
@@ -304,7 +304,7 @@ class Table(Utils):
 
         @return: cell value on success.
         @rtype: string
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         cell = self._get_accessible_at_row_column(obj, row_index, column)
@@ -338,7 +338,7 @@ class Table(Utils):
         return name
 
     def checkrow(self, window_name, object_name, row_index, column = 0):
-        '''
+        """
         Check row
         
         @param window_name: Window name to type in, either full name,
@@ -354,7 +354,7 @@ class Table(Utils):
 
         @return: cell value on success.
         @rtype: string
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         cell = self._get_accessible_at_row_column(obj, row_index, column)
@@ -396,7 +396,7 @@ class Table(Utils):
         return 1
 
     def expandtablecell(self, window_name, object_name, row_index, column = 0):
-        '''
+        """
         Expand or contract table cell
         
         @param window_name: Window name to type in, either full name,
@@ -412,7 +412,7 @@ class Table(Utils):
 
         @return: cell value on success.
         @rtype: string
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         cell = self._get_accessible_at_row_column(obj, row_index, column)
@@ -452,7 +452,7 @@ class Table(Utils):
         return 1
 
     def uncheckrow(self, window_name, object_name, row_index, column = 0):
-        '''
+        """
         Check row
         
         @param window_name: Window name to type in, either full name,
@@ -468,7 +468,7 @@ class Table(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         cell = self._get_accessible_at_row_column(obj, row_index, column)
@@ -510,7 +510,7 @@ class Table(Utils):
         return 1
 
     def gettablerowindex(self, window_name, object_name, row_text):
-        '''
+        """
         Get table row index matching given text
         
         @param window_name: Window name to type in, either full name,
@@ -524,7 +524,7 @@ class Table(Utils):
 
         @return: row index matching the text on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -560,7 +560,7 @@ class Table(Utils):
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
     def getrowcount(self, window_name, object_name):
-        '''
+        """
         Select row partial match
         
         @param window_name: Window name to type in, either full name,
@@ -572,7 +572,7 @@ class Table(Utils):
 
         @return: Row count on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -583,7 +583,7 @@ class Table(Utils):
         return tablei.nRows
 
     def singleclickrow(self, window_name, object_name, row_text):
-        '''
+        """
         Single click row matching given text
         
         @param window_name: Window name to type in, either full name,
@@ -597,7 +597,7 @@ class Table(Utils):
 
         @return: row index matching the text on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -641,7 +641,7 @@ class Table(Utils):
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
     def doubleclickrow(self, window_name, object_name, row_text):
-        '''
+        """
         Single click row matching given text
         
         @param window_name: Window name to type in, either full name,
@@ -655,7 +655,7 @@ class Table(Utils):
 
         @return: row index matching the text on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
 
         try:
@@ -700,7 +700,7 @@ class Table(Utils):
 
     def verifytablecell(self, window_name, object_name, row_index,
                         column_index, row_text):
-        '''
+        """
         Verify table cell value with given text
         
         @param window_name: Window name to type in, either full name,
@@ -718,7 +718,7 @@ class Table(Utils):
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-         '''
+         """
         try:
             text = self.getcellvalue(window_name, object_name,
                                      row_index, column_index)
@@ -727,7 +727,7 @@ class Table(Utils):
             return 0
 
     def doesrowexist(self, window_name, object_name, row_text):
-        '''
+        """
         Verify table cell value with given text
         
         @param window_name: Window name to type in, either full name,
@@ -741,7 +741,7 @@ class Table(Utils):
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
 
@@ -760,7 +760,7 @@ class Table(Utils):
 
     def verifypartialtablecell(self, window_name, object_name, row_index,
                                column_index, row_text):
-        '''
+        """
         Verify partial table cell value
         
         @param window_name: Window name to type in, either full name,
@@ -778,7 +778,7 @@ class Table(Utils):
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             text = self.getcellvalue(window_name, object_name, row_index, column)
             if re.search(row_text, text):

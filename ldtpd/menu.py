@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 Core.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -14,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import re
 import pyatspi 
@@ -25,7 +25,7 @@ from utils import Utils
 
 class Menu(Utils):
     def selectmenuitem(self, window_name, object_name):
-        '''
+        """
         Select (click) a menu item.
         
         @param window_name: Window name to look for, either full name,
@@ -37,7 +37,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
@@ -48,7 +48,7 @@ class Menu(Utils):
         return 1
 
     def doesmenuitemexist(self, window_name, object_name):
-        '''
+        """
         Check a menu item exist.
         
         @param window_name: Window name to look for, either full name,
@@ -60,7 +60,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             if re.search(';', object_name):
                 obj = self._get_menu_hierarchy(window_name, object_name)
@@ -71,7 +71,7 @@ class Menu(Utils):
             return 0
 
     def listsubmenus(self, window_name, object_name):
-        '''
+        """
         List children of menu item
         
         @param window_name: Window name to look for, either full name,
@@ -83,7 +83,7 @@ class Menu(Utils):
 
         @return: menu item in ';' separated format on success.
         @rtype: string
-        '''
+        """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
@@ -102,7 +102,7 @@ class Menu(Utils):
         return _children
 
     def menucheck(self, window_name, object_name):
-        '''
+        """
         Check (click) a menu item.
         
         @param window_name: Window name to look for, either full name,
@@ -114,7 +114,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
@@ -126,7 +126,7 @@ class Menu(Utils):
         return 1
 
     def menuuncheck(self, window_name, object_name):
-        '''
+        """
         Check (click) a menu item.
         
         @param window_name: Window name to look for, either full name,
@@ -138,7 +138,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
@@ -150,7 +150,7 @@ class Menu(Utils):
         return 1
 
     def menuitemenabled(self, window_name, object_name):
-        '''
+        """
         Verify a menu item is enabled
         
         @param window_name: Window name to look for, either full name,
@@ -162,7 +162,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             if re.search(';', object_name):
                 obj = self._get_menu_hierarchy(window_name, object_name)
@@ -176,7 +176,7 @@ class Menu(Utils):
         return 0
 
     def verifymenucheck(self, window_name, object_name):
-        '''
+        """
         Verify a menu item is checked
         
         @param window_name: Window name to look for, either full name,
@@ -188,7 +188,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             if re.search(';', object_name):
                 obj = self._get_menu_hierarchy(window_name, object_name)
@@ -202,7 +202,7 @@ class Menu(Utils):
         return 0
 
     def verifymenuuncheck(self, window_name, object_name):
-        '''
+        """
         Verify a menu item is un-checked
         
         @param window_name: Window name to look for, either full name,
@@ -214,7 +214,7 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             if re.search(';', object_name):
                 obj = self._get_menu_hierarchy(window_name, object_name)
@@ -228,7 +228,7 @@ class Menu(Utils):
         return 0
 
     def invokemenu(self, window_name, object_name):
-        '''
+        """
         Invoke menu item.
         
         @param window_name: Window name to look for, either full name,
@@ -240,6 +240,6 @@ class Menu(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         return self.press(window_name, object_name)
 

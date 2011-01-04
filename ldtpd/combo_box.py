@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 Core Combo box.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -14,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import pyatspi 
 from utils import Utils
@@ -25,7 +25,7 @@ from server_exception import LdtpServerException
 
 class LayeredPane(Utils):
     def _lp_selectitem(self, obj, item_name):
-        '''
+        """
         Select layered pane item
 
         @param obj: Layered pane object
@@ -35,7 +35,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         index = 0
         for child in self._list_objects(obj):
             if child == obj:
@@ -64,7 +64,7 @@ class LayeredPane(Utils):
         raise LdtpServerException('Unable to select item')
 
     def _lp_selectindex(self, obj, item_index):
-        '''
+        """
         Select layered pane item based on index
 
         @param obj: Layered pane object
@@ -74,7 +74,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         selectioni = obj.querySelection()
         try:
             selectioni.selectChild(item_index)
@@ -83,7 +83,7 @@ class LayeredPane(Utils):
             raise LdtpServerException('Unable to select index')
 
     def unselectitem(self, window_name, object_name, item_name):
-        '''
+        """
         Select layered pane item
 
         @param window_name: Window name to type in, either full name,
@@ -96,7 +96,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -128,7 +128,7 @@ class LayeredPane(Utils):
         raise LdtpServerException('Unable to unselect item')
 
     def unselectindex(self, window_name, object_name, item_index):
-        '''
+        """
         Select layered pane item based on index
 
         @param window_name: Window name to type in, either full name,
@@ -142,7 +142,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -154,7 +154,7 @@ class LayeredPane(Utils):
             raise LdtpServerException('Unable to unselect index')
 
     def ischildselected(self, window_name, object_name, item_name):
-        '''
+        """
         Is layered pane item selected
 
         @param window_name: Window name to type in, either full name,
@@ -167,7 +167,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -190,7 +190,7 @@ class LayeredPane(Utils):
         return 0
 
     def ischildindexselected(self, window_name, object_name, item_index):
-        '''
+        """
         Is layered pane item selected in the given index
 
         @param window_name: Window name to type in, either full name,
@@ -204,7 +204,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -216,7 +216,7 @@ class LayeredPane(Utils):
         return 0
 
     def selecteditemcount(self, window_name, object_name):
-        '''
+        """
         Selected item count in layered pane
         
         @param window_name: Window name to type in, either full name,
@@ -228,7 +228,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -236,7 +236,7 @@ class LayeredPane(Utils):
         return selectioni.nSelectedChildren
 
     def selectall(self, window_name, object_name):
-        '''
+        """
         Select all item in layered pane
         
         @param window_name: Window name to type in, either full name,
@@ -248,7 +248,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -260,7 +260,7 @@ class LayeredPane(Utils):
             raise LdtpServerException('Unable to select all item')
 
     def unselectall(self, window_name, object_name):
-        '''
+        """
         Unselect all item in layered pane
         
         @param window_name: Window name to type in, either full name,
@@ -272,7 +272,7 @@ class LayeredPane(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -285,7 +285,7 @@ class LayeredPane(Utils):
 
 class ComboBox(Utils, LayeredPane):
     def selectitem(self, window_name, object_name, item_name):
-        '''
+        """
         Select combo box / layered pane item
         
         @param window_name: Window name to type in, either full name,
@@ -299,7 +299,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -366,7 +366,7 @@ class ComboBox(Utils, LayeredPane):
     comboselect = selectitem
 
     def selectindex(self, window_name, object_name, item_index):
-        '''
+        """
         Select combo box item / layered pane based on index
         
         @param window_name: Window name to type in, either full name,
@@ -380,7 +380,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -412,7 +412,7 @@ class ComboBox(Utils, LayeredPane):
     comboselectindex = selectindex
 
     def getallitem(self, window_name, object_name):
-        '''
+        """
         Select combo box item
         
         @param window_name: Window name to type in, either full name,
@@ -424,7 +424,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: list of string on success.
         @rtype: list
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -458,7 +458,7 @@ class ComboBox(Utils, LayeredPane):
         raise LdtpServerException('Unable to select item')
 
     def showlist(self, window_name, object_name):
-        '''
+        """
         Show combo box list / menu
         
         @param window_name: Window name to type in, either full name,
@@ -470,7 +470,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -484,7 +484,7 @@ class ComboBox(Utils, LayeredPane):
         return 1
 
     def hidelist(self, window_name, object_name):
-        '''
+        """
         Hide combo box list / menu
         
         @param window_name: Window name to type in, either full name,
@@ -496,7 +496,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -510,7 +510,7 @@ class ComboBox(Utils, LayeredPane):
         return 1
 
     def verifydropdown(self, window_name, object_name):
-        '''
+        """
         Verify drop down list / menu poped up
         
         @param window_name: Window name to type in, either full name,
@@ -522,7 +522,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
@@ -542,7 +542,7 @@ class ComboBox(Utils, LayeredPane):
         return 0
 
     def verifyshowlist(self, window_name, object_name):
-        '''
+        """
         Verify drop down list / menu poped up
         
         @param window_name: Window name to type in, either full name,
@@ -554,11 +554,11 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         return self.verifydropdown(window_name, object_name)
 
     def verifyhidelist(self, window_name, object_name):
-        '''
+        """
         Verify list / menu is hidden in combo box
         
         @param window_name: Window name to type in, either full name,
@@ -570,7 +570,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
@@ -591,7 +591,7 @@ class ComboBox(Utils, LayeredPane):
         return 0
 
     def verifyselect(self, window_name, object_name, item_name):
-        '''
+        """
         Verify the item selected in combo box
         
         @param window_name: Window name to type in, either full name,
@@ -605,7 +605,7 @@ class ComboBox(Utils, LayeredPane):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)

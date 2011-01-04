@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 xml rpc daemon.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009-10 Nagappan Alagappan
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -17,7 +17,7 @@ merchantability or fitness for a particular purpose.
 See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import os, re, time
 from core import Ldtpd
@@ -57,7 +57,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     if not _ldtp_debug:
         # If LDTP_DEBUG env set, then print verbose info on console
         def _ebRender(self, failure):
-            '''Custom error render method (used by our XMLRPC objects)'''
+            """Custom error render method (used by our XMLRPC objects)"""
             if isinstance(failure.value, xmlrpclib.Fault):
                 return failure.value
 

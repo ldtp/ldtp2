@@ -1,10 +1,10 @@
-'''
+"""
 LDTP v2 Core Text.
 
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009 Nagappan Alagappan
+@copyright: Copyright (c) 2009-11 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -14,10 +14,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 import re
 import pyatspi 
@@ -28,7 +28,7 @@ from keypress_actions import KeyComboAction, KeyPressAction, KeyReleaseAction
 
 class Text(Utils):
     def generatekeyevent(self, data):
-        '''
+        """
         Functionality of generatekeyevent is similar to typekey of 
         LTFX project.
         
@@ -37,7 +37,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
 
         key_combo_action = KeyComboAction(data)
         key_combo_action()
@@ -45,7 +45,7 @@ class Text(Utils):
         return 1
 
     def keypress(self, data):
-        '''
+        """
         Press key. NOTE: keyrelease should be called
 
         @param data: data to type.
@@ -53,7 +53,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
 
         key_press_action = KeyPressAction(key_name = data)
         key_press_action()
@@ -61,7 +61,7 @@ class Text(Utils):
         return 1
 
     def keyrelease(self, data):
-        '''
+        """
         Release key. NOTE: keypress should be called before this
 
         @param data: data to type.
@@ -69,7 +69,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
 
         key_release_action = KeyReleaseAction(key_name = data)
         key_release_action()
@@ -77,7 +77,7 @@ class Text(Utils):
         return 1
 
     def enterstring(self, window_name, object_name='', data=''):
-        '''
+        """
         Type string sequence.
         
         @param window_name: Window name to focus on, either full name,
@@ -91,7 +91,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         if object_name:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
@@ -108,7 +108,7 @@ class Text(Utils):
         return 1
 
     def settextvalue(self, window_name, object_name, data=''):
-        '''
+        """
         Type string sequence.
         
         @param window_name: Window name to type in, either full name,
@@ -122,7 +122,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
@@ -139,7 +139,7 @@ class Text(Utils):
 
     def gettextvalue(self, window_name, object_name, startPosition = None,
                      endPosition = None):
-        '''
+        """
         Get text value
         
         @param window_name: Window name to type in, either full name,
@@ -155,7 +155,7 @@ class Text(Utils):
 
         @return: text on success.
         @rtype: string
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
@@ -185,7 +185,7 @@ class Text(Utils):
         return unicode(texti.getText(start, end))
 
     def verifypartialmatch(self, window_name, object_name, partial_text):
-        '''
+        """
         Verify partial text
         
         @param window_name: Window name to type in, either full name,
@@ -199,7 +199,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             if re.search(partial_text,
                          self.gettextvalue(window_name,
@@ -210,7 +210,7 @@ class Text(Utils):
         return 0
 
     def verifysettext(self, window_name, object_name, text):
-        '''
+        """
         Verify text is set correctly
         
         @param window_name: Window name to type in, either full name,
@@ -224,7 +224,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         try:
             return int(self._glob_match(text,
                                         self.gettextvalue(window_name,
@@ -233,7 +233,7 @@ class Text(Utils):
             return 0
 
     def activatetext(self, window_name, object_name):
-        '''
+        """
         Activate text
         
         @param window_name: Window name to type in, either full name,
@@ -245,7 +245,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -254,7 +254,7 @@ class Text(Utils):
         return 1
 
     def appendtext(self, window_name, object_name, data=''):
-        '''
+        """
         Append string sequence.
         
         @param window_name: Window name to type in, either full name,
@@ -268,7 +268,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
@@ -286,7 +286,7 @@ class Text(Utils):
         return 1
 
     def istextstateenabled(self, window_name, object_name):
-        '''
+        """
         Verifies text state enabled or not
         
         @param window_name: Window name to type in, either full name,
@@ -298,7 +298,7 @@ class Text(Utils):
 
         @return: 1 on success 0 on failure.
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
@@ -307,7 +307,7 @@ class Text(Utils):
             return 0
 
     def getcharcount(self, window_name, object_name):
-        '''
+        """
         Get character count
         
         @param window_name: Window name to type in, either full name,
@@ -319,7 +319,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -331,7 +331,7 @@ class Text(Utils):
         return texti.characterCount
 
     def getcursorposition(self, window_name, object_name):
-        '''
+        """
         Get cursor position
         
         @param window_name: Window name to type in, either full name,
@@ -343,7 +343,7 @@ class Text(Utils):
 
         @return: Cursor position on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -355,7 +355,7 @@ class Text(Utils):
         return texti.caretOffset
 
     def setcursorposition(self, window_name, object_name, cursor_position):
-        '''
+        """
         Set cursor position
         
         @param window_name: Window name to type in, either full name,
@@ -369,7 +369,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -382,7 +382,7 @@ class Text(Utils):
         return 1
 
     def cuttext(self, window_name, object_name, start_position, end_position = -1):
-        '''
+        """
         cut text from start position to end position
         
         @param window_name: Window name to type in, either full name,
@@ -399,7 +399,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -416,7 +416,7 @@ class Text(Utils):
         return 1
 
     def copytext(self, window_name, object_name, start_position, end_position = -1):
-        '''
+        """
         copy text from start position to end position
         
         @param window_name: Window name to type in, either full name,
@@ -433,7 +433,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -450,7 +450,7 @@ class Text(Utils):
         return 1
 
     def deletetext(self, window_name, object_name, start_position, end_position = -1):
-        '''
+        """
         delete text from start position to end position
         
         @param window_name: Window name to type in, either full name,
@@ -467,7 +467,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -484,7 +484,7 @@ class Text(Utils):
         return 1
 
     def pastetext(self, window_name, object_name, position = 0):
-        '''
+        """
         paste text from start position to end position
         
         @param window_name: Window name to type in, either full name,
@@ -498,7 +498,7 @@ class Text(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -512,7 +512,7 @@ class Text(Utils):
         return 1
 
     def getstatusbartext(self, window_name, object_name):
-        '''
+        """
         Get text value
         
         @param window_name: Window name to type in, either full name,
@@ -524,5 +524,5 @@ class Text(Utils):
 
         @return: text on success.
         @rtype: string
-        '''
+        """
         return self.gettextvalue(window_name, object_name)

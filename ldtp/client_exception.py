@@ -1,4 +1,4 @@
-'''
+"""
 LDTP v2 client exception
 
 @author: Eitan Isaacson <eitan@ascender.com>
@@ -12,10 +12,10 @@ Public License version 2 as published by the Free Software Foundation. This file
 is distributed without any warranty; without even the implied warranty of 
 merchantability or fitness for a particular purpose.
 
-See "COPYING" in the source distribution for more information.
+See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 
 ERROR_CODE = 123
 
