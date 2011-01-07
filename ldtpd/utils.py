@@ -341,8 +341,19 @@ class Utils:
                 if relationType == pyatspi.RELATION_LABELLED_BY or \
                         relationType == pyatspi.RELATION_CONTROLLED_BY:
                     # Get associated label
-                    label_acc = rel.getTarget(i)
-                    break
+                    try:
+                        label_acc = rel.getTarget(i)
+                        break
+                    except AttributeError:
+                        # With "alacarte" window, doing getbojectlist('Main Menu')
+                        # raise exception
+                        #   File "/usr/lib/pymodules/python2.6/pyatspi/accessible.py", line 657, in getTarget
+                        #    target = target._narrow(Accessibility.Accessible)
+                        # exceptions.AttributeError: 'NoneType' object has no attribute '_narrow'
+                        # Let us not throw exception, instead continue
+                        if self._ldtp_debug:
+                            print traceback.format_exc()
+                        continue
         role = acc.getRole()
         if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
                 role == pyatspi.ROLE_WINDOW or \
