@@ -12,7 +12,7 @@ def parse_cmd_line_option():
                      action = "store_true", help = "LDTP engine version",
                      default = False)
    parser.add_option("-v", "--verbose", dest = "verbose",
-                     action = "store_true", help = "Verbose mode (TODO)",
+                     action = "store_true", help = "Verbose mode",
                      default = False)
 
    (options, args) = parser.parse_args()
@@ -21,6 +21,7 @@ def parse_cmd_line_option():
       print 'ldtp-2.1.1'
       sys.exit(0)
    if options.verbose:
+      # Set verbose flag
       os.environ['LDTP_DEBUG'] = '2'
 
 parse_cmd_line_option()
