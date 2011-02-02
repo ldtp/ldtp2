@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import ldtpd
 from optparse import OptionParser
@@ -19,6 +20,8 @@ def parse_cmd_line_option():
       # Print version info and exit
       print 'ldtp-2.1.1'
       sys.exit(0)
+   if options.verbose:
+      os.environ['LDTP_DEBUG'] = '2'
 
 parse_cmd_line_option()
 try:
