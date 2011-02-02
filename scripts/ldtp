@@ -17,7 +17,7 @@ def parse_cmd_line_option():
    (options, args) = parser.parse_args()
    if options.version:
       # Print version info and exit
-      print 'ldtp-2.0.6'
+      print 'ldtp-2.1.1'
       sys.exit(0)
 
 parse_cmd_line_option()
