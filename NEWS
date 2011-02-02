@@ -1,3 +1,33 @@
+LDTP 2.1.1 released Download - Tuesday Feb 1 2011
+  Launchpad bug 710545: Resolve getobjectlist('Main Menu') of alacarte app
+LDTP 2.1.0 released Download - Monday Jan 3 2011
+  Changes in this release:
+    Added documentation files from LDTPv1 and updated accordingly
+    Search object name as unicode character and mutliline
+    Print Unicode exception, instead of string. Printing string fails, if non-ascii strings are in exception string
+  Performance improvement:
+    When looking for object inside a window without any delay, utilize all the CPU, just delay the lookup every 2 seconds
+    Don't force remap on gechild, getobjectlist, getobjectproperty, unless the window object is changed, as this utilizes more CPU
+  New API:
+    getmax - Get max value of spin button
+    getmin - Get min value of spin button
+    startlog - Start logging to file
+    stoplog - Stop logging to file
+    startprocessmonitor - Start monitoring the given process
+    stopprocessmonitor - Stop monitoring the given process
+    getcpustat - Get the current CPU statistics of the given process
+    getmemorystat - Get the current memory statistics of the given process
+    registerkbevent - Register keyboard event
+    deregisterkbevent - De-Register keyboard event
+    getobjectnameatcoords - Get window / object name in LDTP format based on the current mouse co-ordinates
+  Bugs fixed:
+    619575: Raise a more descriptive error when a child is not found
+    620343: setcellvalue is not implemented in LDTP2
+    624690: LDTP2.0.6 cannot type comma ', ' use function 'enterstring'
+    624678: Cannot identifiy some dialogs of OpenOffice3.2
+    635047: 'comboselect' doesn't work when specify component name listed in 'getobjectlist'
+    638229 - onwindowcreate fails with CannotSendRequest with python2.7
+    638226 - Missing import socket in ldtp/__init__.py
 LDTP 2.0.6 released Download - Wednesday April 14 2010
   Bug 547572 - Components should be exposed in a hierarchical way
   Bug 614249 - Connection refused when importing ldtp module
