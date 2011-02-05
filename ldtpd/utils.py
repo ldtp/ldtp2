@@ -629,16 +629,25 @@ class Utils:
         self._appmap[window_name] = self.ldtpized_list
         return self.ldtpized_list
 
-    def _get_menu_hierarchy(self, window_name, object_name):
+    def _get_menu_hierarchy(self, window_name, object_name,
+                            strict_hierarchy = False):
         _menu_hierarchy = re.split(';', object_name)
+        if strict_hierarchy and len(_menu_hierarchy) <= 1:
+            # If strict_hierarchy is set and _menu_hierarchy doesn't have
+            # hierarchy menu's with ; seperated, then raise exception
+            # Fixes bug #590111 - It would be nice if doesmenuexist could
+            # search for strict hierarchies
+            raise LdtpServerException("Invalid menu hierarchy input")
         if not re.search('^mnu', _menu_hierarchy[0], re.M | re.U):
-            _menu_hierarchy[0] = 'mnu%s' % _menu_hierarchy[0]
+            # Add mnu to the first object, if it doesn't exist
+            _menu_hierarchy[0] = u'mnu%s' % _menu_hierarchy[0]
         obj = self._get_object(window_name, _menu_hierarchy[0])
         for _menu in _menu_hierarchy[1:]:
             _flag = False
             for _child in self._list_objects(obj):
                 if obj == _child:
-                    # if the given object and child object matches
+                    # if the given object and child object matches, as
+                    # the _list_objects return object as one of the _child
                     continue
                 if self._match_name_to_acc(_menu, _child):
                     _flag = True

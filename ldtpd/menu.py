@@ -47,7 +47,8 @@ class Menu(Utils):
 
         return 1
 
-    def doesmenuitemexist(self, window_name, object_name):
+    def doesmenuitemexist(self, window_name, object_name,
+                          strict_hierarchy = False):
         """
         Check a menu item exist.
         
@@ -57,12 +58,14 @@ class Menu(Utils):
         @param object_name: Object name to look for, either full name,
         LDTP's name convention, or a Unix glob. Or menu heirarchy
         @type object_name: string
+        @param strict_hierarchy: Mandate menu hierarchy if set to True
+        @type object_name: boolean
 
         @return: 1 on success.
         @rtype: integer
         """
         try:
-            if re.search(';', object_name):
+            if strict_hierarchy or re.search(';', object_name):
                 obj = self._get_menu_hierarchy(window_name, object_name)
             else:
                 obj = self._get_object(window_name, object_name)
