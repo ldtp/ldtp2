@@ -168,7 +168,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def isalive(self):
         return True
 
-    def launchapp(self, cmd, args = [], delay = 0, env = 1):
+    def launchapp(self, cmd, args = [], delay = 0, env = 1, lang = "C"):
         """
         Launch application.
 
@@ -180,6 +180,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @type delay: int
         @param env: GNOME accessibility environment to be set or not
         @type env: int
+        @param lang: Application language to be used
+        @type lang: string
 
         @return: PID of new process
         @rtype: integer
@@ -191,6 +193,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if env:
             os.environ['GTK_MODULES'] = 'gail:atk-bridge'
             os.environ['GNOME_ACCESSIBILITY'] = '1'
+        if lang:
+            os.environ['LANG'] = lang
         try:
             process = subprocess.Popen([cmd]+args, close_fds = True)
             # Let us wait so that the application launches
