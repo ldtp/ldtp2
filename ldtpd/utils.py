@@ -592,7 +592,8 @@ class Utils:
                 index += 1
                 if not child:
                     continue
-                if child.getRole() == pyatspi.ROLE_TABLE_CELL:
+                if not self._handle_table_cell and \
+                       child.getRole() == pyatspi.ROLE_TABLE_CELL:
                     break
                 self._populate_appmap(child, parent, index)
 
