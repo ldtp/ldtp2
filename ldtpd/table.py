@@ -93,8 +93,8 @@ class Table(Utils):
                         if not flag:
                             self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
-                        self._grab_focus(cell)
-                        return 1
+                    self._grab_focus(cell)
+                    return 1
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowpartialmatch(self, window_name, object_name, row_text):
@@ -143,8 +143,8 @@ class Table(Utils):
                         if not flag:
                             self._handle_table_cell = False
                 elif self._match_name_to_acc(row_text, cell):
-                        self._grab_focus(cell)
-                        return 1
+                    self._grab_focus(cell)
+                    return 1
         raise LdtpServerException('Unable to select row: %s' % row_text)
 
     def selectrowindex(self, window_name, object_name, row_index):
@@ -336,6 +336,65 @@ class Table(Utils):
         if not name:
             raise LdtpServerException('Unable to get row text')
         return name
+
+    def rightclick(self, window_name, object_name, row_text):
+        """
+        Right click on table cell
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+
+        @return: 1 on success.
+        @rtype: integer
+        """
+        obj = self._get_object(window_name, object_name)
+
+        try:
+            tablei = obj.queryTable()
+        except NotImplementedError:
+            raise LdtpServerException('Object not table type.')
+
+        for i in range(0, tablei.nRows):
+            for j in range(0, tablei.nColumns):
+                cell = tablei.getAccessibleAt(i, j)
+                if not cell:
+                    continue
+                if cell.childCount > 0:
+                    flag = False
+                    try:
+                        if self._handle_table_cell:
+                            # Was externally set, let us not
+                            # touch this value
+                            flag = True
+                        else:
+                            self._handle_table_cell = True
+                        children = self._list_objects(cell)
+                        for child in children:
+                            if self._match_name_to_acc(row_text, child):
+                                self._grab_focus(child)
+                                size = self._get_size(child)
+                                self._mouse_event(size.x + size.width / 2,
+                                                  size.y + size.height / 2, 'b3c')
+                                return 1
+                    finally:
+                        if not flag:
+                            self._handle_table_cell = False
+                elif self._match_name_to_acc(row_text, cell):
+                    self._grab_focus(cell)
+                    size = self._get_size(cell)
+                    self._mouse_event(size.x + size.width / 2,
+                                      size.y + size.height / 2, 'b3c')
+                    return 1
+                
+        raise LdtpServerException('Unable to right click row: %s' % row_text)
 
     def checkrow(self, window_name, object_name, row_index, column = 0):
         """
