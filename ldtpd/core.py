@@ -168,6 +168,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def isalive(self):
         return True
 
+    def handletablecell(self):
+        self._handle_table_cell = True
+
+    def unhandletablecell(self):
+        self._handle_table_cell = False
+
     def launchapp(self, cmd, args = [], delay = 0, env = 1, lang = "C"):
         """
         Launch application.
