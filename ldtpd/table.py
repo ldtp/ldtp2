@@ -559,29 +559,6 @@ class Table(Utils):
                     return i
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
-    def getrowcount(self, window_name, object_name):
-        """
-        Select row partial match
-        
-        @param window_name: Window name to type in, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: string
-        @param object_name: Object name to type in, either full name,
-        LDTP's name convention, or a Unix glob. 
-        @type object_name: string
-
-        @return: Row count on success.
-        @rtype: integer
-        """
-        obj = self._get_object(window_name, object_name)
-
-        try:
-            tablei = obj.queryTable()
-        except NotImplementedError:
-            raise LdtpServerException('Object not table type.')
-
-        return tablei.nRows
-
     def singleclickrow(self, window_name, object_name, row_text):
         """
         Single click row matching given text
