@@ -762,7 +762,8 @@ class Table(Utils):
         except:
             return 0
 
-    def doesrowexist(self, window_name, object_name, row_text):
+    def doesrowexist(self, window_name, object_name, row_text,
+                     partial_match = False):
         """
         Verify table cell value with given text
         
@@ -774,6 +775,8 @@ class Table(Utils):
         @type object_name: string
         @param row_text: Row text to match
         @type string
+        @param partial_match: Find partial match strings
+        @type boolean
 
         @return: 1 on success 0 on failure.
         @rtype: integer
@@ -786,7 +789,11 @@ class Table(Utils):
                     itext = acc.queryText()
                 except NotImplementedError:
                     return False
-                return row_text == itext.getText(0,-1)
+                if partial_match:
+                    return bool(re.search(row_text, itext.getText(0, -1),
+                                          re.M | re.U))
+                else:
+                    return row_text == itext.getText(0, -1)
 
             results = pyatspi.findDescendant(obj, _searchString)
         
