@@ -6474,7 +6474,7 @@
 /** \page hasstate hasstate
  * \section Syntax
  *
- * hasstate ('<window name\>', '<object name\>', <object SPI state>[, <guitimeout>])
+ * hasstate ('<window name\>', '<object name\>', <object SPI state\>[, <guitimeout\>])
  *
  * \section Description
  *
