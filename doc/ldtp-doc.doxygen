@@ -6474,7 +6474,7 @@
 /** \page hasstate hasstate
  * \section Syntax
  *
- * hasstate ('<window name\>', '<object name\>', <object SPI state-1>[, ..., <object SPI state-n>])
+ * hasstate ('<window name\>', '<object name\>', <object SPI state>[, <guitimeout>])
  *
  * \section Description
  *
@@ -6494,7 +6494,9 @@
  *
  * hasstate ('*-gedit', 'txt0', state.FOCUSABLE)
  *
- * hasstate ('*-gedit', 'txt0', state.FOCUSABLE, state.VISIBLE)
+ * # Wait for FOCUSABLE state till 10 seconds to be enabled
+ *
+ * hasstate ('*-gedit', 'txt0', state.FOCUSABLE, 10)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
