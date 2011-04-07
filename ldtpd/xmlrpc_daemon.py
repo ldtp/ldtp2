@@ -76,14 +76,17 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             if args and isinstance(args[-1], dict):
                 kwargs = args[-1]
                 args = args[:-1]
-                if delay:
+                if delay or self._delaycmdexec:
                     pattern = '(wait|exist|has|get|verify|enabled|launch|image)'
                     p = re.compile(pattern)
                     if not p.search(functionPath):
                         # Sleep for 1 second, else the at-spi-registryd dies,
                         # on the speed we execute
                         try:
-                            time.sleep(float(delay))
+                            if self._delaycmdexec:
+                                self.wait(float(self._delaycmdexec))
+                            else:
+                                self.wait(float(delay))
                         except ValueError:
                             time.sleep(0.5)
             else:

@@ -176,6 +176,7 @@ class Utils:
         self._state_names = {}
         self._window_uptime = {}
         self._callback_event = []
+        self._delaycmdexec = None
         self._get_all_state_names()
         self._handle_table_cell = False
         self._custom_logger = _custom_logger

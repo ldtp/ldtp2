@@ -174,6 +174,18 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def unhandletablecell(self):
         self._handle_table_cell = False
 
+    def delaycmdexec(self, delay = None):
+        """
+        Delay command execution
+
+        @param delay: Delay after the application is launched
+        @type delay: float
+
+        @return: 1 on success
+        @rtype: integer
+        """
+        self._delaycmdexec = delay
+
     def launchapp(self, cmd, args = [], delay = 0, env = 1, lang = "C"):
         """
         Launch application.

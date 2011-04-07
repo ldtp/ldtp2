@@ -299,6 +299,9 @@
  * \subpage bindtext - Bind text to the current application and current locale
  * \n
  * \n
+ * \subpage delaycmdexec - Delay command execution by number of seconds
+ * \n
+ * \n
  * \subpage generatekeyevent - Generate keyboard event on currently
  * focused window
  * \n
@@ -5668,6 +5671,31 @@
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Shankar Ganesh <shagan.glare@gmail.com>
+ *
+ */
+
+/** \page delaycmdexec delaycmdexec
+ * \section Syntax
+ *
+ * delaycmdexec ([\<number of seconds to delay commands execution\>])
+ *
+ * \section Description
+ *
+ * Delay commands execution for the specified time period. Default wait time is None.
+ *
+ * \note Time in seconds.
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ *
+ * \section Example
+ *
+ * To delay the current sequence of execution for 5 seconds
+ * 
+ * from ldtputils import * 
+ *
+ * delaycmdexec(5)
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  *
  */
 
