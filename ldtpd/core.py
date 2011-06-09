@@ -856,6 +856,43 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         """
         return self.verifycheck(window_name, object_name)
 
+    def verifytoggled(self, window_name, object_name):
+        """
+        Verify toggle item toggled.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        """
+        return self.verifycheck(window_name, object_name)
+
+    def verifypushbutton(self, window_name, object_name):
+        """
+        Verify whether the object is push button or not.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success 0 on failure.
+        @rtype: integer
+        """
+        try:
+            obj = self._get_object(window_name, object_name)
+
+            return int(obj.getRole() == pyatspi.ROLE_PUSH_BUTTON)
+        except:
+            return 0
+
     def verifycheck(self, window_name, object_name):
         """
         Verify check item.
