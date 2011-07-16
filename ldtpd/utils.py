@@ -377,8 +377,12 @@ class Utils:
         # Return the role type (if, not in the know list of roles,
         # return ukn - unknown), strip the above characters from name
         # also return labely_by string
+        try:
+            label = re.sub(strip, '', (label_acc or acc).name)
+        except LookupError:
+            label = ''
         return abbreviated_roles.get(role, 'ukn'), \
-            re.sub(strip, '', (label_acc or acc).name), \
+            label, \
             label_by
 
     def _glob_match(self, pattern, string):
