@@ -332,8 +332,11 @@ class Utils:
         @rtype: tuple
         """
         label_by = label_acc = None
-        # Get accessible relation set
-        rel_set = acc.getRelationSet()
+        try:
+            # Get accessible relation set
+            rel_set = acc.getRelationSet()
+        except LookupError:
+            rel_set = None
         if rel_set:
             for i, rel in enumerate(rel_set):
                 relationType = rel.getRelationType()
