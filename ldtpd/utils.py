@@ -215,10 +215,10 @@ class Utils:
         NOTE: Just called once, internally
         """
         for state in pyatspi.STATE_VALUE_TO_NAME.keys():
-            self._states[state.__repr__()] = state
+            self._states[str(state)] = state
             # Ignore STATE_ string for LDTPv1 compatibility
             self._state_names[state] = \
-                state.__repr__().lower().partition("state_")[2]
+                str(state).lower().partition("state_")[2]
         return self._states
 
     def _obj_changed(self, event):
