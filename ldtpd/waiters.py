@@ -337,8 +337,10 @@ class ObjectExistsWaiter(GuiExistsWaiter):
                 _state_inst = obj.getState()
                 _obj_state = _state_inst.getStates()
                 state = 'STATE_%s' % self._state.upper()
-                if state in self._states and \
-                        self._states[state] in _obj_state:
+                if (state in self._states and \
+                    self._states[state] in _obj_state) or \
+                       (state in self._states_old and \
+                        self._states_old[state] in _obj_state):
                     self.success = True
             else:
                 self.success = True

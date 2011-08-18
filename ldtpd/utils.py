@@ -172,6 +172,7 @@ class Utils:
         self._states = {}
         self._appmap = {}
         self._callback = {}
+        self._states_old = {}
         self._logger = logger
         self._state_names = {}
         self._window_uptime = {}
@@ -215,6 +216,8 @@ class Utils:
         NOTE: Just called once, internally
         """
         for state in pyatspi.STATE_VALUE_TO_NAME.keys():
+            self._states_old[state.__repr__()] = state
+            # b.g.o Bug#654683
             self._states[str(state)] = state
             # Ignore STATE_ string for LDTPv1 compatibility
             self._state_names[state] = \
