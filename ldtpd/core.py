@@ -914,6 +914,27 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         except:
             return 0
 
+    def getpanelchildcount(self, window_name, object_name):
+        """
+        Get panel child count.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: 1 on success, -1 on failure.
+        @rtype: integer
+        """
+        try:
+            obj = self._get_object(window_name, object_name)
+
+            return obj.childCount
+        except:
+            return -1
+
     def verifyuncheck(self, window_name, object_name):
         """
         Verify uncheck item.
