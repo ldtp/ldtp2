@@ -39,8 +39,12 @@ def main(port=4118, parentpid=None):
     os.environ['NO_GAIL'] = '1'
     os.environ['NO_AT_BRIDGE'] = '1'
 
-    from twisted.internet import glib2reactor
-    glib2reactor.install()
+    import twisted
+    if twisted.version.major < 11:
+       # As per Ubuntu 11.10, twisted glib2reactor
+       # works with gtk2, which fails with gtk3
+       from twisted.internet import glib2reactor
+       glib2reactor.install()
     from twisted.internet import reactor
     from twisted.web import server, xmlrpc
     from xmlrpc_daemon import XMLRPCLdtpd
