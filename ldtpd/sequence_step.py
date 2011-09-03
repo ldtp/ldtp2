@@ -17,7 +17,11 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 '''
 
-import gobject, pyatspi, sys
+import pyatspi, sys
+try:
+  from gi.repository import GObject as gobject
+except:
+  import gobject
 
 class SequenceStep(gobject.GObject):
   '''

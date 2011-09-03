@@ -564,7 +564,10 @@ class Utils:
             ldtpized_name = u'%s%d' % (ldtpized_name_base,
                                       self.ldtpized_obj_index[abbrev_role])
         else:
-            ldtpized_name_base = u'%s%s' % (abbrev_role, abbrev_name)
+            try:
+               ldtpized_name_base = u'%s%s' % (abbrev_role, abbrev_name)
+            except UnicodeDecodeError:
+               ldtpized_name_base = u'%s%s' % (abbrev_role, abbrev_name.decode('utf-8'))
             ldtpized_name = ldtpized_name_base
         i = 0
         while ldtpized_name in self.ldtpized_list:

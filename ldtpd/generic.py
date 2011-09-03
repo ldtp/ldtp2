@@ -21,7 +21,14 @@ Headers in this file shall remain intact.
 
 import gc
 import os
-import gtk
+try:
+  # If we have gtk3+ gobject introspection, use that
+  import gi
+  from gi.repository import Wnck as wnck, Gtk as gtk
+except:
+  # No gobject introspection, use gtk2 libwnck
+  import gtk
+  import wnck
 import pyatspi 
 import tempfile
 from base64 import b64encode

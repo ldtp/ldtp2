@@ -21,7 +21,10 @@ Headers in this file shall remain intact.
 
 import re
 import time
-import gobject
+try:
+  from gi.repository import GObject as gobject
+except:
+  import gobject
 import pyatspi
 import subprocess
 
