@@ -33,9 +33,17 @@ from server_exception import LdtpServerException
 import os
 import re
 import sys
-import gtk
 import time
-import wnck
+try:
+  # If we have gtk3+ gobject introspection, use that
+  import gi
+  from gi.repository import Wnck as wnck, Gtk as gtk
+  gtk3 = True
+except:
+  # No gobject introspection, use gtk2 libwnck
+  import gtk
+  import wnck
+  gtk3 = False
 import pyatspi
 import traceback
 from fnmatch import translate as glob_trans
@@ -1293,11 +1301,15 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         display = gtk.gdk.Display(gtk.gdk.get_display())
         screen, x, y, flags =  display.get_pointer()
         del screen # A workaround http://bugzilla.gnome.org/show_bug.cgi?id=593732
-        wnck_screen = wnck.screen_get_default()
         # Bug in wnck, if the following 2 lines are not called
         # wnck returns empty list
         while gtk.events_pending():
             gtk.main_iteration()
+        if gtk3:
+          screen = wnck.Screen.get_default()
+        else:
+          screen = wnck.screen_get_default()
+        screen.force_update()
 
         window_order = [(w.get_name(), w) \
                         for w in wnck_screen.get_windows_stacked()]

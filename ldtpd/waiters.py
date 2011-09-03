@@ -21,20 +21,29 @@ Headers in this file shall remain intact.
 
 from utils import Utils
 import re
-import gtk
 import time
-import wnck
+try:
+  # If we have gtk3+ gobject introspection, use that
+  import gi
+  from gi.repository import Wnck as wnck, Gtk as gtk, GObject as gobject
+  gtk3 = True
+except:
+  # No gobject introspection, use gtk2 libwnck
+  import gtk
+  import wnck
+  import gobject
+  gtk3 = False
 import fnmatch
-import gobject
 import pyatspi
 import traceback
 import datetime
 
 _main_loop = None
-_gtk_vers = gtk.ver
-if _gtk_vers[0] <= 2 and _gtk_vers[1] <= 15:
-    # Required for SLED11
-    _main_loop = gobject.MainLoop()
+if not gtk3:
+   _gtk_vers = gtk.ver
+   if _gtk_vers[0] <= 2 and _gtk_vers[1] <= 15:
+       # Required for SLED11
+      _main_loop = gobject.MainLoop()
 
 class Waiter(Utils):
     events = []
@@ -119,13 +128,17 @@ class NullWaiter(Waiter):
 
 class MaximizeWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, timeout = 0)
-        self._frame_name = frame_name
+      Waiter.__init__(self, timeout = 0)
+      self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
-            gtk.main_iteration()
+          gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
@@ -152,9 +165,13 @@ class MinimizeWindow(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
             gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
@@ -181,9 +198,13 @@ class UnmaximizeWindow(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
             gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
@@ -210,9 +231,13 @@ class UnminimizeWindow(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
             gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
@@ -239,9 +264,13 @@ class ActivateWindow(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
             gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
@@ -266,9 +295,15 @@ class CloseWindow(Waiter):
         self._frame_name = frame_name
 
     def poll(self):
-        screen = wnck.screen_get_default()
         while gtk.events_pending():
             gtk.main_iteration()
+        if not gtk3:
+          screen = wnck.screen_get_default()
+        else:
+          screen = wnck.Screen.get_default()
+        # Added screen.force_update() based on
+        # http://stackoverflow.com/questions/5794309/how-can-i-get-a-list-of-windows-with-wnck-using-pygi
+        screen.force_update()
         window_list = screen.get_windows()
         for w in window_list:
             if self._frame_name:
