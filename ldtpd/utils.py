@@ -640,7 +640,10 @@ class Utils:
             _parent = abbrev_name
         else:
             _parent = ''
-        self._populate_appmap(gui, _parent, gui.getIndexInParent())
+        try:
+            self._populate_appmap(gui, _parent, gui.getIndexInParent())
+        except LookupError:
+            raise LdtpServerException("Unable to find window/object")
         self._appmap[window_name] = self.ldtpized_list
         return self.ldtpized_list
 
