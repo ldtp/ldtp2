@@ -23,12 +23,13 @@ import gc
 import os
 try:
   # If we have gtk3+ gobject introspection, use that
-  import gi
-  from gi.repository import Wnck as wnck, Gtk as gtk
+  from gi.repository import Wnck as wnck, Gtk as gtk, Gdk as gdk
+  gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck
   import gtk
   import wnck
+  gtk3 = False
 import pyatspi 
 import tempfile
 from base64 import b64encode
@@ -83,21 +84,36 @@ class Generic(Utils):
             bb = icomponent.getExtents(pyatspi.DESKTOP_COORDS)
             x, y, height, width = bb.x, bb.y, bb.height, bb.width
 
-        window = gtk.gdk.get_default_root_window()
-        size = window.get_size()
-        pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 
-                            width or size [0], 
-                            height or size [1])
-        pb = pb.get_from_drawable(window, window.get_colormap(),
-                                   x, y, 0, 0, 
-                                   width or size [0], 
-                                   height or size [1])
+        tmpFile = tempfile.mktemp('.png', 'ldtpd_')
+        if gtk3:
+           window = gdk.get_default_root_window()
+           tmp_size = window.get_geometry()
+           size = []
+           # Width
+           size.append(tmp_size[2])
+           # Height
+           size.append(tmp_size[3])
+           pb = gdk.pixbuf_get_from_window(window, x, y, width or size[0],
+                                           height or size[1])
+           pb.savev(tmpFile, 'png', [], [])
+           del pb
+           gc.collect()
+        else:
+           window = gtk.gdk.get_default_root_window()
+           size = window.get_size()
+           pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 
+                               width or size [0], 
+                               height or size [1])
+           pb = pb.get_from_drawable(window, window.get_colormap(),
+                                      x, y, 0, 0, 
+                                      width or size [0], 
+                                      height or size [1])
 
-        if pb:
-            tmpFile = tempfile.mktemp('.png', 'ldtpd_')
-            pb.save(tmpFile, 'png')
-            del pb
-            gc.collect()
+           if pb:
+              pb.save(tmpFile, 'png')
+              del pb
+              gc.collect()
         rv = b64encode(open(tmpFile).read())
         os.remove(tmpFile)
         return rv
+
