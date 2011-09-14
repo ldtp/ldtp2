@@ -22,6 +22,15 @@ Headers in this file shall remain intact.
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
+try:
+  # If we have gtk3+ gobject introspection, use that
+  from gi.repository import Wnck as wnck, Gtk as gtk, GObject as gobject
+  gtk3 = True
+except:
+  # No gobject introspection, use gtk2 libwnck
+  import gtk
+  import wnck
+  gtk3 = False
 from utils import Utils, ProcessStats
 from constants import abbreviated_roles
 from keypress_actions import KeyboardOp
@@ -34,16 +43,6 @@ import os
 import re
 import sys
 import time
-try:
-  # If we have gtk3+ gobject introspection, use that
-  import gi
-  from gi.repository import Wnck as wnck, Gtk as gtk
-  gtk3 = True
-except:
-  # No gobject introspection, use gtk2 libwnck
-  import gtk
-  import wnck
-  gtk3 = False
 import pyatspi
 import traceback
 from fnmatch import translate as glob_trans
@@ -1258,6 +1257,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         # Following lines from Accerciser, _getComponentAtCoords method
         # quick_select.py file
         container = parent
+        inner_container = parent
         while True:
             container_role = container.getRole()
             if container_role == pyatspi.ROLE_PAGE_TAB_LIST:
@@ -1298,18 +1298,22 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         # Following lines from Accerciser, _inspectUnderMouse method
         # quick_select.py file
         # Inspect accessible under mouse
-        display = gtk.gdk.Display(gtk.gdk.get_display())
-        screen, x, y, flags =  display.get_pointer()
-        del screen # A workaround http://bugzilla.gnome.org/show_bug.cgi?id=593732
+        if gtk3:
+           display = gdk.get_default_root_window()
+           screen, x, y, flags = display.get_pointer()
+        else:
+           display = gtk.gdk.Display(gtk.gdk.get_display())
+           screen, x, y, flags = display.get_pointer()
+           del screen # A workaround http://bugzilla.gnome.org/show_bug.cgi?id=593732
         # Bug in wnck, if the following 2 lines are not called
         # wnck returns empty list
         while gtk.events_pending():
             gtk.main_iteration()
         if gtk3:
-          screen = wnck.Screen.get_default()
+          wnck_screen = wnck.Screen.get_default()
         else:
-          screen = wnck.screen_get_default()
-        screen.force_update()
+          wnck_screen = wnck.screen_get_default()
+        wnck_screen.force_update()
 
         window_order = [(w.get_name(), w) \
                         for w in wnck_screen.get_windows_stacked()]
