@@ -23,7 +23,7 @@ Headers in this file shall remain intact.
 from distutils.core import setup
 
 setup(name="ldtp",
-      version="2.1.1",
+      version="2.2.0",
       description="Linux Desktop Testing Project Version 2",
       maintainer="Nagappan Alagappan",
       maintainer_email="nagappan@gmail.com",
