@@ -1,3 +1,14 @@
+LDTP 2.2.0 released Download - Wednesday Sep 21 2011
+  Many fixes with respect to GTK3
+  Fixed bug#657290 - getpanelchildcount is not implemented
+  Fixed bug#656801 - hasstate return wrong status result on solaris
+  Check partial_match, compatible with LDTPv1
+  handle_table_cell when handletablecell function was called
+  Added new function rightclick
+  Handled exception: ResponseNotReady, noticed in VMware Automation environment, specific to Ubuntu 11.04
+  Added two new methods to LDTPv2 as per LDTPv1 API set - verifytoggled, verifypushbutton
+  Patch to fix bug#654683 getallstates does not work with pyatspi2, thanks to Michael Terry <michael.terry@canonical.com> for the patch
+  Fixes bug#654685 Frequent LookupErrors, thanks Michael Terry <michael.terry@canonical.com> reporting the issue
 LDTP 2.1.1 released Download - Tuesday Feb 1 2011
   Launchpad bug 710545: Resolve getobjectlist('Main Menu') of alacarte app
 LDTP 2.1.0 released Download - Monday Jan 3 2011
