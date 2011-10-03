@@ -27,7 +27,7 @@ class Menu(Utils):
     def selectmenuitem(self, window_name, object_name):
         """
         Select (click) a menu item.
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -51,7 +51,7 @@ class Menu(Utils):
                           strict_hierarchy = False):
         """
         Check a menu item exist.
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -107,7 +107,7 @@ class Menu(Utils):
     def menucheck(self, window_name, object_name):
         """
         Check (click) a menu item.
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -130,8 +130,8 @@ class Menu(Utils):
 
     def menuuncheck(self, window_name, object_name):
         """
-        Check (click) a menu item.
-        
+        Uncheck (click) a menu item.
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -155,7 +155,7 @@ class Menu(Utils):
     def menuitemenabled(self, window_name, object_name):
         """
         Verify a menu item is enabled
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -181,7 +181,7 @@ class Menu(Utils):
     def verifymenucheck(self, window_name, object_name):
         """
         Verify a menu item is checked
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -207,7 +207,7 @@ class Menu(Utils):
     def verifymenuuncheck(self, window_name, object_name):
         """
         Verify a menu item is un-checked
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -233,7 +233,7 @@ class Menu(Utils):
     def invokemenu(self, window_name, object_name):
         """
         Invoke menu item.
-        
+
         @param window_name: Window name to look for, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
@@ -245,4 +245,3 @@ class Menu(Utils):
         @rtype: integer
         """
         return self.press(window_name, object_name)
-

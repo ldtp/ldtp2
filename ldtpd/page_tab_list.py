@@ -25,7 +25,7 @@ from server_exception import LdtpServerException
 class PageTabList(Utils):
     def selecttab(self, window_name, object_name, tab_name):
         '''
-        Type string sequence.
+        Select tab based on name.
         
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
@@ -64,7 +64,7 @@ class PageTabList(Utils):
 
     def selecttabindex(self, window_name, object_name, tab_index):
         '''
-        Type string sequence.
+        Select tab based on index.
         
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
@@ -95,7 +95,7 @@ class PageTabList(Utils):
 
     def verifytabname(self, window_name, object_name, tab_name):
         '''
-        Type string sequence.
+        Verify tab name.
         
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
@@ -129,7 +129,7 @@ class PageTabList(Utils):
 
     def gettabcount(self, window_name, object_name):
         '''
-        Type string sequence.
+        Get tab count.
         
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.

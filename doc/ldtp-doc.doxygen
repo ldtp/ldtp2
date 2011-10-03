@@ -25,7 +25,7 @@
  *
  * \section AboutLDTP About LDTP
  *
- * Linux Desktop Testing Project (LDTP) is aimed at producing high
+ * Linux Desktop Testing Project(LDTP) is aimed at producing high
  * quality test automation framework and cutting-edge tools that can
  * be used to test Linux Desktop and improve it. It uses the
  * Accessibility libraries to poke through the application's user
@@ -717,6 +717,9 @@
  * \n
  * \n
  * \subpage selecttabindex - Select tab based on tab index
+ * \n
+ * \n
+ * \subpage verifytabname - Verify tab name is selected or not
  *
  */
 
@@ -769,6 +772,9 @@
  * given name matches
  * \n
  * \n
+ * \subpage handletablecell - Handle table cells in table, by default its turned off
+ * \n
+ * \n
  * \subpage selectlastrow - Select last row in the table
  * \n
  * \n
@@ -796,6 +802,9 @@
  * \n
  * \n
  * \subpage uncheckrow - Un check the table cell of type toggle button
+ * \n
+ * \n
+ * \subpage unhandletablecell - Don't handle table cells in table, by default its turned off
  * \n
  * \n
  * \subpage verifytablecell - Verify whether the cell value is same as
@@ -924,7 +933,7 @@
 /** \page embeddedcomponent embeddedcomponent
  * \section EmbeddedcomponentSection About Embeddedcomponent functions
  *
- * To operate on a embedded component (accessible) object and based on your requirement, you can use any of these functions
+ * To operate on a embedded component(accessible) object and based on your requirement, you can use any of these functions
  *
  * \section EmbeddedcomponentAPI Embeddedcomponent python API's
  *
@@ -1078,7 +1087,7 @@
  * \subpage getobjectlist - Get list of objects in a window
  * \n
  * \n
- * \subpage getobjectproperty - Get a class (label, type) property of an object
+ * \subpage getobjectproperty - Get a class(label, type) property of an object
  * \n
  * \n
  * \subpage getobjectnameatcoords - Get object name at the mouse coordinates
@@ -1182,7 +1191,7 @@
  * \page guiexist guiexist
  * \section Syntax
  * 
- * guiexist ('\<window name\>'[, \<object name\>])
+ * guiexist('\<window name\>'[, \<object name\>])
  * 
  * \section Description
  * 
@@ -1202,11 +1211,11 @@
  *
  * # if GTK File selector is opened the following function will return 1, else 0
  *
- * guiexist ('dlgOpenFile...')
+ * guiexist('dlgOpenFile...')
  * 
- * guiexist ('dlgOpenFile...', 'btnOpen') # Returns 1, If window exist and also the object exist
+ * guiexist('dlgOpenFile...', 'btnOpen') # Returns 1, If window exist and also the object exist
  * 
- * guiexist ('dlgOpenFile...', 'btnabc') # Returns 0
+ * guiexist('dlgOpenFile...', 'btnabc') # Returns 0
  * 
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1215,7 +1224,7 @@
  * \page waittillguiexist waittillguiexist
  * \section Syntax
  * 
- * waittillguiexist ('\<window name\>'[, '\<component name\>'[, guiTimeOut][, \<'state'\>]])
+ * waittillguiexist('\<window name\>'[, '\<component name\>'[, guiTimeOut][, \<'state'\>]])
  * 
  * \section Description
  * 
@@ -1234,44 +1243,44 @@
  *
  * \section section1 Different window types
  *
- *    1. Frame (frm)
+ *    1. Frame(frm)
  *
- *    2. Dialog (dlg)
+ *    2. Dialog(dlg)
  *
- *    3. Alert (dlg)
+ *    3. Alert(dlg)
  *
- *    4. Font Chooser (dlg)
+ *    4. Font Chooser(dlg)
  *
- *    5. File Chooser (dlg)
+ *    5. File Chooser(dlg)
  *
- *    6. Window (This type in general does not have any associated
+ *    6. Window(This type in general does not have any associated
  *    title, so we need to represent them using index - dlg)
  *
  * \section section2 Glob Pattern support
  *
- * Window name can be clubbed with glob patterns (* or ?)
+ * Window name can be clubbed with glob patterns(* or ?)
  *
  * \section section3 Different ways of representing window name
  *
- *    1. Window type and window title (Ex:
+ *    1. Window type and window title(Ex:
  *    'frmUnsavedDocument1-gedit')
  *
- *    2. Window title (Ex: 'Unsaved Document 1 - gedit')
+ *    2. Window title(Ex: 'Unsaved Document 1 - gedit')
  *
- *    3. Window type, glob expression and partial window title (Ex:
+ *    3. Window type, glob expression and partial window title(Ex:
  *    'frm*-gedit')
  *
- *    4. Glob pattern and partial window title (Ex: '*-gedit')
+ *    4. Glob pattern and partial window title(Ex: '*-gedit')
  *
- *    5. Window type, partial window title and glob pattern (Ex:
+ *    5. Window type, partial window title and glob pattern(Ex:
  *    'frmUnsavedDocument1*')
  *
- *    6. Window type, window title and index (If two windows of same
+ *    6. Window type, window title and index(If two windows of same
  *    title exist at same time. Ex:
  *       First window name 'dlgAppoinment', Second window name
  *    'dlgAppoinment1')
  *
- *    7. Window type and index (only if window does not have any
+ *    7. Window type and index(only if window does not have any
  *    accessible title, Ex: 'dlg0')
  *
  * \section section4 Window name formats
@@ -1316,7 +1325,7 @@
  * \page waittillguinotexist waittillguinotexist
  * \section Syntax
  * 
- * waittillguinotexist ('\<window name\>'[, '\<component name\>'[, guiTimeOut][, \<'state'\>]])
+ * waittillguinotexist('\<window name\>'[, '\<component name\>'[, guiTimeOut][, \<'state'\>]])
  * 
  * \section Description
  * 
@@ -1335,44 +1344,44 @@
  *
  * \section section1 Different window types
  *
- *    1. Frame (frm)
+ *    1. Frame(frm)
  *
- *    2. Dialog (dlg)
+ *    2. Dialog(dlg)
  *
- *    3. Alert (dlg)
+ *    3. Alert(dlg)
  *
- *    4. Font Chooser (dlg)
+ *    4. Font Chooser(dlg)
  *
- *    5. File Chooser (dlg)
+ *    5. File Chooser(dlg)
  *
- *    6. Window (This type in general does not have any associated
+ *    6. Window(This type in general does not have any associated
  *    title, so we need to represent them using index - dlg)
  *
  * \section section2 Glob Pattern support
  *
- * Window name can be clubbed with glob patterns (* or ?)
+ * Window name can be clubbed with glob patterns(* or ?)
  *
  * \section section3 Different ways of representing window name
  *
- *    1. Window type and window title (Ex:
+ *    1. Window type and window title(Ex:
  *    'frmUnsavedDocument1-gedit')
  *
- *    2. Window title (Ex: 'Unsaved Document 1 - gedit')
+ *    2. Window title(Ex: 'Unsaved Document 1 - gedit')
  *
- *    3. Window type, glob expression and partial window title (Ex:
+ *    3. Window type, glob expression and partial window title(Ex:
  *    'frm*-gedit')
  *
- *    4. Glob pattern and partial window title (Ex: '*-gedit')
+ *    4. Glob pattern and partial window title(Ex: '*-gedit')
  *
- *    5. Window type, partial window title and glob pattern (Ex:
+ *    5. Window type, partial window title and glob pattern(Ex:
  *    'frmUnsavedDocument1*')
  *
- *    6. Window type, window title and index (If two windows of same
+ *    6. Window type, window title and index(If two windows of same
  *    title exist at same time. Ex:
  *       First window name 'dlgAppoinment', Second window name
  *    'dlgAppoinment1')
  *
- *    7. Window type and index (only if window does not have any
+ *    7. Window type and index(only if window does not have any
  *    accessible title, Ex: 'dlg0')
  *
  * \section section4 Window name formats
@@ -1427,7 +1436,7 @@
  * \page log log
  * \section Syntax
  * 
- * log ('\<Message to be logged\>', '\<tag\>')
+ * log('\<Message to be logged\>', '\<tag\>')
  * 
  * where tag can be any of these
  * 
@@ -1487,11 +1496,11 @@
  * 
  * With Respect to Evolution:
  * 
- * 1) log ('EvolutionSuite', 'begin')
+ * 1) log('EvolutionSuite', 'begin')
  * 
- * execfile ('evolution.py')
+ * execfile('evolution.py')
  * 
- * log ('EvolutionSuite', 'end')
+ * log('EvolutionSuite', 'end')
  * 
  * 2) With respect to Appointment-to check the checkbox, 
  * 
@@ -1499,21 +1508,21 @@
  * 
  * selecttab('dlgAppointment-NoSummary', 'ptlAppointment-Nosummary', '1')
  *       
- * log ('Selecttab-In-Appointment', 'pass')
+ * log('Selecttab-In-Appointment', 'pass')
  * 
  * In except block:
  * 
  * print "Error"
  * 
- * log ('Selecttab','fail')
+ * log('Selecttab','fail')
  * 
  * 3) With respect to creation of vFolders
  * 
- * log ('Creation-of-vFolders', 'teststart')
+ * log('Creation-of-vFolders', 'teststart')
  * 
  * Create_folder()
  * 
- * log ('Creation-of-vFolders', 'testend')
+ * log('Creation-of-vFolders', 'testend')
  * 
  * 4) Log message showing success of some test case 
  * 
@@ -1521,9 +1530,9 @@
  * 
  * You can log the message to start the test case before writing the test case as
  * 
- * log ('Open a file', 'teststart')
+ * log('Open a file', 'teststart')
  * 
- * log ('opening a file', 'pass')
+ * log('opening a file', 'pass')
  * 
  * \author Nagashree <mnagashree@novell.com>
  */
@@ -1532,7 +1541,7 @@
  * \page ldtplog ldtplog
  * \section Syntax
  * 
- * ldtplog ('\<Message to be logged\>', '\<tag\>')
+ * ldtplog('\<Message to be logged\>', '\<tag\>')
  * 
  * where tag can be any of these
  * 
@@ -1592,11 +1601,11 @@
  * 
  * With Respect to Evolution:
  * 
- * 1) ldtplog ('EvolutionSuite', 'begin')
+ * 1) ldtplog('EvolutionSuite', 'begin')
  * 
- * execfile ('evolution.py')
+ * execfile('evolution.py')
  * 
- * ldtplog ('EvolutionSuite', 'end')
+ * ldtplog('EvolutionSuite', 'end')
  * 
  * 2) With respect to Appointment-to check the checkbox, 
  * 
@@ -1604,21 +1613,21 @@
  * 
  * selecttab('dlgAppointment-NoSummary', 'ptlAppointment-Nosummary', '1')
  *       
- * ldtplog ('Selecttab-In-Appointment', 'pass')
+ * ldtplog('Selecttab-In-Appointment', 'pass')
  * 
  * In except block:
  * 
  * print "Error"
  * 
- * ldtplog ('Selecttab','fail')
+ * ldtplog('Selecttab','fail')
  * 
  * 3) With respect to creation of vFolders
  * 
- * ldtplog ('Creation-of-vFolders', 'teststart')
+ * ldtplog('Creation-of-vFolders', 'teststart')
  * 
  * Create_folder()
  * 
- * ldtplog ('Creation-of-vFolders', 'testend')
+ * ldtplog('Creation-of-vFolders', 'testend')
  * 
  * 4) Log message showing success of some test case 
  * 
@@ -1626,9 +1635,9 @@
  * 
  * You can log the message to start the test case before writing the test case as
  * 
- * ldtplog ('Open a file', 'teststart')
+ * ldtplog('Open a file', 'teststart')
  * 
- * ldtplog ('opening a file', 'pass')
+ * ldtplog('opening a file', 'pass')
  * 
  * \author Nagashree <mnagashree@novell.com>
  */
@@ -1637,11 +1646,11 @@
  * \page check check
  * \section Syntax
  * 
- * check ('\<window name\>', '\<component name\>')
+ * check('\<window name\>', '\<component name\>')
  * 
  * \section Description
  * 
- * Check (tick) the check box state.
+ * Check(tick) the check box state.
  * 
  * \section ImplementationDetails
  * 
@@ -1655,15 +1664,15 @@
  * 
  * For check menu item with respect to gedit menu
  * 
- * check ('gedit', 'mnuOutputWindow')
+ * check('gedit', 'mnuOutputWindow')
  * 
  * For check menu item with respect to gedit menu
  * 
- * check ('gedit', 'mnuToolbar')
+ * check('gedit', 'mnuToolbar')
  * 
  * For check box with respect to gedit preferences
  * 
- * check ('dlgPreferences', 'cboxEnableAutoIndentation')
+ * check('dlgPreferences', 'cboxEnableAutoIndentation')
  * 
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Khasim Shaheed <khasim.shaheed@gmail.com>
@@ -1672,11 +1681,11 @@
 /** \page uncheck uncheck
  * \section Syntax
  * 
- * uncheck ('\<window name\>', '\<component name\>')
+ * uncheck('\<window name\>', '\<component name\>')
  * 
  * \section Description
  * 
- * Uncheck (un-tick) the check  state.
+ * Uncheck(un-tick) the check  state.
  * 
  * \section ImplementationDetails
  * 
@@ -1690,15 +1699,15 @@
  * 
  * To uncheck menu item with respect to gedit menu
  * 
- * uncheck ('gedit', 'mnuOutputWindow')
+ * uncheck('gedit', 'mnuOutputWindow')
  * 
  * For check menu item with respect to gedit menu
  * 
- * uncheck ('gedit', 'mnuToolbar')
+ * uncheck('gedit', 'mnuToolbar')
  * 
  * To uncheck box with respect to gedit preferences
  * 
- * uncheck ('dlgPreferences', 'cboxEnableAutoIndentation')
+ * uncheck('dlgPreferences', 'cboxEnableAutoIndentation')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1706,7 +1715,7 @@
 /** \page click click
  * \section Syntax
  * 
- * click ('\<window name\>', '\<component name\>')
+ * click('\<window name\>', '\<component name\>')
  * 
  * \section Description
  * 
@@ -1716,17 +1725,17 @@
  * 
  * \subsection Radio Radio Button
  * 
- * If radio button is already in checked state, then this function will uncheck (unset) it.
+ * If radio button is already in checked state, then this function will uncheck(unset) it.
  * 
- * If radio button is already in unchecked state, then this function will check (set) it.
+ * If radio button is already in unchecked state, then this function will check(set) it.
  * 
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/radio-button.c
  * 
  * \subsection Check Check Box
  * 
- * If check box is already in checked state, then this function will uncheck (unset) it.
+ * If check box is already in checked state, then this function will uncheck(unset) it.
  * 
- * If check box is already in unchecked state, then this function will check (set) it.
+ * If check box is already in unchecked state, then this function will check(set) it.
  * 
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
  * 
@@ -1750,9 +1759,9 @@
  * 
  * \section Examples
  * 
- * Example for push button (With respect to gedit open dialog)
+ * Example for push button(With respect to gedit open dialog)
  * 
- * click ('dlgOpen', 'btnOpen')
+ * click('dlgOpen', 'btnOpen')
  * 
  * For Check box, Check menu item, on doing this action, the state will be toggled.
  * 
@@ -1764,7 +1773,7 @@
 /** \page verifycheck verifycheck
  * \section Syntax
  * 
- * verifycheck ('\<window name\>', '\<component name\>')
+ * verifycheck('\<window name\>', '\<component name\>')
  * 
  * \section Description
  * 
@@ -1780,11 +1789,11 @@
  * 
  * For check menu item with respect to gedit menu
  * 
- * verifycheck ('gedit', 'mnuView;mnOutputWindow')
+ * verifycheck('gedit', 'mnuView;mnOutputWindow')
  * 
  * For check box with respect to gedit preferences
  * 
- * verifycheck ('dlgPreferences', 'cboxEnableAutoIndentation')
+ * verifycheck('dlgPreferences', 'cboxEnableAutoIndentation')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Aishwariya <aishwariyabhavan@yahoo.com>
@@ -1794,7 +1803,7 @@
 /** \page verifyuncheck verifyuncheck
  * \section Syntax
  * 
- * verifyuncheck ('\<window name\>', '\<component name\>')
+ * verifyuncheck('\<window name\>', '\<component name\>')
  * 
  * \section Description
  * 
@@ -1810,11 +1819,11 @@
  * 
  * To verify uncheck menu item with respect to gedit menu
  * 
- * verifyuncheck ('gedit', 'mnuView;mnOutputWindow')
+ * verifyuncheck('gedit', 'mnuView;mnOutputWindow')
  * 
  * To verify uncheck box with respect to gedit preferences
  * 
- * verifyuncheck ('dlgPreferences', 'cboxEnableAutoIndentation')
+ * verifyuncheck('dlgPreferences', 'cboxEnableAutoIndentation')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Khasim Shaheed <khasim.shaheed@gmail.com>
@@ -1823,7 +1832,7 @@
 /** \page menuitemenabled menuitemenabled
  * \section Syntax
  * 
- * menuitemenabled ('\<window name\>', '\<menu item\>')
+ * menuitemenabled('\<window name\>', '\<menu item\>')
  *
  * \section Description
  * 
@@ -1837,7 +1846,7 @@
  *
  * With respect to gedit, View menu and Toolbar check menuitem, we can verify whether the menu is enabled or not. If enabled 1 will be returned, else 0 will be returned.
  *
- * menuitemenabled ('*-gedit', 'mnuView;mnuToolbar')
+ * menuitemenabled('*-gedit', 'mnuView;mnuToolbar')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1845,7 +1854,7 @@
 /** \page verifymenucheck verifymenucheck
  * \section Syntax
  * 
- * verifymenucheck ('\<window name\>', '\<menu item\>')
+ * verifymenucheck('\<window name\>', '\<menu item\>')
  *
  * \section Description
  * 
@@ -1859,7 +1868,7 @@
  *
  * With respect to gedit, View menu and Toolbar check menuitem, we can verify whether the menu is checked or not. If checked 1 will be returned, else 0 will be returned.
  *
- * verifymenucheck ('*-gedit', 'mnuView;mnuToolbar')
+ * verifymenucheck('*-gedit', 'mnuView;mnuToolbar')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1867,7 +1876,7 @@
 /** \page verifymenuuncheck verifymenuuncheck
  * \section Syntax
  * 
- * verifymenuuncheck ('\<window name\>', '\<menu item\>')
+ * verifymenuuncheck('\<window name\>', '\<menu item\>')
  *
  * \section Description
  * 
@@ -1881,7 +1890,7 @@
  *
  * With respect to gedit, View menu and Toolbar check menuitem, we can verify whether the menu is unchecked or not. If unchecked 1 will be returned, else 0 will be returned.
  *
- * verifymenuuncheck ('*-gedit', 'mnuView;mnuToolbar')
+ * verifymenuuncheck('*-gedit', 'mnuView;mnuToolbar')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1889,7 +1898,7 @@
 /** \page menucheck menucheck
  * \section Syntax
  * 
- * menucheck ('\<window name\>', '\<menu item\>')
+ * menucheck('\<window name\>', '\<menu item\>')
  *
  * \section Description
  * 
@@ -1903,7 +1912,7 @@
  * 
  * With respect to gedit, View menu and Toolbar check menuitem, we can check the menuitem. If its already checked, it will be silently ignored.
  *
- * menucheck ('*-gedit', 'mnuView;mnuToolbar')
+ * menucheck('*-gedit', 'mnuView;mnuToolbar')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1911,7 +1920,7 @@
 /** \page menuuncheck menuuncheck
  * \section Syntax
  * 
- * menuuncheck ('\<window name\>', '\<menu item\>')
+ * menuuncheck('\<window name\>', '\<menu item\>')
  *
  * \section Description
  * 
@@ -1925,7 +1934,7 @@
  * 
  * With respect to gedit, View menu and Toolbar check menuitem, we can uncheck the menuitem. If its already unchecked, it will be silently ignored.
  *
- * menuuncheck ('*-gedit', 'mnuView;mnuToolbar')
+ * menuuncheck('*-gedit', 'mnuView;mnuToolbar')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -1933,7 +1942,7 @@
 /** \page setcursorposition setcursorposition
  * \section Syntax
  * 
- * setcursorposition ('\<window name\>', '\<text object name\>', \<position\>)
+ * setcursorposition('\<window name\>', '\<text object name\>', \<position\>)
  *
  * \section Description
  * 
@@ -1949,9 +1958,9 @@
  *
  * # Assuming that gedit is opened
  *
- * settextvalue ('*-gedit', 'txt0', 'Testing setcursorposition function of LDTP')
+ * settextvalue('*-gedit', 'txt0', 'Testing setcursorposition function of LDTP')
  *
- * setcursorposition ('*-gedit', 'txt0', 9)
+ * setcursorposition('*-gedit', 'txt0', 9)
  *
  * The above example will set the given text value in first tab of gedit window and the cursor position will be moved to column number 10 of the first row.
  *
@@ -1961,7 +1970,7 @@
 /** \page istextstateenabled istextstateenabled
  * \section Syntax
  * 
- * istextstateenabled ('\<window name\>', '\<text object name\>')
+ * istextstateenabled('\<window name\>', '\<text object name\>')
  *
  * \section Description
  * 
@@ -1981,7 +1990,7 @@
 /** \page getstatusbartext getstatusbartext
  * \section Syntax
  * 
- * getstatusbartext ('\<window name\>', '\<status bar name\>')
+ * getstatusbartext('\<window name\>', '\<status bar name\>')
  *
  * \section Description
  * 
@@ -2001,7 +2010,7 @@
 /** \page verifystatusbar verifystatusbar
  * \section Syntax
  * 
- * verifystatusbar ('\<window name\>', '\<status bar name\>')
+ * verifystatusbar('\<window name\>', '\<status bar name\>')
  *
  * \section Description
  * 
@@ -2017,7 +2026,7 @@
  *
  * from ldtp import *
  *
- * verifystatusbar ('*-gedit', 'stat0')
+ * verifystatusbar('*-gedit', 'stat0')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2025,7 +2034,7 @@
 /** \page verifystatusbarvisible verifystatusbarvisible
  * \section Syntax
  * 
- * verifystatusbarvisible ('\<window name\>', '\<status bar name\>')
+ * verifystatusbarvisible('\<window name\>', '\<status bar name\>')
  *
  * \section Description
  * 
@@ -2041,7 +2050,7 @@
  *
  * from ldtp import *
  *
- * verifystatusbarvisible ('*-gedit', 'stat0')
+ * verifystatusbarvisible('*-gedit', 'stat0')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2049,11 +2058,11 @@
 /** \page selecttextbyindexandregion selecttextbyindexandregion
  * \section Syntax
  * 
- * selecttextbyindexandregion ('\<window name\>', '\<text object name\>'[, <start position\>[, <end position\>[, <selection number\>]]])
+ * selecttextbyindexandregion('\<window name\>', '\<text object name\>'[, <start position\>[, <end position\>[, <selection number\>]]])
  *
  * \section Description
  * 
- * Select text by index (text selection change based on index) and the region (start and end position)
+ * Select text by index(text selection change based on index) and the region(start and end position)
  *
  * Reference: http://developer.gnome.org/doc/API/2.0/at-spi/at-spi-cspi-AccessibleText-Interface.html#AccessibleText-setSelection
  * 
@@ -2071,7 +2080,7 @@
 /** \page selecttextbyname selecttextbyname
  * \section Syntax
  * 
- * selecttextbyname ('\<window name\>', '\<text object name\>')
+ * selecttextbyname('\<window name\>', '\<text object name\>')
  *
  * \section Description
  * 
@@ -2091,7 +2100,7 @@
 /** \page getcursorposition getcursorposition
  * \section Syntax
  * 
- * getcursorposition ('\<window name\>', '\<text object name\>')
+ * getcursorposition('\<window name\>', '\<text object name\>')
  *
  * \section Description
  * 
@@ -2107,9 +2116,9 @@
  *
  * # Assuming that gedit is opened
  *
- * settextvalue ('*-gedit', 'txt0', 'Testing setcursorposition function of LDTP')
+ * settextvalue('*-gedit', 'txt0', 'Testing setcursorposition function of LDTP')
  *
- * getcursorposition ('*-gedit', 'txt0')
+ * getcursorposition('*-gedit', 'txt0')
  *
  * The above example will get the current cursor position in the text object of gedit windows first tab.
  *
@@ -2119,7 +2128,7 @@
 /** \page hidelist hidelist
  * \section Syntax
  * 
- * hidelist ('\<dlgName\>', '\<cboName\>')
+ * hidelist('\<dlgName\>', '\<cboName\>')
  *
  * \section Description
  * 
@@ -2143,9 +2152,9 @@
 /** \page comboselect comboselect
  * \section Syntax
  *
- * comboselect ('\<window name\>', '\<component name\>', '\<menu item name\>')
+ * comboselect('\<window name\>', '\<component name\>', '\<menu item name\>')
  *
- * comboselect ('\<window name\>', '\<component name\>', '\<list item name\>')
+ * comboselect('\<window name\>', '\<component name\>', '\<list item name\>')
  *
  * \section Description
  *
@@ -2159,7 +2168,7 @@
  *
  * In gnome-search-tool combo box 'Available options' to select the menu item 'Contains the text'
  * 
- * comboselect ('SearchForFiles', 'cboAvailableoptions', 'Contains the text')
+ * comboselect('SearchForFiles', 'cboAvailableoptions', 'Contains the text')
  * 
  * \author Poornima <pnayak@novell.com>
  */
@@ -2167,7 +2176,7 @@
 /** \page selectindex selectindex
  * \section Syntax
  *
- * selectindex ('\<dlgName\>', '\<object name\>', \<index\>)
+ * selectindex('\<dlgName\>', '\<object name\>', \<index\>)
  *
  * \section Description
  *
@@ -2194,7 +2203,7 @@
  *
  * # Selects the first folder / file in desktop
  * 
- * selectindex ('x-nautilus-desktop', 'Icon View', 0)
+ * selectindex('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Poornima <pnayak@novell.com>
  * \author Nagappan Alagappan <nagappan@gmail.com>
@@ -2203,7 +2212,7 @@
 /** \page unselectindex unselectindex
  * \section Syntax
  *
- * unselectindex ('\<dlgName\>', '\<object name\>', \<index\>)
+ * unselectindex('\<dlgName\>', '\<object name\>', \<index\>)
  *
  * \section Description
  *
@@ -2217,7 +2226,7 @@
  *
  * # Unselects the first folder / file in desktop
  * 
- * unselectindex ('x-nautilus-desktop', 'Icon View', 0)
+ * unselectindex('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2225,7 +2234,7 @@
 /** \page unselectitemindex unselectitemindex
  * \section Syntax
  *
- * unselectitemindex ('\<dlgName\>', '\<object name\>', \<index\>)
+ * unselectitemindex('\<dlgName\>', '\<object name\>', \<index\>)
  *
  * \section Description
  *
@@ -2240,7 +2249,7 @@
  *
  * # Unselects the first folder / file in desktop that is already selected
  * 
- * unselectitemindex ('x-nautilus-desktop', 'Icon View', 0)
+ * unselectitemindex('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2248,7 +2257,7 @@
 /** \page selectall selectall
  * \section Syntax
  *
- * selectall ('\<dlgName\>', '\<object name\>')
+ * selectall('\<dlgName\>', '\<object name\>')
  *
  * \section Description
  *
@@ -2260,7 +2269,7 @@
  *
  * \section Example
  *
- * selectall ('x-nautilus-desktop', 'Icon View')
+ * selectall('x-nautilus-desktop', 'Icon View')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2268,7 +2277,7 @@
 /** \page unselectall unselectall
  * \section Syntax
  *
- * unselectall ('\<dlgName\>', '\<object name\>')
+ * unselectall('\<dlgName\>', '\<object name\>')
  *
  * \section Description
  *
@@ -2280,7 +2289,7 @@
  *
  * \section Example
  *
- * unselectall ('x-nautilus-desktop', 'Icon View')
+ * unselectall('x-nautilus-desktop', 'Icon View')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2288,7 +2297,7 @@
 /** \page selecteditemcount selecteditemcount
  * \section Syntax
  *
- * selecteditemcount ('\<dlgName\>', '\<object name\>')
+ * selecteditemcount('\<dlgName\>', '\<object name\>')
  *
  * \section Description
  *
@@ -2300,7 +2309,7 @@
  *
  * \section Example
  *
- * selecteditemcount ('x-nautilus-desktop', 'Icon View')
+ * selecteditemcount('x-nautilus-desktop', 'Icon View')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2308,7 +2317,7 @@
 /** \page ischildselected ischildselected
  * \section Syntax
  *
- * ischildselected ('\<dlgName\>', '\<object name\>', '\<item\>')
+ * ischildselected('\<dlgName\>', '\<object name\>', '\<item\>')
  *
  * \section Description
  *
@@ -2321,7 +2330,7 @@
  *
  * \section Example
  *
- * ischildselected ('x-nautilus-desktop', 'Icon View', 'file-name.txt')
+ * ischildselected('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2329,7 +2338,7 @@
 /** \page ischilditemselected ischilditemselected
  * \section Syntax
  *
- * ischilditemselected ('\<dlgName\>', '\<object name\>', '\<item\>')
+ * ischilditemselected('\<dlgName\>', '\<object name\>', '\<item\>')
  *
  * \section Description
  *
@@ -2342,7 +2351,7 @@
  *
  * \section Example
  *
- * ischilditemselected ('x-nautilus-desktop', 'Icon View', 'file-name.txt')
+ * ischilditemselected('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2350,7 +2359,7 @@
 /** \page ischildindexselected ischildindexselected
  * \section Syntax
  *
- * ischildindexselected ('\<dlgName\>', '\<object name\>', \<index\>)
+ * ischildindexselected('\<dlgName\>', '\<object name\>', \<index\>)
  *
  * \section Description
  *
@@ -2363,7 +2372,7 @@
  *
  * \section Example
  *
- * ischildindexselected ('x-nautilus-desktop', 'Icon View', 0)
+ * ischildindexselected('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2371,7 +2380,7 @@
 /** \page ischilditemindexselected ischilditemindexselected
  * \section Syntax
  *
- * ischilditemindexselected ('\<dlgName\>', '\<object name\>', \<index\>)
+ * ischilditemindexselected('\<dlgName\>', '\<object name\>', \<index\>)
  *
  * \section Description
  *
@@ -2384,7 +2393,7 @@
  *
  * \section Example
  *
- * ischilditemindexselected ('x-nautilus-desktop', 'Icon View', 0)
+ * ischilditemindexselected('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2392,7 +2401,7 @@
 /** \page settextvalue settextvalue
  * \section Syntax
  *
- * settextvalue ('\<window name\>', '\<component name\>', '\<text\>')
+ * settextvalue('\<window name\>', '\<component name\>', '\<text\>')
  *
  * \section Description
  *
@@ -2414,7 +2423,7 @@
  *
  * With respect to gnome search tool text field
  * 
- * settextvalue ('SearchforFiles', 'txtNameContainsEntry', 'abcd')
+ * settextvalue('SearchforFiles', 'txtNameContainsEntry', 'abcd')
  * 
  * This is to insert the text 'abcd' into the 'txtNameContainsEntry' field.
  * 
@@ -2428,7 +2437,7 @@
 /** \page appendtext appendtext 
  * \section Syntax
  *
- * appendtext ('\<window name\>', '\<component name\>', '\<text\>')
+ * appendtext('\<window name\>', '\<component name\>', '\<text\>')
  *
  * \section Description
  *
@@ -2454,11 +2463,11 @@
 /** \page activatetext activatetext
  * \section Syntax
  *
- * activatetext ('\<window name\>', '\<component name\>')
+ * activatetext('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
- * activates the text box ( similar to press enter after setting text)
+ * activates the text box( similar to press enter after setting text)
  *
  * \section ImplementationDetails
  *
@@ -2470,7 +2479,7 @@
  *
  * With respect to gftp-gtk structure
  * 
- * activatetext ('gFTP', 'txtUser')
+ * activatetext('gFTP', 'txtUser')
  * 
  * This is to activate the text box 'txtUser' in gftp-gtk 
  *
@@ -2480,7 +2489,7 @@
 /** \page getcharcount getcharcount
  * \section Syntax
  *
- * getcharcount ('\<window name\>', '\<component name\>')
+ * getcharcount('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -2496,7 +2505,7 @@
  *
  * With respect to gedit
  * 
- * getcharcount ('gedit', 'txt0')
+ * getcharcount('gedit', 'txt0')
  * 
  * This will return the number of characters in the file presently open. 
  *
@@ -2506,7 +2515,7 @@
 /** \page cuttext cuttext
  * \section Syntax
  *
- * cuttext ('\<window name\>', '\<component name\>', \<startindex\>, \<endindex\>)
+ * cuttext('\<window name\>', '\<component name\>', \<startindex\>, \<endindex\>)
  *
  * \section Description
  *
@@ -2522,7 +2531,7 @@
  *
  * With respect to gedit tool structure
  * 
- * cuttext ('gedit', 'txtName', 1, 3)
+ * cuttext('gedit', 'txtName', 1, 3)
  * 
  * This is to cut the text from the startindex position till the endindex in the 'txtName' field.
  *
@@ -2532,7 +2541,7 @@
 /** \page  copytext copytext
  * \section Syntax
  *
- * copytext ('\<window name\>', '\<component name\>', \<startoffset\>, \<endoffset\>)
+ * copytext('\<window name\>', '\<component name\>', \<startoffset\>, \<endoffset\>)
  *
  * \section Description
  *
@@ -2548,7 +2557,7 @@
  *
  * With respect to gedit tool structure
  * 
- * copytext ('gedit', 'txt0', 5,10)
+ * copytext('gedit', 'txt0', 5,10)
  * 
  * This is to copy the text within the offset specified from the 'txt0' field into clipboard. 
  *
@@ -2558,7 +2567,7 @@
 /** \page inserttext inserttext
  * \section Syntax
  *
- * inserttext ('\<window name\>', '\<component name\>', \<position\>, '\<text\>')
+ * inserttext('\<window name\>', '\<component name\>', \<position\>, '\<text\>')
  *
  * \section Description
  *
@@ -2574,7 +2583,7 @@
  *
  * With respect to gedit
  * 
- * inserttext ('*-gedit', 'txt0', 5, 'sample text')
+ * inserttext('*-gedit', 'txt0', 5, 'sample text')
  * 
  * This is to insert the given text at the specified position in the 'txtName' field. 
  *
@@ -2584,7 +2593,7 @@
 /** \page pastetext pastetext
  * \section Syntax
  *
- * pastetext ('\<window name\>', '\<component name\>', \<position\>)
+ * pastetext('\<window name\>', '\<component name\>', \<position\>)
  *
  * \section Description
  *
@@ -2600,7 +2609,7 @@
  *
  * With respect to gedit tool structure
  * 
- * pastetext ('gedit', 'txtName', 1)
+ * pastetext('gedit', 'txtName', 1)
  * 
  * This is to paste the text from the position specified in the 'txtName' field. 
  *
@@ -2610,7 +2619,7 @@
 /** \page deletetext deletetext
  * \section Syntax
  *
- * deletetext ('\<window name\>', '\<component name\>', \<startindex\>, \<endindex\>)
+ * deletetext('\<window name\>', '\<component name\>', \<startindex\>, \<endindex\>)
  *
  * \section Description
  *
@@ -2626,7 +2635,7 @@
  *
  * With respect to gedit tool structure
  * 
- * deletetext ('gedit', 'txtName', 1, 3)
+ * deletetext('gedit', 'txtName', 1, 3)
  * 
  * This is to delete the text from the startindex to endindex specified in the 'txtName'field. 
  *
@@ -2636,7 +2645,7 @@
 /** \page showlist showlist
  * \section Syntax
  *
- * showlist ('\<dlgName\>', '\<cboName\>')
+ * showlist('\<dlgName\>', '\<cboName\>')
  *
  * \section Description
  *
@@ -2660,7 +2669,7 @@
 /** \page verifydropdown verifydropdown
  * \section Syntax
  *
- * verifydropdown ('\<window name\>', '\<combo box / list name\>')
+ * verifydropdown('\<window name\>', '\<combo box / list name\>')
  *
  * \section Description
  *
@@ -2678,7 +2687,7 @@
 /** \page verifyhidelist verifyhidelist
  * \section Syntax
  *
- * verfyhidelist ('\<dlgName\>', '\<cboName\>')
+ * verfyhidelist('\<dlgName\>', '\<cboName\>')
  *
  * \section Description
  *
@@ -2702,7 +2711,7 @@
 /** \page verifyshowlist verifyshowlist
  * \section Syntax
  *
- * verifyshowlist ('\<dlgName\>', '\<cboName\>')
+ * verifyshowlist('\<dlgName\>', '\<cboName\>')
  *
  * \section Description
  *
@@ -2726,7 +2735,7 @@
 /** \page verifyselect verifyselect
  * \section Syntax
  *
- * verifyselect ('\<dlgName\>', '\<cboName\>', '\<argument\>')
+ * verifyselect('\<dlgName\>', '\<cboName\>', '\<argument\>')
  *
  * \section Description
  *
@@ -2744,7 +2753,7 @@
  *
  * In gnome-search-tool combo box 'Available options' to select the menu item 'Contains the text'
  * 
- * verifyselect ('SearchForFiles', 'cboAvailableoptions', 'Contains the text')
+ * verifyselect('SearchForFiles', 'cboAvailableoptions', 'Contains the text')
  *
  * \author Poornima <pnayak@novell.com>
  */
@@ -2752,7 +2761,7 @@
 /** \page verifysettext verifysettext
  * \section Syntax
  *
- * verifysettext ('\<window name\>', '\<component name\>', '\<text\>')
+ * verifysettext('\<window name\>', '\<component name\>', '\<text\>')
  *
  * \section Description
  *
@@ -2768,7 +2777,7 @@
  *
  * With respect to gnome search tool structure
  * 
- * verifysettext ('SearchforFiles', 'txtNameContainsEntry', 'abcd')
+ * verifysettext('SearchforFiles', 'txtNameContainsEntry', 'abcd')
  * 
  * This is to verify if the previous settextvalue function has inserted 'abcd' into the txtNameContainsEntry field in the gnome search tool 
  *
@@ -2778,9 +2787,9 @@
 /** \page rightclick rightclick
  * \section Syntax
  *
- * rightclick ('\<window name\>', '\<component name\>', '\<menu item\>', '[data]')
+ * rightclick('\<window name\>', '\<component name\>', '\<menu item\>', '[data]')
  *
- * \todo icon - rightclick ('\<window name\>', '\<component name\>')
+ * \todo icon - rightclick('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -2801,7 +2810,7 @@
  *
  * # Right click on an embedded component object type
  *
- * rightclick ('frmBottomExpandedEdgePanel', 'Volume Control', None)
+ * rightclick('frmBottomExpandedEdgePanel', 'Volume Control', None)
  *
  * \author Thanikachalam S <thanika1999@yahoo.com>
  * \author Poornima <pnayak@novell.com>
@@ -2811,7 +2820,7 @@
 /** \page selectitem selectitem
  * \section Syntax
  *
- * selectitem ('\<window name\>', '\<object name\>', '\<item\>')
+ * selectitem('\<window name\>', '\<object name\>', '\<item\>')
  *
  * \section Description
  *
@@ -2823,7 +2832,7 @@
  *
  * \section Example
  *
- * selectitem ('x-nautilus-desktop', 'Icon View', 'file-name.txt')
+ * selectitem('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Thanikachalam S <thanika1999@yahoo.com>
  */
@@ -2831,7 +2840,7 @@
 /** \page unselectitem unselectitem
  * \section Syntax
  *
- * unselectitem ('\<window name\>', '\<object name\>', '\<item\>')
+ * unselectitem('\<window name\>', '\<object name\>', '\<item\>')
  *
  * \section Description
  *
@@ -2843,7 +2852,7 @@
  *
  * \section Example
  *
- * unselectitem ('x-nautilus-desktop', 'Icon View', 'file-name.txt')
+ * unselectitem('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2851,7 +2860,7 @@
 /** \page selecttextitem selecttextitem
  * \section Syntax
  *
- * selecttextitem ('\<window name\>', '\<combo box name\>', '\<item\>')
+ * selecttextitem('\<window name\>', '\<combo box name\>', '\<item\>')
  *
  * \section Description
  *
@@ -2868,11 +2877,11 @@
  *
  * from ldtp import *
  *
- * click ('*-gedit', 'btnFind')
+ * click('*-gedit', 'btnFind')
  *
  * # assuming that LDTP string is available in the list of searched strings
  *
- * selecttextitem ('dlgFind', 'cboSearchFor', 'LDTP')
+ * selecttextitem('dlgFind', 'cboSearchFor', 'LDTP')
  *
  * \author Poornima Nayak <pnayak@novell.com>
  */
@@ -2880,7 +2889,7 @@
 /** \page selectmenuitem selectmenuitem
  * \section Syntax
  *
- * selectmenuitem ('\<window name\>', '\<menu hierarchy\>')
+ * selectmenuitem('\<window name\>', '\<menu hierarchy\>')
  *
  * \section Description
  *
@@ -2896,7 +2905,7 @@
  *
  * With respect to gedit menu structure
  * 
- * selectmenuitem ('*-gedit', 'mnuFile;mnuNew') 
+ * selectmenuitem('*-gedit', 'mnuFile;mnuNew') 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Thanikachalam S <thanika1999@yahoo.com>
@@ -2905,7 +2914,7 @@
 /** \page selecttab selecttab
  * \section Syntax
  *
- * selecttab ('\<window name\>', '\<tab list name\>', '\<tab name\>')
+ * selecttab('\<window name\>', '\<tab list name\>', '\<tab name\>')
  *
  * \section Description
  *
@@ -2923,15 +2932,41 @@
  * 
  * For selecting Editor tab with respect to gedit preferences
  * 
- * selecttab ('dlgPreferences', 'ptlPreferences', 'Editor') 
+ * selecttab('dlgPreferences', 'ptlPreferences', 'Editor') 
  *
  * \author Thanikachalam S <thanika1999@yahoo.com>
+ */
+
+/** \page verifytabname verifytabname
+ * \section Syntax
+ *
+ * verifytabname('\<window name\>', '\<tab list name\>', '\<tab name\>')
+ *
+ * \section Description
+ *
+ * Select the given tab name in the tab list
+ *
+ * \section ImplementationDetails
+ *
+ * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ * 
+ * For selecting Editor tab with respect to gedit preferences
+ * 
+ * verifytabname('dlgPreferences', 'ptlPreferences', 'Editor') 
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page selecttabindex selecttabindex
  * \section Syntax
  *
- * selecttabindex ('\<window name\>', '\<tab list name\>', \<index of the tab\>)
+ * selecttabindex('\<window name\>', '\<tab list name\>', \<index of the tab\>)
  *
  * \section Description
  *
@@ -2949,7 +2984,7 @@
  * 
  * For selecting Editor tab with respect to gedit preferences
  * 
- * selecttabindex ('dlgPreferences', 'ptlPreferences', 1)
+ * selecttabindex('dlgPreferences', 'ptlPreferences', 1)
  * 
  * \note 0 based index
  *
@@ -2959,7 +2994,7 @@
 /** \page gettabcount gettabcount
  * \section Syntax
  *
- * gettabcount ('\<window name\>', '\<tab list name\>')
+ * gettabcount('\<window name\>', '\<tab list name\>')
  *
  * \section Description
  *
@@ -2975,9 +3010,9 @@
  *
  * from ldtp import *
  *
- * selectmenuitem ('*-gedit', 'mnuEdit;mnuPreferences')
+ * selectmenuitem('*-gedit', 'mnuEdit;mnuPreferences')
  *
- * gettabcount ('dlgPreferences', 'ptl0')
+ * gettabcount('dlgPreferences', 'ptl0')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2985,7 +3020,7 @@
 /** \page gettabname gettabname
  * \section Syntax
  *
- * gettabname ('\<window name\>', '\<tab list name\>', \<index\>)
+ * gettabname('\<window name\>', '\<tab list name\>', \<index\>)
  *
  * \section Description
  *
@@ -3001,9 +3036,9 @@
  *
  * from ldtp import *
  *
- * selectmenuitem ('*-gedit', 'mnuEdit;mnuPreferences')
+ * selectmenuitem('*-gedit', 'mnuEdit;mnuPreferences')
  *
- * gettabname ('dlgPreferences', 'ptl0', 0)
+ * gettabname('dlgPreferences', 'ptl0', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3011,7 +3046,7 @@
 /** \page verifypushbutton verifypushbutton
  * \section Syntax
  *
- * verifypushbutton ('\<window name\>', '\<component name\>')
+ * verifypushbutton('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -3027,7 +3062,7 @@
  *
  * With respect to gedit open dialog window, verify open button is push button or not.
  * 
- * verifypushbutton ('dlgOpenFile', 'btnOpen') 
+ * verifypushbutton('dlgOpenFile', 'btnOpen') 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3035,7 +3070,7 @@
 /** \page stateenabled stateenabled
  * \section Syntax
  *
- * stateenabled ('\<window name\>', '\<component name\>')
+ * stateenabled('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -3052,15 +3087,15 @@
  *
  * Push button: With respect to gedit Open dialog, this function checks open button state enabled or not
  * 
- * stateenabled ('dlgOpenFile', 'btnOpen')
+ * stateenabled('dlgOpenFile', 'btnOpen')
  * 
  * Radio button: With respect to gedit Print dialog, this function cheks the 'All' radio button state is enabled or not
  *
- * stateenabled ('Print', 'All')
+ * stateenabled('Print', 'All')
  * 
  * Check box: With respect to gedit Print dialog, this function cheks the 'Reverse' check box state is enabled or not
  *
- * stateenabled ('Print', 'Reverse')
+ * stateenabled('Print', 'Reverse')
  * 
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3068,7 +3103,7 @@
 /** \page setvalue setvalue
  * \section Syntax
  *
- * setvalue ('\<window name\>', '\<spinbutton name\>', \<value\>)
+ * setvalue('\<window name\>', '\<spinbutton name\>', \<value\>)
  *
  * \section Description
  *
@@ -3084,7 +3119,7 @@
  *
  * Creation of Appointment in Evolution:
  * 
- * setvalue ('dlgAppointment-Nosummary','sbtnOccurence',2) 
+ * setvalue('dlgAppointment-Nosummary','sbtnOccurence',2) 
  *
  * \author Thanikachalam S <thanika1999@yahoo.com>
  */
@@ -3092,7 +3127,7 @@
 /** \page getvalue getvalue
  * \section Syntax
  *
- * getvalue ('\<window name\>', '\<spinbutton name\>')
+ * getvalue('\<window name\>', '\<spinbutton name\>')
  *
  * \section Description
  *
@@ -3108,7 +3143,7 @@
  *
  * Creation of Appointment in Evolution:
  * 
- * getvalue ('dlgAppointment-Nosummary', 'sbtnOccurence')
+ * getvalue('dlgAppointment-Nosummary', 'sbtnOccurence')
  *
  * \author Thanikachalam S <thanika1999@yahoo.com>
  */
@@ -3116,7 +3151,7 @@
 /** \page getmaxvalue getmaxvalue
  * \section Syntax
  *
- * getmaxvalue ('\<window name\>', '\<spinbutton name\>')
+ * getmaxvalue('\<window name\>', '\<spinbutton name\>')
  *
  * \section Description
  *
@@ -3132,7 +3167,7 @@
  *
  * Creation of Appointment in Evolution:
  * 
- * getmaxvalue ('dlgAppointment-Nosummary', 'sbtnOccurence')
+ * getmaxvalue('dlgAppointment-Nosummary', 'sbtnOccurence')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3140,7 +3175,7 @@
 /** \page getmax getmax
  * \section Syntax
  *
- * getmax ('\<window name\>', '\<spinbutton name\>')
+ * getmax('\<window name\>', '\<spinbutton name\>')
  *
  * \section Description
  *
@@ -3164,7 +3199,7 @@
 /** \page getminvalue getminvalue
  * \section Syntax
  *
- * getminvalue ('\<window name\>', '\<spinbutton name\>')
+ * getminvalue('\<window name\>', '\<spinbutton name\>')
  *
  * \section Description
  *
@@ -3180,7 +3215,7 @@
  *
  * Creation of Appointment in Evolution:
  * 
- * getminvalue ('dlgAppointment-Nosummary', 'sbtnOccurence')
+ * getminvalue('dlgAppointment-Nosummary', 'sbtnOccurence')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3212,7 +3247,7 @@
 /** \page getminincrement getminincrement
  * \section Syntax
  *
- * getminincrement ('\<window name\>', '\<spinbutton name\>')
+ * getminincrement('\<window name\>', '\<spinbutton name\>')
  *
  * \section Description
  *
@@ -3229,7 +3264,7 @@
  *
  * Creation of Appointment in Evolution:
  * 
- * getminincrement ('dlgAppointment-Nosummary', 'sbtnOccurence')
+ * getminincrement('dlgAppointment-Nosummary', 'sbtnOccurence')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3237,7 +3272,7 @@
 /** \page verifysetvalue verifysetvalue
  * \section Syntax
  *
- * verifysetvalue ('\<window name\>', '\<spinbutton name\>', '\<value\>')
+ * verifysetvalue('\<window name\>', '\<spinbutton name\>', '\<value\>')
  *
  * \section Description
  *
@@ -3253,7 +3288,7 @@
  *
  * In the Creation of Appointment:
  * 
- * verifysetvalue ('dlgAppointment-Nosummary','sbtnOccurence','2') 
+ * verifysetvalue('dlgAppointment-Nosummary','sbtnOccurence','2') 
  *
  * \author Sheetal <svnayak18@yahoo.com>
  */
@@ -3261,11 +3296,11 @@
 /** \page selectrow selectrow
  * \section Syntax
  *
- * selectrow ('\<window name\>', '\<table name\>', '\<value of row in first column\>')
+ * selectrow('\<window name\>', '\<table name\>', '\<value of row in first column\>')
  *
  * \section Description
  *
- * Selects the row in table whose first column's (0th column) value is same as the contents of the third argument in the function call.
+ * Selects the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
  *
  * \section ImplementationDetails
  *
@@ -3280,7 +3315,7 @@
  * 
  * With respect to gedit open dialog
  * 
- * selectrow ('dlgOpen', 'dlgFiles', 'readme') 
+ * selectrow('dlgOpen', 'dlgFiles', 'readme') 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3288,7 +3323,7 @@
 /** \page selectrowindex selectrowindex
  * \section Syntax
  *
- * selectrowindex ('\<window name\>', '\<table name\>', \<row index\>) 
+ * selectrowindex('\<window name\>', '\<table name\>', \<row index\>) 
  *
  * \section Description
  *
@@ -3307,7 +3342,7 @@
  * 
  * With respect to gedit open dialog
  * 
- * selectrowindex ('dlgOpen', 'dlgFiles', 0) 
+ * selectrowindex('dlgOpen', 'dlgFiles', 0) 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3315,7 +3350,7 @@
 /** \page selectrowpartialmatch selectrowpartialmatch
  * \section Syntax
  *
- * selectrowpartialmatch ('\<window name\>', '\<tree table name\>', '\<texttobesearchedfor\>')
+ * selectrowpartialmatch('\<window name\>', '\<tree table name\>', '\<texttobesearchedfor\>')
  *
  * \section Description
  *
@@ -3332,7 +3367,7 @@
  *
  * With respect to evolution
  * 
- * selectrowpartialmatch ('evolution', 'ttblMailFolder','Inbox')
+ * selectrowpartialmatch('evolution', 'ttblMailFolder','Inbox')
  * 
  * The 'Inbox' folder's name changes depending on the number of unread mails. In such cases we can use the above method to select the 'Inbox' folder. 
  *
@@ -3342,7 +3377,7 @@
 /** \page verifytoggled verifytoggled
  * \section Syntax
  *
- * verifytoggled ('<window name\>', 'component name\>')
+ * verifytoggled('<window name\>', 'component name\>')
  *
  * \section Description
  *
@@ -3358,15 +3393,15 @@
  *
  * from ldtp import *
  *
- * verifytoggled ('Open File*', 'Type a file name') # If 'Type a file name' button is toggled then location text box will be in editable state in GTK file selector
+ * verifytoggled('Open File*', 'Type a file name') # If 'Type a file name' button is toggled then location text box will be in editable state in GTK file selector
  *
  * 2. With respect to GTK File Selector in gedit
  *
  * from ldtp import *
  *
- * click ('*-gedit', 'btnOpen')
+ * click('*-gedit', 'btnOpen')
  *
- * verifytoggled ('dlgOpenFile...', 'tbtnTypeafilename')
+ * verifytoggled('dlgOpenFile...', 'tbtnTypeafilename')
  *
  * \author Poornima Nayak <pnayak@novell.com>
  * \author Premkumar J <prem.jothimani@gmail.com> 
@@ -3375,7 +3410,7 @@
 /** \page onedown onedown
  * \section Syntax
  *
- * onedown ('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
+ * onedown('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
  *
  * \section Description
  *
@@ -3393,7 +3428,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * onedown ('gedit', 'scrollBar', 3) 
+ * onedown('gedit', 'scrollBar', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3401,11 +3436,11 @@
 /** \page oneleft oneleft
  * \section Syntax
  *
- * oneleft ('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
+ * oneleft('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
  *
  * \section Description
  *
- * Move the (horizontal) scroll bar left 'n' times, where 'n' is the number of iterations specified in the argument field.
+ * Move the(horizontal) scroll bar left 'n' times, where 'n' is the number of iterations specified in the argument field.
  *
  * \section ImplementationDetails
  *
@@ -3419,7 +3454,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * oneleft ('gedit', 'scrollBar', 3) 
+ * oneleft('gedit', 'scrollBar', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3427,11 +3462,11 @@
 /** \page oneright oneright
  * \section Syntax
  *
- * oneright ('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
+ * oneright('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
  *
  * \section Description
  *
- * Move the (horizontal) scroll bar right 'n' times, where 'n' is the number of iterations specified in the argument field.
+ * Move the(horizontal) scroll bar right 'n' times, where 'n' is the number of iterations specified in the argument field.
  *
  * \section ImplementationDetails
  *
@@ -3445,7 +3480,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * oneright ('gedit', 'scrollBar', 3) 
+ * oneright('gedit', 'scrollBar', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3453,11 +3488,11 @@
 /** \page oneup oneup
  * \section Syntax
  *
- * oneup ('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
+ * oneup('\<window name\>', '\<scroll component name\>', \<number of iterations\>)
  *
  * \section Description
  *
- * Move the (vertical) scroll bar up 'n' times, where 'n' is the number of iterations specified in the argument field.
+ * Move the(vertical) scroll bar up 'n' times, where 'n' is the number of iterations specified in the argument field.
  *
  * \section ImplementationDetails
  *
@@ -3471,7 +3506,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * oneup ('gedit', 'scrollBar', 3) 
+ * oneup('gedit', 'scrollBar', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3479,11 +3514,11 @@
 /** \page scrolldown scrolldown
  * \section Syntax
  *
- * scrolldown ('\<window name\>', '\<scroll component name\>')
+ * scrolldown('\<window name\>', '\<scroll component name\>')
  *
  * \section Description
  *
- * Move the (vertical) scroll bar to the bottom.
+ * Move the(vertical) scroll bar to the bottom.
  *
  * \section ImplementationDetails
  *
@@ -3497,7 +3532,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * scrolldown ('gedit', 'scrollBar') 
+ * scrolldown('gedit', 'scrollBar') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3505,11 +3540,11 @@
 /** \page scrollleft scrollleft
  * \section Syntax
  *
- * scrolleft ('\<window name\>', '\<scroll component name\>')
+ * scrolleft('\<window name\>', '\<scroll component name\>')
  *
  * \section Description
  *
- * Move the (horizontal) scroll bar to the extreme left.
+ * Move the(horizontal) scroll bar to the extreme left.
  *
  * \section ImplementationDetails
  *
@@ -3523,7 +3558,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * scrolleft ('gedit', 'scrollBar') 
+ * scrolleft('gedit', 'scrollBar') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3531,11 +3566,11 @@
 /** \page scrollright scrollright
  * \section Syntax
  *
- * scrollright ('\<window name\>', '\<scroll component name\>')
+ * scrollright('\<window name\>', '\<scroll component name\>')
  *
  * \section Description
  *
- * Move the (horizontal) scroll bar to the extreme right.
+ * Move the(horizontal) scroll bar to the extreme right.
  *
  * \section ImplementationDetails
  *
@@ -3549,7 +3584,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * scrollright ('gedit', 'scrollBar') 
+ * scrollright('gedit', 'scrollBar') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3557,11 +3592,11 @@
 /** \page scrollup scrollup
  * \section Syntax
  *
- * scrollup ('\<window name\>', '\<scroll component name\>')
+ * scrollup('\<window name\>', '\<scroll component name\>')
  *
  * \section Description
  *
- * Move the (vertical) scroll bar to the extreme top.
+ * Move the(vertical) scroll bar to the extreme top.
  *
  * \section ImplementationDetails
  *
@@ -3575,7 +3610,7 @@
  * 
  * For scroll bar item with respect to gedit
  * 
- * scrollup ('gedit', 'scrollBar') 
+ * scrollup('gedit', 'scrollBar') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3583,7 +3618,7 @@
 /** \page setmax setmax
  * \section Syntax
  *
- * setmax ('\<window name\>', '\<slider name\>')
+ * setmax('\<window name\>', '\<slider name\>')
  *
  * \section Description
  *
@@ -3601,7 +3636,7 @@
  * 
  * For slider component with respect to gnome-terminal
  * 
- * setmax ('dlgEditingProfile"Default"', 'slider') 
+ * setmax('dlgEditingProfile"Default"', 'slider') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3609,7 +3644,7 @@
 /** \page setmin setmin
  * \section Syntax
  *
- * setmin ('\<window name\>', '\<slider name\>')
+ * setmin('\<window name\>', '\<slider name\>')
  *
  * \section Description
  *
@@ -3627,7 +3662,7 @@
  * 
  * For slider component with respect to gnome-terminal
  * 
- * setmin ('dlgEditingProfile"Default"', 'slider') 
+ * setmin('dlgEditingProfile"Default"', 'slider') 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3635,7 +3670,7 @@
 /** \page getslidervalue getslidervalue
  * \section Syntax
  *
- * getslidervalue ('\<window name\>', '\<slider name\>')
+ * getslidervalue('\<window name\>', '\<slider name\>')
  *
  * \section Description
  *
@@ -3655,7 +3690,7 @@
 /** \page increase increase
  * \section Syntax
  *
- * increase ('\<window name\>', '\<slider name\>', \<number of iterations\>)
+ * increase('\<window name\>', '\<slider name\>', \<number of iterations\>)
  *
  * \section Description
  *
@@ -3673,7 +3708,7 @@
 
  * For slider component with respect to gnome-terminal
  * 
- * increase ('dlgEditingProfile"Default"', 'slider', 3) 
+ * increase('dlgEditingProfile"Default"', 'slider', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3681,7 +3716,7 @@
 /** \page decrease decrease
  * \section Syntax
  *
- * decrease ('\<window name\>', '\<slider name\>', \<number of iterations\>)
+ * decrease('\<window name\>', '\<slider name\>', \<number of iterations\>)
  *
  * \section Description
  *
@@ -3699,7 +3734,7 @@
  * 
  * For slider component with respect to gnome-terminal
  * 
- * decrease ('dlgEditingProfile"Default"', 'slider', 3) 
+ * decrease('dlgEditingProfile"Default"', 'slider', 3) 
  *
  * \author Aishwariya & Kamakshi <poorvaishoo@yahoo.com>
  */
@@ -3707,7 +3742,7 @@
 /** \page selectpanel selectpanel
  * \section Syntax
  *
- * selectpanel ('\<window name\>', '\<component name\>', \<panel number\>)
+ * selectpanel('\<window name\>', '\<component name\>', \<panel number\>)
  *
  * \section Description
  *
@@ -3725,7 +3760,7 @@
  * 
  * With respect to Evolution Contacts
  * 
- * selectpanel ('frmEvolution-Contacts', 'pnlAddbook', 1) 
+ * selectpanel('frmEvolution-Contacts', 'pnlAddbook', 1) 
  *
  * \author Poornima Nayak <pnayak@novell.com>
  */
@@ -3733,7 +3768,7 @@
 /** \page selectlabelspanelbyname selectlabelspanelbyname
  * \section Syntax
  *
- * selectlabelspanelbyname ('<window name\>', '<label name\>')
+ * selectlabelspanelbyname('<window name\>', '<label name\>')
  *
  * \section Description
  *
@@ -3751,7 +3786,7 @@
 /** \page verifytablecell verifytablecell
  * \section Syntax
  *
- * verifytablecell ('\<window name\>', '\<table name\>', \<row no\>, \<column no\>, '\<string to be compared\>')
+ * verifytablecell('\<window name\>', '\<table name\>', \<row no\>, \<column no\>, '\<string to be compared\>')
  *
  * \section Description
  *
@@ -3769,15 +3804,73 @@
  * 
  * With respect to Evolution, open message
  * 
- * verifytablecell ('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz\@yahoo.com') 
+ * verifytablecell('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz\@yahoo.com') 
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
+ */
+
+/** \page handletablecell handletablecell
+ * \section Syntax
+ *
+ * handletablecell()
+ *
+ * \section Description
+ *
+ * Handle table cell, by default handling table cell is turned off, as the mapping (atleast with Evolution) consumes lot of time
+ *
+ * \section ImplementationDetails
+ *
+ * \retval 1 on success and 0 on error.
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ * 
+ * With respect to Evolution, open message
+ * 
+ * handletablecell()
+ * 
+ * verifytablecell('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz\@yahoo.com') 
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
+ */
+
+/** \page unhandletablecell unhandletablecell
+ * \section Syntax
+ *
+ * unhandletablecell()
+ *
+ * \section Description
+ *
+ * Don't handle table cell, by default handling table cell is turned off, as the mapping (atleast with Evolution) consumes lot of time
+ *
+ * \section ImplementationDetails
+ *
+ * \retval 1 on success and 0 on error.
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ * 
+ * With respect to Evolution, open message
+ * 
+ * handletablecell()
+ * 
+ * verifytablecell('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz\@yahoo.com') 
+ *
+ * unhandletablecell()
+ * 
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page setcellvalue setcellvalue
  * \section Syntax
  *
- * setcellvalue ('<window name\>', '<table name\>', <row\>[, <column\>[, '<data\>']])
+ * setcellvalue('<window name\>', '<table name\>', <row\>[, <column\>[, '<data\>']])
  *
  * \section Description
  *
@@ -3811,7 +3904,7 @@
 /** \page selectlastrow selectlastrow
  * \section Syntax
  *
- * selectlastrow ('\<window name\>', '\<table name\>')
+ * selectlastrow('\<window name\>', '\<table name\>')
  *
  * \section Description
  *
@@ -3827,7 +3920,7 @@
  * 
  * With respect to Contact List Members dialog of Contact List Editor
  * 
- * selectlastrow ('dlgContactListMembers', 'tblContacts') 
+ * selectlastrow('dlgContactListMembers', 'tblContacts') 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -3835,7 +3928,7 @@
 /** \page selectevent selectevent
  * \section Syntax
  *
- * selectevent ('\<window name\>', '\<Calendar_view name\>', '\<calendar event summary\>')
+ * selectevent('\<window name\>', '\<Calendar_view name\>', '\<calendar event summary\>')
  *
  * \section Description
  *
@@ -3853,7 +3946,7 @@
  * 
  * from ldtp import *
  * 
- * selectevent ('Evolution-Calendars', 'calview', 'abc') 
+ * selectevent('Evolution-Calendars', 'calview', 'abc') 
  *
  * \author Poornima <pnayak@novell.com>
  */
@@ -3861,7 +3954,7 @@
 /** \page selecteventindex selecteventindex
  * \section Syntax
  *
- * selecteventindex ('\<window name\>', '\<component name\>', \<event number\>)
+ * selecteventindex('\<window name\>', '\<component name\>', \<event number\>)
  *
  * \section Description
  *
@@ -3879,7 +3972,7 @@
  * 
  * With respect to Evolution-Calendars
  * 
- * selecteventindex ('Evolution-Calendars', 'calview', 1) 
+ * selecteventindex('Evolution-Calendars', 'calview', 1) 
  *
  * \author Poornima <pnayak@novell.com>
  */
@@ -3887,7 +3980,7 @@
 /** \page doesrowexist doesrowexist
  * \section Syntax
  *
- * doesrowexist ('\<window name\>', '\<table name\>', '\<string to be
+ * doesrowexist('\<window name\>', '\<table name\>', '\<string to be
  * matched\>'[, \<partial match = False\>])
  *
  * \section Description
@@ -3908,9 +4001,9 @@
  * 
  * With respect to the message list table in Evolution Mailer, the following call will return 1 if there is atleast one mail in the list with the given string in the subject field or sender field or in any other field for that matter.
  * 
- * doesrowexist ('dlgContactListMembers', 'tblContacts', 'Sample subject') 
+ * doesrowexist('dlgContactListMembers', 'tblContacts', 'Sample subject') 
  * 
- * doesrowexist ('dlgContactListMembers', 'tblContacts', 'Sample', True) 
+ * doesrowexist('dlgContactListMembers', 'tblContacts', 'Sample', True) 
  *
  * \author Manu <manunature@rediffmail.com>
  */
@@ -3918,7 +4011,7 @@
 /** \page checkrow checkrow
  * \section Syntax
  *
- * checkrow ('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
+ * checkrow('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
  *
  * \section Description
  *
@@ -3944,7 +4037,7 @@
 /** \page verifycheckrow verifycheckrow
  * \section Syntax
  *
- * verifycheckrow ('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
+ * verifycheckrow('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
  *
  * \section Description
  *
@@ -3962,7 +4055,7 @@
  * 
  * With respect to Categories in Appointment in Evolution
  * 
- * verifycheckrow ('dlgCategories', 'tblcategories', 3)
+ * verifycheckrow('dlgCategories', 'tblcategories', 3)
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
  */
@@ -3970,7 +4063,7 @@
 /** \page uncheckrow uncheckrow
  * \section Syntax
  *
- * uncheckrow ('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
+ * uncheckrow('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
  *
  * \section Description
  *
@@ -3996,7 +4089,7 @@
 /** \page verifyuncheckrow verifyuncheckrow
  * \section Syntax
  *
- * verifyuncheckrow ('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
+ * verifyuncheckrow('\<window name\>', '\<table name\>', \<row index\>[, \<col index\>])
  *
  * \section Description
  *
@@ -4014,7 +4107,7 @@
  * 
  * With respect to Categories in Appointment in Evolution
  * 
- * verifyuncheckrow ('dlgCategories', 'tblcategories', 3) 
+ * verifyuncheckrow('dlgCategories', 'tblcategories', 3) 
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
  */
@@ -4022,7 +4115,7 @@
 /** \page sortcolumn sortcolumn
  * \section Syntax
  *
- * sortcolumn ('<window name\>', '<table name\>', '<column name\>')
+ * sortcolumn('<window name\>', '<table name\>', '<column name\>')
  *
  * \section Description
  *
@@ -4043,7 +4136,7 @@
 /** \page sortcolumnindex sortcolumnindex
  * \section Syntax
  *
- * sortcolumnindex ('<window name\>', '<table name\>', <column index\>)
+ * sortcolumnindex('<window name\>', '<table name\>', <column index\>)
  *
  * \section Description
  *
@@ -4064,7 +4157,7 @@
 /** \page verifypartialmatch verifypartialmatch
  * \section Syntax
  *
- * verifypartialmatch ('\<window name\>', '\<textbox name\>' , '\<substring\>' )
+ * verifypartialmatch('\<window name\>', '\<textbox name\>' , '\<substring\>' )
  *
  * \section Description
  *
@@ -4082,7 +4175,7 @@
  * 
  * With respect to Evolution, to verify textbox with partial string
  * 
- * verifypartialmatch ('frmComposeamessage', 'txtto','nove') 
+ * verifypartialmatch('frmComposeamessage', 'txtto','nove') 
  *
  * \author Bhargavi <kbhargavi_83yahoo.co.in>
  */
@@ -4090,7 +4183,7 @@
 /** \page getrowcount getrowcount
  * \section Syntax
  *
- * getrowcount ('\<window name\>', '\<table name\>')
+ * getrowcount('\<window name\>', '\<table name\>')
  *
  * \section Description
  *
@@ -4108,7 +4201,7 @@
  * 
  * With respect to Evolution, to check no of mails
  * 
- * getrowcount ('frmReadOnlyMail', 'tblmails')
+ * getrowcount('frmReadOnlyMail', 'tblmails')
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
  */
@@ -4116,7 +4209,7 @@
 /** \page verifypartialtablecell verifypartialtablecell
  * \section Syntax
  *
- * verifypartialtablecell ('\<window name\>', '\<table name\>', \<row no\>, \<column no\>, '\<sub string to be compared\>')
+ * verifypartialtablecell('\<window name\>', '\<table name\>', \<row no\>, \<column no\>, '\<sub string to be compared\>')
  *
  * \section Description
  *
@@ -4134,7 +4227,7 @@
  * 
  * With respect to Evolution, open message
  * 
- * verifypartialtablecell ('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz') 
+ * verifypartialtablecell('frmReadOnlyMail', 'tblcheck', 1, 1, 'xyz') 
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
  */
@@ -4142,7 +4235,7 @@
 /** \page grabfocus grabfocus
  * \section Syntax
  *
- * grabfocus ('\<window name\>'[, '\<component name\>'])
+ * grabfocus('\<window name\>'[, '\<component name\>'])
  *
  * \section Description
  *
@@ -4156,7 +4249,7 @@
  *
  * With respect to gnome search tool structure
  * 
- * settextvalue ('SearchforFiles', 'txtNameContainsEntry')
+ * settextvalue('SearchforFiles', 'txtNameContainsEntry')
  * 
  * This places the cursor in the 'txtNameContainsEntry' field. 
  *
@@ -4165,7 +4258,7 @@
 /** \page selectpanelname selectpanelname
  * \section Syntax
  *
- * selectpanelname ('\<window name\>', '\<component name\>', '\<panel name\>')
+ * selectpanelname('\<window name\>', '\<component name\>', '\<panel name\>')
  *
  * \section Description
  *
@@ -4183,7 +4276,7 @@
  * 
  * With respect to Evolution Contacts
  * 
- * selectpanelname ('Evolution-Contacts', 'pnlAddbook', 'ldtp') 
+ * selectpanelname('Evolution-Contacts', 'pnlAddbook', 'ldtp') 
  *
  * \author Khasim Shaheed <khasim.shaheed@gmail.com>
  */
@@ -4191,7 +4284,7 @@
 /** \page verifyeventexist verifyeventexist
  * \section Syntax
  *
- * verifyeventexist ('\<window name\>', '\<component name\>')
+ * verifyeventexist('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -4209,7 +4302,7 @@
  * 
  * With respect to Evolution-Calendars
  * 
- * verifyeventexist ('Evolution-Calendars', 'calview') 
+ * verifyeventexist('Evolution-Calendars', 'calview') 
  *
  * \author Manu <manunature@rediffmail.com>
  */
@@ -4217,7 +4310,7 @@
 /** \page expandtablecell expandtablecell
  * \section Syntax
  *
- * expandtablecell ('<window name\>', '<tree table object name\>', <row\>)
+ * expandtablecell('<window name\>', '<tree table object name\>', <row\>)
  *
  * \section Description
  *
@@ -4233,7 +4326,7 @@
  *
  * from ldtp import *
  *
- * expandtablecell ('frm*-Evolution', 'ttblMailFolderTree', 0) # In mail folder view
+ * expandtablecell('frm*-Evolution', 'ttblMailFolderTree', 0) # In mail folder view
  *
  * \author 
  */
@@ -4241,7 +4334,7 @@
 /** \page gettreetablerowindex gettreetablerowindex
  * \section Syntax
  *
- * gettreetablerowindex ('\<window name\>', '\<tree table name\>', '\<name of a table cell\>')
+ * gettreetablerowindex('\<window name\>', '\<tree table name\>', '\<name of a table cell\>')
  *
  * \section Description
  *
@@ -4259,7 +4352,7 @@
  * 
  * With respect to the tree table in Mail in Evolution
  * 
- * i = gettreetablerowindex ('Evolution', 'treetblMail', 'Cabinet')
+ * i = gettreetablerowindex('Evolution', 'treetblMail', 'Cabinet')
  * 
  * here 'i' will be having the index of the Cabinet which is a table cell under tree table mail. 
  *
@@ -4269,7 +4362,7 @@
 /** \page gettablerowindex gettablerowindex
  * \section Syntax
  *
- * gettablerowindex ('\<window name\>', '\<tablename\>', '\<cellvalue\>')
+ * gettablerowindex('\<window name\>', '\<tablename\>', '\<cellvalue\>')
  *
  * \section Description
  *
@@ -4285,7 +4378,7 @@
  *
  * In case of Evolution Calendar, to select the category form the list of categories
  * 
- * gettablerowindex ('dlgMeeting', 'tblCategoryList', 'Business')
+ * gettablerowindex('dlgMeeting', 'tblCategoryList', 'Business')
  * 
  * The above call would return the row id of the cell containing Business. 
  *
@@ -4295,7 +4388,7 @@
 /** \page comboselectindex comboselectindex
  * \section Syntax
  *
- * comboselectindex ('\<window name\>', '\<component name\>', \<index\>)
+ * comboselectindex('\<window name\>', '\<component name\>', \<index\>)
  *
  * \section Description
  *
@@ -4305,7 +4398,7 @@
  *
  * \section Example
  *
- * selectindex ('x-nautilus-desktop', 'Icon View', 0)
+ * selectindex('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4313,7 +4406,7 @@
 /** \page verifyvisiblebuttoncount verifyvisiblebuttoncount
  * \section Syntax
  *
- * verifyvisiblebuttoncount ('<window name\>', '<toolbar name\>', <count\>)
+ * verifyvisiblebuttoncount('<window name\>', '<toolbar name\>', <count\>)
  *
  * \section Description
  *
@@ -4327,7 +4420,7 @@
  *
  * from ldtp import *
  *
- * verifyvisiblebuttoncount ('*-gedit', 'tbar0', 12) # Gedit 2.12 default without any plugin
+ * verifyvisiblebuttoncount('*-gedit', 'tbar0', 12) # Gedit 2.12 default without any plugin
  *
  * \author J Premkumar <prem.jothimani@gmail.com>
  */
@@ -4335,7 +4428,7 @@
 /** \page verifybuttoncount verifybuttoncount
  * \section Syntax
  *
- * verifybuttoncount ('<window name\>', '<toolbar name\>', <count\>)
+ * verifybuttoncount('<window name\>', '<toolbar name\>', <count\>)
  *
  * \section Description
  *
@@ -4349,7 +4442,7 @@
  *
  * from ldtp import *
  *
- * verifybuttoncount ('*-gedit', 'tbar0', 12) # Gedit 2.12 default without any plugin
+ * verifybuttoncount('*-gedit', 'tbar0', 12) # Gedit 2.12 default without any plugin
  *
  * \author J Premkumar <prem.jothimani@gmail.com>
  */
@@ -4357,7 +4450,7 @@
 /** \page gettextvalue gettextvalue
  * \section Syntax
  *
- * gettextvalue ('\<window name\>', '\<component name\>', \<startoffset\>, \<endoffset\>)
+ * gettextvalue('\<window name\>', '\<component name\>', \<startoffset\>, \<endoffset\>)
  *
  * \section Description
  *
@@ -4371,15 +4464,15 @@
  *
  * With respect to gnome search tool structure
  * 
- * gettextvalue ('SearchforFiles', 'txtNameContainsEntry')
+ * gettextvalue('SearchforFiles', 'txtNameContainsEntry')
  * 
  * The above statement will return the text present in 'txtNameContainsEntry' field.
  * 
- * gettextvalue ('SearchforFiles', 'txtNameContainsEntry', 5)
+ * gettextvalue('SearchforFiles', 'txtNameContainsEntry', 5)
  * 
  * The above statement will return the text present in 'txtNameContainsEntry' field starting from the fifth character.
  * 
- * gettextvalue ('SearchforFiles', 'txtNameContainsEntry', 5, 10)
+ * gettextvalue('SearchforFiles', 'txtNameContainsEntry', 5, 10)
  * 
  * The above statement will return the text present in 'txtNameContainsEntry' field starting from the fifth character
  * 
@@ -4391,7 +4484,7 @@
 /** \page getcellvalue getcellvalue
  * \section Syntax
  *
- * getcellvalue ('\<window name\>', '\<component name\>', '\<row\>', '\<column\>')
+ * getcellvalue('\<window name\>', '\<component name\>', '\<row\>', '\<column\>')
  *
  * \section Description
  *
@@ -4406,7 +4499,7 @@
  *
  * With respect to Evolution Messages tree table
  * 
- * gettextvalue ('Evolution-Mail', 'treetblMails', 2, 4)
+ * gettextvalue('Evolution-Mail', 'treetblMails', 2, 4)
  * 
  * This will return the subject of 3rd message in the message list. 
  *
@@ -4417,7 +4510,7 @@
 /** \page capturetofile capturetofile
  * \section Syntax
  *
- * capturetofile ('\<window name\>', '\<combo box name\>'[, '\<file name\>'])
+ * capturetofile('\<window name\>', '\<combo box name\>'[, '\<file name\>'])
  *
  * \section Description
  *
@@ -4435,11 +4528,11 @@
  *
  * # Without specifiying the filename
  *
- * capturetofile ('dlgFind', 'cboSearchfor')
+ * capturetofile('dlgFind', 'cboSearchfor')
  *
  * # With specifiying the filename
  *
- * capturetofile ('dlgFind', 'cboSearchfor', '/tmp/comboboxlistitem.txt') # Note relative path won't work !!!
+ * capturetofile('dlgFind', 'cboSearchfor', '/tmp/comboboxlistitem.txt') # Note relative path won't work !!!
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
@@ -4447,7 +4540,7 @@
 /** \page gettextproperty gettextproperty
  * \section Syntax
  *
- * gettextproperty ('<window name\>', '<text object name\>'[, <start position\>[, <end position\>]])
+ * gettextproperty('<window name\>', '<text object name\>'[, <start position\>[, <end position\>]])
  *
  * \section Description
  *
@@ -4467,7 +4560,7 @@
 /** \page comparetextproperty comparetextproperty
  * \section Syntax
  *
- * comparetextproperty ('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
+ * comparetextproperty('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
  *
  * \section Description
  *
@@ -4489,7 +4582,7 @@
 /** \page containstextproperty containstextproperty
  * \section Syntax
  *
- * containstextproperty ('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
+ * containstextproperty('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
  *
  * \section Description
  *
@@ -4511,7 +4604,7 @@
 /** \page selectcalendardate selectcalendardate
  * \section Syntax
  *
- * selectcalendardate ('\<window name\>', '\<calendar object name\>', \<day\>, \<month\>, \<year\>)
+ * selectcalendardate('\<window name\>', '\<calendar object name\>', \<day\>, \<month\>, \<year\>)
  *
  * \section Description
  *
@@ -4531,13 +4624,13 @@
 /** \page remap remap
  * \section Syntax
  *
- * remap ('\<window name\>'[, '\<component name\>'])
+ * remap('\<window name\>'[, '\<component name\>'])
  * 
- * undoremap ('\<application-name\>', '\<dialog name\>') 
+ * undoremap('\<application-name\>', '\<dialog name\>') 
  *
  * \section Description
  *
- * We can handle dynamically created widgets (meaning widgets created at run time) using this remap function. Calling remap will generate appmap for the given dialog at run time and update the hash table. Then we can access the new widgets. But please make sure to call undoremap() once the required functions are performed so that the hash table will be reverted back to its original state. The reason for having undoremap() is that subsequent calls to remap() might corrupt the hash table containg the appmap entries.
+ * We can handle dynamically created widgets(meaning widgets created at run time) using this remap function. Calling remap will generate appmap for the given dialog at run time and update the hash table. Then we can access the new widgets. But please make sure to call undoremap() once the required functions are performed so that the hash table will be reverted back to its original state. The reason for having undoremap() is that subsequent calls to remap() might corrupt the hash table containg the appmap entries.
  * 
  * Please not that the <application-name> should be same as the one given as the commmand-line argument for appmap generation. 
  *
@@ -4549,13 +4642,13 @@
  *
  * \section Example
  * 
- * remap ('dlggeditPreferences') # Remaps the complete gedit preferences dialog
+ * remap('dlggeditPreferences') # Remaps the complete gedit preferences dialog
  * 
- * remap ('dlggeditPreferences', 'ptabView') # Remaps all the controls under page tab with the name View of gedit Preferences dialog.
+ * remap('dlggeditPreferences', 'ptabView') # Remaps all the controls under page tab with the name View of gedit Preferences dialog.
  * 
  * . .
  * 
- * undoremap ('evolution', 'dlgAppointment-Nosummary') 
+ * undoremap('evolution', 'dlgAppointment-Nosummary') 
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
@@ -4563,7 +4656,7 @@
 /** \page getwindowlist getwindowlist
  * \section Syntax
  *
- * getwindowlist ()
+ * getwindowlist()
  *
  * \section Description
  *
@@ -4577,7 +4670,7 @@
  *
  * from ldtp import *
  *
- * getwindowlist ()
+ * getwindowlist()
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
@@ -4585,7 +4678,7 @@
 /** \page getwindowsize getwindowsize
  * \section Syntax
  *
- * getwindowsize ('\<window name\>')
+ * getwindowsize('\<window name\>')
  *
  * \section Description
  *
@@ -4597,9 +4690,9 @@
  *
  * \section Example
  *
- * launchapp ('gedit')
+ * launchapp('gedit')
  *
- * getwindowsize ('*-gedit')
+ * getwindowsize('*-gedit')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4607,7 +4700,7 @@
 /** \page getobjectsize getobjectsize
  * \section Syntax
  *
- * getobjectsize ('\<window name\>'[, '\<object name\>'])
+ * getobjectsize('\<window name\>'[, '\<object name\>'])
  *
  * \section Description
  *
@@ -4619,9 +4712,9 @@
  *
  * \section Example
  *
- * launchapp ('gedit')
+ * launchapp('gedit')
  *
- * getobjectsize ('*-gedit', 'btnFind')
+ * getobjectsize('*-gedit', 'btnFind')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4629,7 +4722,7 @@
 /** \page getapplist getapplist
  * \section Syntax
  *
- * getapplist ()
+ * getapplist()
  *
  * \section Description
  *
@@ -4643,7 +4736,7 @@
  *
  * from ldtp import *
  *
- * getapplist () # Will return all the accessibility application window title that are currently opened
+ * getapplist() # Will return all the accessibility application window title that are currently opened
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4651,7 +4744,7 @@
 /** \page getallstates getallstates
  * \section Syntax
  *
- * getallstates ('\<window name\>'[, '\<component name\>'])
+ * getallstates('\<window name\>'[, '\<component name\>'])
  *
  * \section Description
  *
@@ -4665,12 +4758,12 @@
  *
  * from ldtp import *
  *
- * getallstates () # Will return all the accessibility states of given
+ * getallstates() # Will return all the accessibility states of given
  * object information
  * Compare all the states based on your requirement, say for example,
  * if interested in checking for VISIBLE state, then:
  * 
- * states = getallstates ('*-gedit', 'btnCopy')
+ * states = getallstates('*-gedit', 'btnCopy')
  * if state.VISIBLE in states:
  *     print 'Object is visible'
  *
@@ -4680,7 +4773,7 @@
 /** \page getchild getchild
  * \section Syntax
  *
- * getchild ('\<window name\>'<[, '\<component name\>'], [ '\<role\>']>)
+ * getchild('\<window name\>'<[, '\<component name\>'], [ '\<role\>']>)
  *
  * \section Description
  *
@@ -4697,11 +4790,11 @@
  *
  * from ldtp import *
  *
- * getchild ('*-gedit', 'Find')
+ * getchild('*-gedit', 'Find')
  *
- * getchild ('*-gedit', role = 'push button')
+ * getchild('*-gedit', role = 'push button')
  *
- * getchild ('*-gedit', 'Find', role = 'push button')
+ * getchild('*-gedit', 'Find', role = 'push button')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4709,11 +4802,11 @@
 /** \page getobjectlist getobjectlist
  * \section Syntax
  *
- * getobjectlist ('\<window name\>')
+ * getobjectlist('\<window name\>')
  *
  * \section Description
  *
- * Gets the list of object available in the window (if window exist, else exception will be thrown)
+ * Gets the list of object available in the window(if window exist, else exception will be thrown)
  *
  * \retval List of objects on success, LdtpExecutionError exception on failure
  *
@@ -4725,7 +4818,7 @@
  *
  * from ldtp import *
  *
- * getobjectlist ('dlgFind')
+ * getobjectlist('dlgFind')
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
@@ -4733,13 +4826,13 @@
 /** \page getobjectinfo getobjectinfo
  * \section Syntax
  *
- * getobjectinfo ('\<window name\>', '\<object name\>')
+ * getobjectinfo('\<window name\>', '\<object name\>')
  *
  * \section Description
  *
  * Gets the list of object information lik class, parent, label, label_by, child_index
  *
- * \retval list of object properies (example, class, parent, label, label_by, child_index) on success, LdtpExecutionError exception on failure
+ * \retval list of object properies(example, class, parent, label, label_by, child_index) on success, LdtpExecutionError exception on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
  *
@@ -4749,7 +4842,7 @@
  *
  * from ldtp import *
  *
- * getobjectinfo ('dlgFind', 'btnFind')
+ * getobjectinfo('dlgFind', 'btnFind')
  *
  * \author 
  */
@@ -4757,7 +4850,7 @@
 /** \page getobjectproperty getobjectproperty
  * \section Syntax
  *
- * getobjectproperty ('<window name\>', '<object name\>', '\<object property\>')
+ * getobjectproperty('<window name\>', '<object name\>', '\<object property\>')
  *
  * \section Description
  *
@@ -4773,7 +4866,7 @@
  *
  * from ldtp import *
  *
- * getobjectproperty ('dlgFind', 'btnFind', 'label') # Returns '_Find' string in US.English locale
+ * getobjectproperty('dlgFind', 'btnFind', 'label') # Returns '_Find' string in US.English locale
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
@@ -4785,7 +4878,7 @@
  *
  * \section Description
  *
- * Double clicks the row in table whose first column's (0th column) value is same as the contents of the third argument in the function call.
+ * Double clicks the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
  *
  * \retval 1 on success, else 0.
  *
@@ -4802,11 +4895,11 @@
 /** \page doubleclickrowindex doubleclickrowindex
  * \section Syntax
  *
- * doubleclickrowindex ('\<window name\>', '\<table name\>', \<row index\>)
+ * doubleclickrowindex('\<window name\>', '\<table name\>', \<row index\>)
  *
  * \section Description
  *
- * Double clicks the row in table whose first column's (0th column) value is same as the contents of the third argument in the function call.
+ * Double clicks the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
  *
  * \retval 1 on success, else 0.
  *
@@ -4823,11 +4916,11 @@
 /** \page singleclickrow singleclickrow
  * \section Syntax
  *
- * singleclickrow ('\<window name\>', '\<table name\>', '\<value of row in first column\>')
+ * singleclickrow('\<window name\>', '\<table name\>', '\<value of row in first column\>')
  *
  * \section Description
  *
- * Single clicks the row in table whose first column's (0th column) value is same as the contents of the third argument in the function call.
+ * Single clicks the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
  *
  * \retval 1 on success, else 0.
  *
@@ -4844,11 +4937,11 @@
 /** \page doubleclick doubleclick
  * \section Syntax
  *
- * doubleclick ('\<window name\>', '\<component name\>')
+ * doubleclick('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
- * Double clicks the row in table whose first column's (0th column) value is same as the contents of the third argument in the function call.
+ * Double clicks the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
  *
  * \retval 1 on success, else 0
  *
@@ -4864,7 +4957,7 @@
 /** \page listsubmenus listsubmenus
  * \section Syntax
  *
- * listsubmenus ('window name\>', 'menu name\>')
+ * listsubmenus('window name\>', 'menu name\>')
  *
  * \section Description
  *
@@ -4880,7 +4973,7 @@
  *
  * from ldtp import *
  *
- * listsubmenus ('*-gedit', 'mnuFile') # all the submenus of File menu in ';' seperated string
+ * listsubmenus('*-gedit', 'mnuFile') # all the submenus of File menu in ';' seperated string
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4888,11 +4981,11 @@
 /** \page invokemenu invokemenu
  * \section Syntax
  *
- * invokemenu ('window name\>', 'object name\>')
+ * invokemenu('window name\>', 'object name\>')
  *
  * \section Description
  *
- * Invokes the menu in an embedded component (accessible) type
+ * Invokes the menu in an embedded component(accessible) type
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
@@ -4904,7 +4997,7 @@
  *
  * from ldtp import *
  *
- * invokemenu ('frmBottomExpandedEdgePanel', 'Volume Control')
+ * invokemenu('frmBottomExpandedEdgePanel', 'Volume Control')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4912,7 +5005,7 @@
 /** \page verifyscrollbar verifyscrollbar
  * \section Syntax
  *
- * verifyscrollbar ('<window name\>', '<scroll bar name\>')
+ * verifyscrollbar('<window name\>', '<scroll bar name\>')
  *
  * \section Description
  *
@@ -4928,7 +5021,7 @@
  *
  * from ldtp import *
  *
- * verifyscrollbar ('*-gedit', 'scbr0') # assuming that the file currently opened content is more than one page, else the scrollbar object will not be created by accessibility interface
+ * verifyscrollbar('*-gedit', 'scbr0') # assuming that the file currently opened content is more than one page, else the scrollbar object will not be created by accessibility interface
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4936,7 +5029,7 @@
 /** \page verifyscrollbarhorizontal verifyscrollbarhorizontal
  * \section Syntax
  *
- * verifyscrollbarhorizontal ('<window name\>', '<scroll bar name\>')
+ * verifyscrollbarhorizontal('<window name\>', '<scroll bar name\>')
  *
  * \section Description
  *
@@ -4952,7 +5045,7 @@
  *
  * from ldtp import *
 
- * verifyscrollbarhorizontal ('*-gedit', 'scbr0') # assuming that you have more columns than the actual visible area, else the scrollbar object will not be created by accessibility interface
+ * verifyscrollbarhorizontal('*-gedit', 'scbr0') # assuming that you have more columns than the actual visible area, else the scrollbar object will not be created by accessibility interface
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4960,7 +5053,7 @@
 /** \page verifyscrollbarvertical verifyscrollbarvertical
  * \section Syntax
  *
- * verifyscrollbarvertical ('<window name\>', '<scroll bar name\>')
+ * verifyscrollbarvertical('<window name\>', '<scroll bar name\>')
  *
  * \section Description
  *
@@ -4976,7 +5069,7 @@
  *
  * from ldtp import *
 
- * verifyscrollbarhorizontal ('*-gedit', 'scbr0') # assuming that you have more columns than the actual visible area, else the scrollbar object will not be created by accessibility interface
+ * verifyscrollbarhorizontal('*-gedit', 'scbr0') # assuming that you have more columns than the actual visible area, else the scrollbar object will not be created by accessibility interface
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -4984,7 +5077,7 @@
 /** \page verifyslider verifyslider
  * \section Syntax
  *
- * verifyslider ('<window name\>', '<slider name\>')
+ * verifyslider('<window name\>', '<slider name\>')
  *
  * \section Description
  *
@@ -5004,7 +5097,7 @@
 /** \page verifysliderhorizontal verifysliderhorizontal
  * \section Syntax
  *
- * verifysliderhorizontal ('<window name\>', '<slider name\>')
+ * verifysliderhorizontal('<window name\>', '<slider name\>')
  *
  * \section Description
  *
@@ -5024,7 +5117,7 @@
 /** \page verifyslidervertical verifyslidervertical
  * \section Syntax
  *
- * verifyslidervertical ('<window name\>', '<slider name\>')
+ * verifyslidervertical('<window name\>', '<slider name\>')
  *
  * \section Description
  *
@@ -5044,7 +5137,7 @@
 /** \page onwindowcreate onwindowcreate
  * \section Syntax
  *
- * onwindowcreate ('<window title\>', '<callback function\>'[,
+ * onwindowcreate('<window title\>', '<callback function\>'[,
  * <arguments to callback function\>])
  *
  * \section Description
@@ -5111,7 +5204,7 @@
 /** \page removecallback removecallback
  * \section Syntax
  *
- * removecallback ('<window title\>')
+ * removecallback('<window title\>')
  *
  * \section Description
  *
@@ -5180,7 +5273,7 @@
 /** \page doesmenuitemexist doesmenuitemexist
  * \section Syntax
  *
- * doesmenuitemexist ('\<window name\>', '\<menu hierarchy\>') 
+ * doesmenuitemexist('\<window name\>', '\<menu hierarchy\>') 
  *
  * \section Description
  *
@@ -5196,7 +5289,7 @@
  *
  * With respect to gedit menu structure
  * 
- * doesselectmenuitem ('gedit', 'mnuFile;mnuNew')
+ * doesselectmenuitem('gedit', 'mnuFile;mnuNew')
  * 
  * this function is required mainly to check those menuitems which will not be present always. An example of this kind of a menuitem is the close tab menu item under menu file in firefox web browser. 
  *
@@ -5206,7 +5299,7 @@
 /** \page startlog startlog
  * \section Syntax
  * 
- * startlog ('\<log file name\>', [[0 or 1], ['\<screenshot directory\>']])
+ * startlog('\<log file name\>', [[0 or 1], ['\<screenshot directory\>']])
  * 
  * second argument is optional and 1 is default value
  * 
@@ -5230,19 +5323,19 @@
  * 
  * If we want to overwrite existing log file or create new log file:
  * 
- * startlog ('evolution.xml', 1)
+ * startlog('evolution.xml', 1)
  * 
  * If we want to append existing log file or create new log file:
  * 
- * startlog ('evolution.xml', 0)
+ * startlog('evolution.xml', 0)
  * 
  * or 
  * 
- * startlog ('evolution.xml')
+ * startlog('evolution.xml')
  * 
  * or 
  * 
- * startlog ('~/evolution.xml', screenshotdir = '~/screenshot')
+ * startlog('~/evolution.xml', screenshotdir = '~/screenshot')
  * evolution.xml log file will ge generated in home directory of
  * current user and the screenshot files will be placed screenshot
  * folder of current user's home directory.
@@ -5253,7 +5346,7 @@
 /** \page stoplog stoplog
  * \section Syntax
  * 
- * stoplog ()
+ * stoplog()
  * 
  * \section Description
  * 
@@ -5264,7 +5357,7 @@
  * 
  * \section Example
  * 
- * stoplog ()
+ * stoplog()
  * 
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5273,7 +5366,7 @@
 /** \page imagecapture imagecapture
  * \section Syntax
  *
- * imagecapture ([\<window name\>, [\<output file\>, (opt)\<width-x\>, (opt)\<height-y\>, (opt)x, (opt)y]])
+ * imagecapture([\<window name\>, [\<output file\>,(opt)\<width-x\>,(opt)\<height-y\>,(opt)x,(opt)y]])
  *
  * \section Description
  *
@@ -5287,9 +5380,9 @@
  *
  * from ldtputils import *
  *
- * imagecapture ('Terminal', 'out.png') # out.jpg will be created in current directory. Give absolute path to save it in some other directory.
+ * imagecapture('Terminal', 'out.png') # out.jpg will be created in current directory. Give absolute path to save it in some other directory.
  *
- * imagecapture () # Captures the complete X screen and saves in a temp file and returns the file name.
+ * imagecapture() # Captures the complete X screen and saves in a temp file and returns the file name.
  *
  * \note Window title name is case sensitive
  *
@@ -5303,7 +5396,7 @@
 /** \page imagecompare imagecompare
  * \section Syntax
  *
- * imagecompare (imgfile1, imgfile2)
+ * imagecompare(imgfile1, imgfile2)
  *
  * \section Description
  *
@@ -5319,7 +5412,7 @@
  *
  * from ldtputils import *
  *
- * imagecompare ('in.jpg', 'out.jpg') # Assuming that in.jpg and out.jpg are in current directory. File path should be absolute path.
+ * imagecompare('in.jpg', 'out.jpg') # Assuming that in.jpg and out.jpg are in current directory. File path should be absolute path.
  *
  * \section Dependency
  *
@@ -5332,7 +5425,7 @@
 /** \page blackoutregion blackoutregion
  * \section Syntax
  *
- * blackoutregion (infile, outfile, topx, topy, botx, boty)
+ * blackoutregion(infile, outfile, topx, topy, botx, boty)
  *
  * \section Description
  *
@@ -5348,7 +5441,7 @@
  *
  * \section Example
  *
- * blackoutregion ('in.jpg','out.jpg',100,100,200,200)
+ * blackoutregion('in.jpg','out.jpg',100,100,200,200)
  *
  * \section Dependency
  *
@@ -5406,7 +5499,7 @@
  *             level = ''
  *         message = re.split(' - ', record.getMessage(), 1)
  *         if self.fp:
- *             self.fp.write('%s,%s,%s,%s\n' % (datetime.datetime.now().isoformat(), level,
+ *             self.fp.write('%s,%s,%s,%s\n' %(datetime.datetime.now().isoformat(), level,
  *                                              message[1], self.name))
  * 
  * # Add LdtpCustomLog handler
@@ -5475,7 +5568,7 @@
  *
  * \section Dependency
  *
- * This functionality depends on the pystatgrab (http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
+ * This functionality depends on the pystatgrab(http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5528,7 +5621,7 @@
  *             level = ''
  *         message = re.split(' - ', record.getMessage(), 1)
  *         if self.fp:
- *             self.fp.write('%s,%s,%s,%s\n' % (datetime.datetime.now().isoformat(), level,
+ *             self.fp.write('%s,%s,%s,%s\n' %(datetime.datetime.now().isoformat(), level,
  *                                              message[1], self.name))
  * 
  * # Add LdtpCustomLog handler
@@ -5597,7 +5690,7 @@
  *
  * \section Dependency
  *
- * This functionality depends on the pystatgrab (http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
+ * This functionality depends on the pystatgrab(http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5613,7 +5706,7 @@
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
- * \retval Returns list of float values in percentage (CPU utilization), of all the instance of given application
+ * \retval Returns list of float values in percentage(CPU utilization), of all the instance of given application
  *
  * \section Example
  *
@@ -5636,7 +5729,7 @@
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
- * \retval Returns list of int values in MB (Memory utilization), of all the instance of given application
+ * \retval Returns list of int values in MB(Memory utilization), of all the instance of given application
  *
  * \section Example
  *
@@ -5651,7 +5744,7 @@
 /** \page wait wait
  * \section Syntax
  *
- * wait ([\<number of seconds to suspend current execution\>])
+ * wait([\<number of seconds to suspend current execution\>])
  *
  * \section Description
  *
@@ -5667,7 +5760,7 @@
  * 
  * from ldtputils import * 
  *
- * wait (5) 
+ * wait(5) 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Shankar Ganesh <shagan.glare@gmail.com>
@@ -5677,7 +5770,7 @@
 /** \page delaycmdexec delaycmdexec
  * \section Syntax
  *
- * delaycmdexec ([\<number of seconds to delay commands execution\>])
+ * delaycmdexec([\<number of seconds to delay commands execution\>])
  *
  * \section Description
  *
@@ -5702,12 +5795,12 @@
 /** \page launchapp launchapp
  * \section Syntax
  *
- * launchapp ('\<application binary name\>'[, argument] [,delay = 5][,
+ * launchapp('\<application binary name\>'[, argument] [,delay = 5][,
  * env = 1])
  *
  * second and third arguments are optional. environment default argument is 1. So the GTK_MODULES and GNOME_ACCESSIBILITY will be set and added to the enivronment variable.
  *
- * Delay is wait time (in seconds) after launching the application
+ * Delay is wait time(in seconds) after launching the application
  *
  * NOTE: Incase of remote session, the command line arguments should be part of application name
  *
@@ -5723,11 +5816,11 @@
  *
  * from ldtp import * 
  *
- * launchapp ('file-roller')
+ * launchapp('file-roller')
  *
- * launchapp ('gaim', env = 1) # Invoke the application after setting environment variables
+ * launchapp('gaim', env = 1) # Invoke the application after setting environment variables
  *
- * launchapp ('file-roller', ['/home/ldtp/test.tar.gz'], env = 0) # Invoke the application with optional command line argument
+ * launchapp('file-roller', ['/home/ldtp/test.tar.gz'], env = 0) # Invoke the application with optional command line argument
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Shankar Ganesh <shagan.glare@gmail.com>
@@ -5743,7 +5836,7 @@
  *
  * Give the window up time
  *
- * \retval startime, endtime (python datetime object)
+ * \retval startime, endtime(python datetime object)
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
@@ -5920,7 +6013,7 @@
 /** \page getpanelchildcount getpanelchildcount
  * \section Syntax
  *
- * getpanelchildcount ('\<window name\>', '\<component name\>')
+ * getpanelchildcount('\<window name\>', '\<component name\>')
  *
  * \section Description
  *
@@ -5936,7 +6029,7 @@
  *
  * from ldtp import *
  *
- * getpanelchildcount ('*-gedit', 'pnl0')
+ * getpanelchildcount('*-gedit', 'pnl0')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
@@ -5945,7 +6038,7 @@
 /** \page bindtext bindtext
  * \section Syntax
  *
- * bindtext ('\<package name\>', '\<locale directory\>'[, '\<mode\>'])
+ * bindtext('\<package name\>', '\<locale directory\>'[, '\<mode\>'])
  *
  * \section Description
  *
@@ -5961,7 +6054,7 @@
  *
  * For mo file with name: "/opt/gnome/share/locale/ta/LC_MESSAGES/gedit.mo"
  *
- * bindtext ('gedit', '/opt/gnome/share/locale')
+ * bindtext('gedit', '/opt/gnome/share/locale')
  *
  * \author Premkumar J <prem.jothimani@gmail.com>
  *
@@ -5970,7 +6063,7 @@
 /** \page setlocale setlocale
  * \section Syntax
  *
- * setlocale (['\<LANG\>'])
+ * setlocale(['\<LANG\>'])
  *
  * \section Description
  *
@@ -5993,7 +6086,7 @@
 /** \page setloglevel setloglevel
  * \section Syntax
  *
- * setloglevel (\<log level\>)
+ * setloglevel(\<log level\>)
  *
  * \section Options
  *
@@ -6013,7 +6106,7 @@
  *
  * \section Example
  *
- * setloglevel (logging.WARNING)
+ * setloglevel(logging.WARNING)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
@@ -6022,7 +6115,7 @@
 /** \page addlogger addlogger
  * \section Syntax
  *
- * addlogger ('\<log configuration file\>')
+ * addlogger('\<log configuration file\>')
  *
  * \section Description
  *
@@ -6038,7 +6131,7 @@
  *
  * \section Example
  *
- * addlogger ('/etc/ldtp.conf')
+ * addlogger('/etc/ldtp.conf')
  *
  * \section Configration
  *
@@ -6051,7 +6144,7 @@
 /** \page mouseleftclick mouseleftclick
  * \section Syntax
  *
- * mouseleftclick ('\<window name\>', '\<object name\>')
+ * mouseleftclick('\<window name\>', '\<object name\>')
  *
  * \section Description
  *
@@ -6072,7 +6165,7 @@
 /** \page mouserightclick mouserightclick
  * \section Syntax
  *
- * mouserightclick ('\<window name\>', '\<object name\>')
+ * mouserightclick('\<window name\>', '\<object name\>')
  *
  * \section Description
  *
@@ -6093,7 +6186,7 @@
 /** \page mousemove mousemove
  * \section Syntax
  *
- * mousemove ('\<window name\>', '\<object name\>')
+ * mousemove('\<window name\>', '\<object name\>')
  *
  * \section Description
  *
@@ -6135,7 +6228,7 @@
 /** \page enterstring enterstring
  * \section Syntax
  *
- * enterstring ('\<window name\>', '\<object name\>', '\<data\>')
+ * enterstring('\<window name\>', '\<object name\>', '\<data\>')
  *
  * \section Description
  *
@@ -6147,7 +6240,7 @@
  *
  * \section Example
  *
- * enterstring ('*-gedit', 'txt0', 'Testing LDTP\'s enterstring function')
+ * enterstring('*-gedit', 'txt0', 'Testing LDTP\'s enterstring function')
  *
  * This function supports
  * 
@@ -6201,7 +6294,7 @@
 /** \page generatekeyevent generatekeyevent
  * \section Syntax
  *
- * generatekeyevent ('\<data\>')
+ * generatekeyevent('\<data\>')
  *
  * \section Description
  *
@@ -6217,7 +6310,7 @@
  *
  * \section Example
  *
- * generatekeyevent ('Testing LDTP\'s enterstring function')
+ * generatekeyevent('Testing LDTP\'s enterstring function')
  *
  * This function supports
  * 
@@ -6273,7 +6366,7 @@
 /** \page keyrelease keyrelease
  * \section Syntax
  *
- * keyrelease ('\<data\>')
+ * keyrelease('\<data\>')
  *
  * \section Description
  *
@@ -6289,7 +6382,7 @@
  *
  * \section Example
  *
- * keypress ('\<shift\>');generatekeyevent ('hELLO');keyrelease ('\<shift\>');generatekeyevent ('\<space\>World')
+ * keypress('\<shift\>');generatekeyevent('hELLO');keyrelease('\<shift\>');generatekeyevent('\<space\>World')
  *
  * This function supports
  * 
@@ -6343,7 +6436,7 @@
 /** \page keypress keypress
  * \section Syntax
  *
- * keypress ('\<data\>')
+ * keypress('\<data\>')
  *
  * \section Description
  *
@@ -6359,7 +6452,7 @@
  *
  * \section Example
  *
- * keypress ('\<shift\>');generatekeyevent ('hELLO');keyrelease ('\<shift\>');generatekeyevent ('\<space\>World')
+ * keypress('\<shift\>');generatekeyevent('hELLO');keyrelease('\<shift\>');generatekeyevent('\<space\>World')
  *
  * This function supports
  * 
@@ -6413,11 +6506,11 @@
 /** \page generatemouseevent generatemouseevent
  * \section Syntax
  *
- * generatemouseevent (x, y [,'\<options\>'])
+ * generatemouseevent(x, y [,'\<options\>'])
  *
  * \section Description
  *
- * Functionality of generatemouseevent, generates the default (left
+ * Functionality of generatemouseevent, generates the default(left
  * click) or specified mouse event in the given X and Y
  * coordinates.
  *
@@ -6462,10 +6555,10 @@
  *
  * \section Example
  *
- * generatemouseevent (100, 200)
+ * generatemouseevent(100, 200)
  *
  *
- * generatemouseevent (100, 200, "b1d") # Generate double click event
+ * generatemouseevent(100, 200, "b1d") # Generate double click event
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
@@ -6474,7 +6567,7 @@
 /** \page hasstate hasstate
  * \section Syntax
  *
- * hasstate ('<window name\>', '<object name\>', <object SPI state\>[, <guitimeout\>])
+ * hasstate('<window name\>', '<object name\>', <object SPI state\>[, <guitimeout\>])
  *
  * \section Description
  *
@@ -6492,11 +6585,11 @@
  *
  * from ldtp import *
  *
- * hasstate ('*-gedit', 'txt0', state.FOCUSABLE)
+ * hasstate('*-gedit', 'txt0', state.FOCUSABLE)
  *
  * # Wait for FOCUSABLE state till 10 seconds to be enabled
  *
- * hasstate ('*-gedit', 'txt0', state.FOCUSABLE, 10)
+ * hasstate('*-gedit', 'txt0', state.FOCUSABLE, 10)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
@@ -6505,7 +6598,7 @@
 /** \page press press
  * \section Syntax
  *
- * press ('<window name\>', '<object name\>')
+ * press('<window name\>', '<object name\>')
  *
  * \section Description
  *
@@ -6528,7 +6621,7 @@
 /** \page objectexist objectexist
  * \section Syntax
  *
- * objectexist ('<window name\>', '<object name\>')
+ * objectexist('<window name\>', '<object name\>')
  *
  * \section Description
  *
@@ -6549,7 +6642,7 @@
 /** \page appundertest appundertest
  * \section Syntax
  *
- * appundertest ('\<accessibility application name\>')
+ * appundertest('\<accessibility application name\>')
  *
  * \section Description
  *
@@ -6561,7 +6654,7 @@
  *
  * \section Example
  *
- * appundertest ('gedit')
+ * appundertest('gedit')
  *
  * If two window's having gedit title and only one window belongs to gedit application, even though, its first in the accessibility list, based on the above call, any operation on '*gedit' window operation, the event will be fired on gedit application only.
  * http://lists.freedesktop.org/archives/ldtp-dev/2009-February/000764.html
@@ -6573,7 +6666,7 @@
 /** \page objtimeout objtimeout
  * \section Syntax
  *
- * objtimeout ([guiTimeOut])
+ * objtimeout([guiTimeOut])
  *
  * \section Description
  *
@@ -6585,7 +6678,7 @@
  *
  * \section Example
  *
- * objtimeout (10)
+ * objtimeout(10)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
@@ -6594,7 +6687,7 @@
 /** \page guitimeout guitimeout
  * \section Syntax
  *
- * guitimeout ([guiTimeOut])
+ * guitimeout([guiTimeOut])
  *
  * \section Description
  *
@@ -6606,7 +6699,7 @@
  *
  * \section Example
  *
- * guitimeout (10)
+ * guitimeout(10)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  *
