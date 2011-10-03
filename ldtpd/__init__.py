@@ -40,7 +40,13 @@ def main(port=4118, parentpid=None):
     os.environ['NO_AT_BRIDGE'] = '1'
 
     import twisted
-    if twisted.version.major < 11:
+    gtkVersion = None
+    try:
+        from gi.repository import Gtk
+        gtkVersion = Gtk._version
+    except:
+        pass
+    if not gtkVersion or gtkVersion == '2.0':
        # As per Ubuntu 11.10, twisted glib2reactor
        # works with gtk2, which fails with gtk3
        from twisted.internet import glib2reactor
