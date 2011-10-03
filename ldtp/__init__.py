@@ -27,7 +27,6 @@ import client
 import atexit
 import socket
 import thread
-import gobject
 import logging
 import datetime
 import tempfile
