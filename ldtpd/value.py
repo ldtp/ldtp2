@@ -110,7 +110,7 @@ class Value(Utils):
             obj = self._get_object(window_name, object_name)
             valuei = obj.queryValue()
 
-            if valuei.currentValue == data:
+            if valuei.currentValue == float(data):
                 return 1
         except:
             pass
