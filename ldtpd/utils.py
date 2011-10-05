@@ -585,6 +585,16 @@ class Utils:
             self.ldtpized_list[parent]['children'] = _current_children
         if not label_by:
             label_by = ''
+        key_binding = ''
+        try:
+            iaction = obj.queryAction()
+            for j in xrange(iaction.nActions):
+                if iaction.getKeyBinding(j) != '':
+                    key_binding = iaction.getKeyBinding(j)
+                    break
+        except NotImplementedError:
+            pass
+        
         self.ldtpized_list[ldtpized_name] = {'key' : ldtpized_name,
                                              'parent' : parent,
                                              'class' : obj.getRoleName().replace(' ', '_'),
@@ -594,7 +604,8 @@ class Utils:
                                                                       self.ldtpized_obj_index[abbrev_role]),
                                              'label' : obj.name,
                                              'label_by' : label_by,
-                                             'description' : obj.description
+                                             'description' : obj.description,
+                                             'key_binding' : key_binding
                                              }
         return ldtpized_name
 
