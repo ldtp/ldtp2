@@ -175,6 +175,7 @@ class Utils:
         self._states_old = {}
         self._logger = logger
         self._state_names = {}
+        self._old_state_names = {}
         self._window_uptime = {}
         self._callback_event = []
         self._delaycmdexec = None
@@ -220,6 +221,8 @@ class Utils:
             # b.g.o Bug#654683
             self._states[str(state)] = state
             # Ignore STATE_ string for LDTPv1 compatibility
+            self._old_state_names[state] = \
+                state.__repr__().lower().partition("state_")[2]
             self._state_names[state] = \
                 str(state).lower().partition("state_")[2]
         return self._states

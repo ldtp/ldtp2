@@ -24,8 +24,9 @@ import re
 import time
 try:
   # If we have gtk3+ gobject introspection, use that
-  import gi
-  from gi.repository import Wnck as wnck, Gtk as gtk, GObject as gobject
+  from gi.repository import Wnck as wnck
+  from gi.repository import Gtk as gtk
+  from gi.repository import GObject as gobject
   gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck

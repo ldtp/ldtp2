@@ -24,7 +24,8 @@ import locale
 import subprocess
 try:
   # If we have gtk3+ gobject introspection, use that
-  from gi.repository import Wnck as wnck, Gtk as gtk, GObject as gobject
+  from gi.repository import Wnck as wnck
+  from gi.repository import Gtk as gtk
   gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck
@@ -710,7 +711,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         _current_state = _state.getStates()
         _obj_states = []
         for state in _current_state:
-            _obj_states.append(self._state_names[state.real])
+            if self._state_names[state.real] == '':
+               val = self._old_state_names[state]
+            else:
+               val = self._state_names[state]
+            _obj_states.append(val)
         return _obj_states
 
     def hasstate(self, window_name, object_name, state, guiTimeOut = 0):
