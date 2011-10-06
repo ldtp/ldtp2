@@ -107,6 +107,9 @@ class Transport(xmlrpclib.Transport):
                     # it fails, if this is not handled
                     # bug 638229
                     self.close()
+                    # Sleep 1 sec, else the retry connection was faster
+                    # and the failure happens again
+                    time.sleep(1)
                     retry_count += 1
                 else:
                     raise
