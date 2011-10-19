@@ -1144,6 +1144,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             if child_name and not role and \
                     self._match_name_to_appmap(child_name, obj):
                 matches.append(name)
+            # When role and child_name args are passed
             if role and child_name and obj['class'] == role and \
                     self._match_name_to_appmap(child_name, obj):
                 matches.append(name)
