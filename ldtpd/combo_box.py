@@ -413,8 +413,8 @@ class ComboBox(Utils, LayeredPane):
 
     def getallitem(self, window_name, object_name):
         """
-        Select combo box item
-        
+        Get all combo box item
+
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string
