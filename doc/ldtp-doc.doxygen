@@ -240,10 +240,6 @@
  *
  * \section ComboboxAPI Combobox python API's
  *
- * \subpage capturetofile - Get the entires of list box and dump it to
- * a file
- * \n
- * \n
  * \subpage click - Click on a combo box
  * \n
  * \n
@@ -253,6 +249,9 @@
  * \n
  * \subpage comboselectindex - Select an item from the combo box list or
  * menu item based on index
+ * \n
+ * \n
+ * \subpage getallitem - Get all the items from combo box list
  * \n
  * \n
  * \subpage hidelist - Hide the combo box drop down list
@@ -4507,34 +4506,30 @@
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
 
-/** \page capturetofile capturetofile
+/** \page getallitem getallitem
  * \section Syntax
  *
- * capturetofile('\<window name\>', '\<combo box name\>'[, '\<file name\>'])
+ * getallitem('\<window name\>', '\<combo box name\>')
  *
  * \section Description
  *
- * Capture the list of contents of a combox box to a file. If file name argument is None, then by default the list contents are written to comboboxitem.lst file of current working directory of LDTP engine.
+ * Get all the list of contents of a combox box as a string list.
  *
- * \retval 1 on success, LdtpExecutionError on failure
+ * \retval list of type string on success, LdtpExecutionError on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
  *
  * \section Example
  *
- * With respect to Find dialog of gedit application
+ * With respect to Replace dialog of gedit application
  *
  * from ldtp import *
  *
  * # Without specifiying the filename
  *
- * capturetofile('dlgFind', 'cboSearchfor')
+ * getallitem('dlgFind', 'cboSearchfor')
  *
- * # With specifiying the filename
- *
- * capturetofile('dlgFind', 'cboSearchfor', '/tmp/comboboxlistitem.txt') # Note relative path won't work !!!
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page gettextproperty gettextproperty
