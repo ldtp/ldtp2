@@ -306,6 +306,17 @@ class Utils:
         """
         List all the applications
         """
+        for app in self._desktop:
+            # Work around for at-spi2
+            if not app: continue
+            flag = False
+            for tmpapp in self.cached_apps:
+                if app == tmpapp[0]:
+                    flag = True
+                    break
+            # App already in list, don't add again
+            if flag: continue
+            self.cached_apps.append([app, True])
         for app in self.cached_apps:
             if not app: continue
             yield app
@@ -314,6 +325,17 @@ class Utils:
         """
         List all the windows that are currently open
         """
+        for app in self._desktop:
+            # Work around for at-spi2
+            if not app: continue
+            flag = False
+            for tmpapp in self.cached_apps:
+                if app == tmpapp[0]:
+                    flag = True
+                    break
+            # App already in list, don't add again
+            if flag: continue
+            self.cached_apps.append([app, True])
         for app in self.cached_apps:
             if not app or not app[0]: continue
             try:
@@ -629,6 +651,17 @@ class Utils:
         self.ldtpized_list = {}
         self.ldtpized_obj_index = {}
         if not force_remap:
+            for app in self._desktop:
+                # Work around for at-spi2
+                if not app: continue
+                flag = False
+                for tmpapp in self.cached_apps:
+                    if app == tmpapp[0]:
+                        flag = True
+                        break
+                # App already in list, don't add again
+                if flag: continue
+                self.cached_apps.append([app, True])
             for app in self.cached_apps:
                 try:
                     if app[0] and gui and app[0] == gui.parent and \
@@ -698,6 +731,8 @@ class Utils:
                 'Object does not have an Action interface')
         else:
             for i in xrange(iaction.nActions):
+                if self._ldtp_debug:
+                    print iaction.getName(i)
                 if re.match(action, iaction.getName(i)):
                     iaction.doAction(i)
                     return
