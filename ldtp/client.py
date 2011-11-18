@@ -20,6 +20,7 @@ Headers in this file shall remain intact.
 """
 
 import os
+import re
 import sys
 import time
 import signal
@@ -73,10 +74,20 @@ class Transport(xmlrpclib.Transport):
         retry_count = 1
         while True:
             try:
+                if hasattr(self, 'close') and \
+                        not re.search('methodName>system.list',
+                                      request_body) and \
+                                      not re.search('methodName>system.method',
+                                                    request_body):
+                                      # On Windows XP SP3 / Python 2.5, close doesn't exist
+                                      self.close()
                 return xmlrpclib.Transport.request(
                     self, host, handler, request_body, verbose=0)
             except SocketError, e:
                 if (e.errno == 111 or e.errno == 146) and 'localhost' in host:
+                    if hasattr(self, 'close'):
+                        # On Windows XP SP3 / Python 2.5, close doesn't exist
+                        self.close()
                     if retry_count == 1:
                         retry_count += 1
                         sigusr1 = signal.signal(signal.SIGUSR1, self._handle_signal)
@@ -96,6 +107,9 @@ class Transport(xmlrpclib.Transport):
                 # else raise exception
                 raise
             except xmlrpclib.Fault, e:
+                if hasattr(self, 'close'):
+                    # On Windows XP SP3 / Python 2.5, close doesn't exist
+                    self.close()
                 if e.faultCode == ERROR_CODE:
                     raise LdtpExecutionError(e.faultString.encode('utf-8'))
                 else:
@@ -106,7 +120,9 @@ class Transport(xmlrpclib.Transport):
                     # In python 2.7 / Ubuntu Natty 11.04
                     # it fails, if this is not handled
                     # bug 638229
-                    self.close()
+                    if hasattr(self, 'close'):
+                        # On Windows XP SP3 / Python 2.5, close doesn't exist
+                        self.close()
                     # Sleep 1 sec, else the retry connection was faster
                     # and the failure happens again
                     time.sleep(1)
