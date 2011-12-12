@@ -37,8 +37,9 @@ from fnmatch import translate as glob_trans
 from client_exception import LdtpExecutionError
 
 _pollEvents = None
-_ldtp_debug = None
 _file_logger = None
+_ldtp_debug = client._ldtp_debug
+_ldtp_windows_env = client._ldtp_windows_env
 
 if 'LDTP_DEBUG' in os.environ:
     _ldtp_debug = os.environ['LDTP_DEBUG']
@@ -348,12 +349,50 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
     else:
         out_file = os.path.expanduser(out_file)
         
+    ### Windows compatibility
+    if _ldtp_windows_env:
+        if width == None:
+            width = -1
+        if height == None:
+            height = -1
+        if window_name == None:
+            window_name = ''
+    ### Windows compatibility - End
     data = _remote_imagecapture(window_name, x, y, width, height)
-    f = open(out_file, 'w')
+    f = open(out_file, 'wb')
     f.write(b64decode(data))
     f.close()
 
     return out_file
+
+### WINDOWS
+### XML-RPC.NET doesn't support optional arguments
+### We have to wrap those wrappers locally
+if _ldtp_windows_env:
+    def wait(timeout=5):
+        return _remote_wait(timeout)
+    def waittillguiexist(window_name, object_name = '',
+                         guiTimeOut = 30, state = ''):
+        return _remote_waittillguiexist(window_name, object_name,
+                                        guiTimeOut)
+    
+    def waittillguinotexist(window_name, object_name = '',
+                            guiTimeOut = 30, state = ''):
+        return _remote_waittillguinotexist(window_name, object_name,
+                                           guiTimeOut)
+    def guiexist(window_name, object_name = ''):
+        return _remote_guiexist(window_name, object_name)
+    def launchapp(cmd, args = [], delay = 0, env = 1, lang = "C"):
+        return _remote_launchapp(cmd, args, delay, env, lang)
+    def hasstate(window_name, object_name, state, guiTimeOut = 0):
+        return _remote_hasstate(window_name, object_name, state, guiTimeOut)
+    def selectrow(window_name, object_name, row_text):
+        return _remote_selectrow(window_name, object_name, row_text, False)
+    def getchild(window_name, child_name = '', role = '', parent = ''):
+        return _remote_getchild(window_name, child_name, role, parent)
+    def enterstring(window_name, object_name = '', data = ''):
+        return _remote_enterstring(window_name, object_name, data)
+### WINDOWS
 
 def onwindowcreate(window_name, fn_name, *args):
     """
