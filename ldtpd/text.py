@@ -99,10 +99,11 @@ class Text(Utils):
             for gui in self._list_guis():
                 if self._match_name_to_acc(window_name, gui):
                     self._grab_focus(gui)
+            text = data
+        else:
+            text = window_name # TODO: Major hack, this is a bad API choice
 
-        data = data or window_name # TODO: Major hack, this is a bad API choice
-
-        key_combo_action = KeyComboAction(data)
+        key_combo_action = KeyComboAction(text)
         key_combo_action()
 
         return 1
@@ -171,7 +172,7 @@ class Text(Utils):
         try:
             texti = obj.queryText()
         except NotImplementedError:
-            raise LdtpServerException('Text cannot be entered into object.')
+            raise LdtpServerException('Text cannot be retrieved from object %s.' % obj)
 
         if startPosition and startPosition > 0:
             start = startPosition
