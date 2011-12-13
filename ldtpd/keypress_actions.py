@@ -54,7 +54,7 @@ _non_print_key_val = {"escape" : 9, "esc" : 9, "backspace" : 22,
                       "F1" : 67, "F2" : 68, "F3" : 69, "F4" : 70,
                       "F5" : 71, "F6" : 72, "F7" : 73, "F8" : 74,
                       "F9" : 75, "F10" : 76, "F11" : 95, "F12" : 96,
-                      "prtscrn" : 107}
+                      "prtscrn" : 107, "ctrll" : 37}
 
 def _get_keyboard_keycodes():
   output = subprocess.Popen('xmodmap -pke', stdout = subprocess.PIPE,
