@@ -53,6 +53,8 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def _listFunctions(self):
         return [a[7:] for a in \
                   filter(lambda x: x.startswith('xmlrpc_'), dir(self))]
+    # Starting twisted 11.1
+    listProcedures = _listFunctions
 
     if not _ldtp_debug:
         # If LDTP_DEBUG env set, then print verbose info on console
@@ -97,7 +99,12 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             self._cbRender(f, request)
         else:
             try:
-                function = self._getFunction(functionPath)
+                if hasattr(self, 'lookupProcedure'):
+                   # Starting twisted 11.1
+                   function = self.lookupProcedure(functionPath)
+                else:
+                   function = self._getFunction(functionPath)
+                print function, functionPath
             except xmlrpc.Fault, f:
                 self._cbRender(f, request)
             else:
