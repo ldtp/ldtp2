@@ -104,7 +104,6 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                    function = self.lookupProcedure(functionPath)
                 else:
                    function = self._getFunction(functionPath)
-                print function, functionPath
             except xmlrpc.Fault, f:
                 self._cbRender(f, request)
             else:
