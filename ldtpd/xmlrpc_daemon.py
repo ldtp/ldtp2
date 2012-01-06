@@ -107,8 +107,12 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
             except xmlrpc.Fault, f:
                 self._cbRender(f, request)
             else:
-                logger.debug('%s(%s)' % \
-                                 (functionPath, ', '.join(map(repr, args)+['%s=%s' % (k, repr(v)) for k, v in kwargs.items()])))
+                if _ldtp_debug:
+                    logger.debug('%s(%s)' % \
+                                     (functionPath,
+                                      ', '.join(map(repr, args) + \
+                                                    ['%s=%s' % (k, repr(v)) \
+                                                         for k, v in kwargs.items()])))
                 xmlrpc.defer.maybeDeferred(function, *args, **kwargs).\
                     addErrback(self._ebRender).\
                     addCallback(self._cbRender, request)
