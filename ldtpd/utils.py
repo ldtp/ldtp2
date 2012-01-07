@@ -23,6 +23,7 @@ Headers in this file shall remain intact.
 import os
 import re
 import time
+import fnmatch
 import logging
 import pyatspi
 import threading
@@ -437,7 +438,7 @@ class Utils:
         @return: Return 0 on failure, 1 on successful match
         @rtype: integer
         """
-        if not acc:
+        if not acc or not name:
             return 0
         if classType:
             # Accessibility role type returns space, when multiple
@@ -451,7 +452,7 @@ class Utils:
         if roleName != classType:
             # If type doesn't match, don't proceed further
             return 0
-        if acc.name == name:
+        if acc.name and re.match(fnmatch.translate(name), acc.name, re.M | re.U):
             # Since, type already matched and now the given name
             # and accessibile name matched, mission accomplished
             return 1
@@ -466,10 +467,10 @@ class Utils:
         except UnicodeDecodeError:
            _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
                                      _ldtpize_accessible_name[1].decode('utf-8'))
-        if _object_name == name:
+        if re.match(_object_name, name, re.M | re.U):
             # If given name equal LDTPized name format
             return 1
-        if self._glob_match(name, acc.name):
+        if self._glob_match(fnmatch.translate(name), acc.name):
             # If given name match object name with regexp
             return 1
         if self._glob_match(name, _object_name):
