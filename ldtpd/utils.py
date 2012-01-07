@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 LDTP v2 utils.
 
@@ -459,8 +460,12 @@ class Utils:
         # Concat object type and object name
         # ex: 'frmUnsavedDocument1-gedit' for Gedit application
         # frm - Frame, Window title - 'Unsaved Document 1 - gedit'
-        _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
-                                  _ldtpize_accessible_name[1])
+        try:
+           _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
+                                     _ldtpize_accessible_name[1])
+        except UnicodeDecodeError:
+           _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
+                                     _ldtpize_accessible_name[1].decode('utf-8'))
         if _object_name == name:
             # If given name equal LDTPized name format
             return 1
