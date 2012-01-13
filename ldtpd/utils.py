@@ -739,7 +739,7 @@ class Utils:
             for i in xrange(iaction.nActions):
                 if self._ldtp_debug:
                     print iaction.getName(i)
-                if re.match(action, iaction.getName(i)):
+                if re.match(action, iaction.getName(i), re.I):
                     iaction.doAction(i)
                     return
             raise LdtpServerException('Object does not have a "%s" action' % action)
