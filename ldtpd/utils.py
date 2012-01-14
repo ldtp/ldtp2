@@ -304,10 +304,11 @@ class Utils:
             # so remap should be forced
             self.cached_apps.append([event.host_application, True])
 
-    def _list_apps(self):
-        """
-        List all the applications
-        """
+    def _atspi2_workaround(self):
+        if not hasattr(pyatspi, 'Accessible'):
+            # This exist only in pyatspi2
+            # Don't do the work around
+            return
         for app in self._desktop:
             # Work around for at-spi2
             if not app: continue
@@ -319,6 +320,12 @@ class Utils:
             # App already in list, don't add again
             if flag: continue
             self.cached_apps.append([app, True])
+
+    def _list_apps(self):
+        """
+        List all the applications
+        """
+        self._atspi2_workaround()
         for app in self.cached_apps:
             if not app: continue
             yield app
@@ -327,17 +334,7 @@ class Utils:
         """
         List all the windows that are currently open
         """
-        for app in self._desktop:
-            # Work around for at-spi2
-            if not app: continue
-            flag = False
-            for tmpapp in self.cached_apps:
-                if app == tmpapp[0]:
-                    flag = True
-                    break
-            # App already in list, don't add again
-            if flag: continue
-            self.cached_apps.append([app, True])
+        self._atspi2_workaround()
         for app in self.cached_apps:
             if not app or not app[0]: continue
             try:
@@ -468,7 +465,7 @@ class Utils:
            _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
                                      _ldtpize_accessible_name[1].decode('utf-8'))
         try:
-            if re.match(_object_name, name, re.M | re.U):
+            if re.match(name, _object_name, re.M | re.U):
                 # If given name equal LDTPized name format
                 return 1
         except:
@@ -662,17 +659,7 @@ class Utils:
         self.ldtpized_list = {}
         self.ldtpized_obj_index = {}
         if not force_remap:
-            for app in self._desktop:
-                # Work around for at-spi2
-                if not app: continue
-                flag = False
-                for tmpapp in self.cached_apps:
-                    if app == tmpapp[0]:
-                        flag = True
-                        break
-                # App already in list, don't add again
-                if flag: continue
-                self.cached_apps.append([app, True])
+            self._atspi2_workaround()
             for app in self.cached_apps:
                 try:
                     if app[0] and gui and app[0] == gui.parent and \
