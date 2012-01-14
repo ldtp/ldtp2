@@ -84,24 +84,21 @@ class Menu(Utils):
         LDTP's name convention, or a Unix glob. Or menu heirarchy
         @type object_name: string
 
-        @return: menu item in ';' separated format on success.
-        @rtype: string
+        @return: menu item in list on success.
+        @rtype: list
         """
         if re.search(';', object_name):
             obj = self._get_menu_hierarchy(window_name, object_name)
         else:
             obj = self._get_object(window_name, object_name)
-        _children = ''
+        _children = []
         for _child in self._list_objects(obj):
             if _child.name == '' or _child.name == 'Empty' or \
                     obj == _child:
                 # If empty string don't add it to the list or
                 # if the given object and child object matches
                 continue
-            if _children == '':
-                _children += _child.name
-            else:
-                _children += ';%s' % _child.name
+            _children.append(_child.name)
         return _children
 
     def menucheck(self, window_name, object_name):

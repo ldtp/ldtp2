@@ -4956,9 +4956,9 @@
  *
  * \section Description
  *
- * Get the list of sub menu item, in a menu in a ; seperated list
+ * Get the list of sub menu item, in a menu as a list
  *
- * \retval ';' seperated string on success, LdtpExecutionError exception on failure
+ * \retval list of menuitems as string on success, LdtpExecutionError exception on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu-item.c
  *
@@ -4968,7 +4968,7 @@
  *
  * from ldtp import *
  *
- * listsubmenus('*-gedit', 'mnuFile') # all the submenus of File menu in ';' seperated string
+ * listsubmenus('*-gedit', 'mnuFile') # all the submenus of File menu as a list of string
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
