@@ -1,3 +1,8 @@
+LDTP 2.3.0 released Download - Thursday Feb 161 2012
+  Fixed twisted gtk2 import in gtk3 environment
+  Updated keycodes based on latest Linux distribution
+  Added Windows client version of LDTP
+  Ubuntu 12.04 twisted XMLRPC APIs have been changed, updated accordingly
 LDTP 2.2.0 released Download - Wednesday Sep 21 2011
   Many fixes with respect to GTK3
   Fixed bug#657290 - getpanelchildcount is not implemented
