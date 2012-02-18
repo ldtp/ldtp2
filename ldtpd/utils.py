@@ -235,7 +235,12 @@ class Utils:
         as the children have changed
         """
         if self._ldtp_debug:
-            print event, event.type, event.source, event.source.parent
+            try:
+                print event, event.type, event.source, event.source.parent
+            except:
+                # With at-spi2, sometimes noticed exception
+                # ignore exception, as we just use them for debugging
+                pass
         if not self.cached_apps:
             # If not initialized as list, don't process further
             return
@@ -258,7 +263,12 @@ class Utils:
 
     def _on_window_event(self, event):
         if self._ldtp_debug:
-            print event, event.type, event.source, event.source.parent
+            try:
+                print event, event.type, event.source, event.source.parent
+            except:
+                # With at-spi2, sometimes noticed exception
+                # ignore exception, as we just use them for debugging
+                pass
         # Proceed only for window destry and deactivate event
         if event and (event.type == "window:destroy" or \
                           event.type == "window:deactivate") and \
@@ -624,14 +634,24 @@ class Utils:
                     break
         except NotImplementedError:
             pass
-        
+        role = obj.getRole()
+        if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
+                role == pyatspi.ROLE_WINDOW or \
+                role == pyatspi.ROLE_FONT_CHOOSER or \
+                role == pyatspi.ROLE_FILE_CHOOSER or \
+                role == pyatspi.ROLE_ALERT or \
+                role == pyatspi.ROLE_COLOR_CHOOSER:
+            obj_index = '%s#%d' % (obj.getApplication().name,
+                                   obj.getIndexInParent())
+        else:
+            obj_index = '%s#%d' % (abbrev_role,
+                                   self.ldtpized_obj_index[abbrev_role])
         self.ldtpized_list[ldtpized_name] = {'key' : ldtpized_name,
                                              'parent' : parent,
                                              'class' : obj.getRoleName().replace(' ', '_'),
                                              'child_index' : child_index,
                                              'children' : '',
-                                             'obj_index' : '%s#%d' % (abbrev_role,
-                                                                      self.ldtpized_obj_index[abbrev_role]),
+                                             'obj_index' : obj_index,
                                              'label' : obj.name,
                                              'label_by' : label_by,
                                              'description' : obj.description,
@@ -803,12 +823,27 @@ class Utils:
                 return gui, name
 
             # Search with LDTP appmap format
+            if window_name.find('#') != -1:
+                obj_index = '%s#%d' % (gui.getApplication().name,
+                                       gui.getIndexInParent())
+                if self._ldtp_debug:
+                    print 'Window name has #', window_name, obj_index
+                if window_name == obj_index:
+                    if self._ldtp_debug:
+                        print 'Window found', gui, name
+                    return gui, name
             if window_name == name:
+                if self._ldtp_debug:
+                    print 'Window found', gui, name
                 return gui, name
             if self._glob_match(window_name, name):
+                if self._ldtp_debug:
+                    print 'Window found', gui, name
                 return gui, name
             if self._glob_match(re.sub(' ', '', window_name),
                                 re.sub(' ', '', name)):
+                if self._ldtp_debug:
+                    print 'Window found', gui, name
                 return gui, name
         return None, None
 
