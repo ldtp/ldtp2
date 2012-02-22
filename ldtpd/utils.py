@@ -474,14 +474,6 @@ class Utils:
         except UnicodeDecodeError:
            _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
                                      _ldtpize_accessible_name[1].decode('utf-8'))
-        try:
-            if self._glob_match(name, _object_name):
-                # If given name equal LDTPized name format
-                return 1
-        except:
-            # Noticed invalid regular expression, if XChat was running
-            if self._ldtp_debug:
-                print traceback.format_exc()
         if self._glob_match(name, acc.name):
             # If given name match object name with regexp
             return 1
