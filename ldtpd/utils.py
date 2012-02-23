@@ -372,7 +372,7 @@ class Utils:
         try:
             # Get accessible relation set
             rel_set = acc.getRelationSet()
-        except LookupError:
+        except:
             rel_set = None
         if rel_set:
             for i, rel in enumerate(rel_set):
@@ -395,7 +395,11 @@ class Utils:
                         if self._ldtp_debug:
                             print traceback.format_exc()
                         continue
-        role = acc.getRole()
+        try:
+            role = acc.getRole()
+        except:
+            # with at-spi2 noticed gi._glib.GError exception
+            role = None
         if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
                 role == pyatspi.ROLE_WINDOW or \
                 role == pyatspi.ROLE_FONT_CHOOSER or \
@@ -416,7 +420,7 @@ class Utils:
         # also return labely_by string
         try:
             label = re.sub(strip, '', (label_acc or acc).name)
-        except LookupError:
+        except:
             label = ''
         return abbreviated_roles.get(role, 'ukn'), \
             label, \
@@ -480,7 +484,12 @@ class Utils:
         if self._glob_match(name, _object_name):
             # If given name match LDTPized name format with regexp
             return 1
-        role = acc.getRole()
+        try:
+            role = acc.getRole()
+        except:
+            # In at-spi2 acc doesn't exist
+            # which raises exception gi._glib.GError
+            return 0
         if role == pyatspi.ROLE_FRAME or role == pyatspi.ROLE_DIALOG or \
                 role == pyatspi.ROLE_WINDOW or \
                 role == pyatspi.ROLE_FONT_CHOOSER or \
