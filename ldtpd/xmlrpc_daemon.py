@@ -108,7 +108,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                 self._cbRender(f, request)
             else:
                 if _ldtp_debug:
-                    print '%s(%s)' % \
+                    print u'%s(%s)' % \
                         (functionPath,
                          ', '.join(map(repr, args) + \
                                        ['%s=%s' % (k, repr(v)) \
