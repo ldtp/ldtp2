@@ -84,6 +84,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             pyatspi.Registry.deregisterEventListener(self._registered_event_cb,
                                                      *self._registered_events)
           except AttributeError:
+            # Handle exception during cleanup
             pass
         for key in self._process_stats.keys():
             # Stop all process monitoring instances
