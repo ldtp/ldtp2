@@ -79,9 +79,12 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def __del__(self):
         if '_events' in dir(self):
             # De-register all registered events
+          try:
             pyatspi.Registry.deregisterEventListener(self._event_cb, *self._events)
             pyatspi.Registry.deregisterEventListener(self._registered_event_cb,
                                                      *self._registered_events)
+          except AttributeError:
+            pass
         for key in self._process_stats.keys():
             # Stop all process monitoring instances
             self._process_stats[key].stop()
