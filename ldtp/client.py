@@ -37,8 +37,10 @@ if sys.version_info[:2] <= (2, 5):
     _python25 = True
 _ldtp_windows_env = False
 if 'LDTP_DEBUG' in os.environ:
+    verbose = 1
     _ldtp_debug = os.environ['LDTP_DEBUG']
 else:
+    verbose = 0
     _ldtp_debug = None
 if 'LDTP_SERVER_ADDR' in os.environ:
     _ldtp_server_addr = os.environ['LDTP_SERVER_ADDR']
@@ -213,4 +215,5 @@ class LdtpClient(xmlrpclib.ServerProxy):
     def setHost(self, host):
         setattr(self, '_ServerProxy__host', host)
 
-_client = LdtpClient('http://%s:%s' % (_ldtp_server_addr, _ldtp_server_port))
+_client = LdtpClient('http://%s:%s' % (_ldtp_server_addr, _ldtp_server_port),
+                     verbose = verbose)
