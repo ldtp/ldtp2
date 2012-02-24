@@ -65,24 +65,32 @@ class Waiter(Utils):
         if self.success or self.timeout == 0:
             return self.success
 
-        gobject.timeout_add_seconds(self.timeout_seconds, self._timeout_cb)
-        if self.events:
+        try:
+          gobject.timeout_add_seconds(self.timeout_seconds, self._timeout_cb)
+          if self.events:
             pyatspi.Registry.registerEventListener(
-                self._event_cb, *self.events)
-        if _main_loop:
+              self._event_cb, *self.events)
+          if _main_loop:
             _main_loop.run()
-        else:
+          else:
             gtk.main()
-        if self.events:
+          if self.events:
             pyatspi.Registry.deregisterEventListener(
-                self._event_cb, *self.events)
+              self._event_cb, *self.events)
+        except:
+          if self._ldtp_debug:
+            print traceback.format_exc()
         return self.success
 
     def _timeout_cb(self):
         if self.success: # dispose of previous waiters.
             return False
         self._timeout_count += 1
-        self.poll()
+        try:
+          self.poll()
+        except:
+          if self._ldtp_debug:
+            print traceback.format_exc()
         if self._timeout_count * self.timeout_seconds > self.timeout or \
                self.success:
             try:
@@ -102,18 +110,22 @@ class Waiter(Utils):
         pass
 
     def _event_cb(self, event):
+      try:
         self.event_cb(event)
-        if self.success:
-            try:
-                if _main_loop:
-                    _main_loop.quit()
-                else:
-                    if gtk.main_level():
-                        gtk.main_quit()
-            except RuntimeError:
-                # In Mandriva RuntimeError exception is thrown
-                # If, gtk.main was already quit
-                pass
+      except:
+        if self._ldtp_debug:
+          print traceback.format_exc()
+      if self.success:
+        try:
+          if _main_loop:
+            _main_loop.quit()
+          else:
+            if gtk.main_level():
+              gtk.main_quit()
+        except RuntimeError:
+          # In Mandriva RuntimeError exception is thrown
+          # If, gtk.main was already quit
+          pass
 
     def event_cb(self, event):
         pass
