@@ -54,8 +54,13 @@ class Waiter(Utils):
         self.timer = None
         self.timeout = timeout
         self.timeout_seconds = 1
-        # Required for wnck functions
+        # Required for wnck functions in gtk3 and
+        # for all APIs required if gtk < 3
         self.useMainLoop = useMainLoop
+        if not gtk3:
+          # Running with thread timer hangs
+          # accessibility stack
+          self.useMainLoop = True
 
     def run(self):
         self.success = False
@@ -91,14 +96,14 @@ class Waiter(Utils):
                                        self.timeout,
                                        self._timeout_thread_cb)
             self.timer.Start()
+            while not self.timer.IsStop():
+              time.sleep(0.1)
           if self.events:
             pyatspi.Registry.deregisterEventListener(
               self._event_cb, *self.events)
         except:
           if self._ldtp_debug:
             print traceback.format_exc()
-        while not self.timer.IsStop():
-          time.sleep(0.1)
         return self.success
 
     def _timeout_thread_cb(self, params):
