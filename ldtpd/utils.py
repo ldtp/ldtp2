@@ -269,50 +269,54 @@ class Utils:
                 # With at-spi2, sometimes noticed exception
                 # ignore exception, as we just use them for debugging
                 pass
-        # Proceed only for window destry and deactivate event
-        if event and (event.type == "window:destroy" or \
-                          event.type == "window:deactivate") and \
-                          event.source:
-            abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
-                event.source)
-            # LDTPized name
-            win_name = u'%s%s' % (abbrev_role, abbrev_name)
-            # Window title is empty
-            if abbrev_name == '':
-                for win_name in self._appmap.keys():
-                    # When window doesn't have a title, destroy all the
-                    # window info from appmap, which doesn't haven't title
-                    if re.search('%s\d*$' % abbrev_role, win_name, re.M | re.U):
-                        del self._appmap[win_name]
-            else:
-                for name in self._appmap.keys():
-                    # When multiple window have same title, destroy all the
-                    # window info from appmap, which have same title
-                    if re.search('%s%s\d*$' % (abbrev_role, abbrev_name),
-                                 win_name, re.M | re.U) or \
-                                 re.search('%s%s*$' % (abbrev_role, abbrev_name),
-                                           win_name, re.M | re.U):
-                        del self._appmap[name]
-            return
-        cache = True
-        if not self.cached_apps:
-            # If not initialized as list, don't process further
-            return
-        for app in self.cached_apps:
-            if event.host_application == app[0]:
-                # Application already in cached list
-                cache = False
-                # Force remap for this application, as some object is
-                # either added / removed / changed
-                index = self.cached_apps.index(app)
-                self.cached_apps[index][1] = True
-                break
-        if cache:
-            # If app doesn't exist in cached apps, then add it
-            # adding app and True flag as list - This flag indicates that the
-            # object in application either got added / removed
-            # so remap should be forced
-            self.cached_apps.append([event.host_application, True])
+        try:
+            # Proceed only for window destry and deactivate event
+            if event and (event.type == "window:destroy" or \
+                              event.type == "window:deactivate") and \
+                              event.source:
+                abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
+                    event.source)
+                # LDTPized name
+                win_name = u'%s%s' % (abbrev_role, abbrev_name)
+                # Window title is empty
+                if abbrev_name == '':
+                    for win_name in self._appmap.keys():
+                        # When window doesn't have a title, destroy all the
+                        # window info from appmap, which doesn't haven't title
+                        if re.search('%s\d*$' % abbrev_role, win_name, re.M | re.U):
+                            del self._appmap[win_name]
+                else:
+                    for name in self._appmap.keys():
+                        # When multiple window have same title, destroy all the
+                        # window info from appmap, which have same title
+                        if re.search('%s%s\d*$' % (abbrev_role, abbrev_name),
+                                     win_name, re.M | re.U) or \
+                                     re.search('%s%s*$' % (abbrev_role, abbrev_name),
+                                               win_name, re.M | re.U):
+                                     del self._appmap[name]
+                return
+            cache = True
+            if not self.cached_apps:
+                # If not initialized as list, don't process further
+                return
+            for app in self.cached_apps:
+                if event.host_application == app[0]:
+                    # Application already in cached list
+                    cache = False
+                    # Force remap for this application, as some object is
+                    # either added / removed / changed
+                    index = self.cached_apps.index(app)
+                    self.cached_apps[index][1] = True
+                    break
+            if cache:
+                # If app doesn't exist in cached apps, then add it
+                # adding app and True flag as list - This flag indicates that the
+                # object in application either got added / removed
+                # so remap should be forced
+                self.cached_apps.append([event.host_application, True])
+        except:
+            if self._ldtp_debug:
+                print traceback.format_exc()
 
     def _atspi2_workaround(self):
         if not hasattr(pyatspi, 'Accessible'):
@@ -413,8 +417,11 @@ class Utils:
             # all other object types
             strip = '( |:|\.|_|\n)'
         if label_acc:
-            # Priority to associated label
-            label_by = label_acc.name
+            try:
+                # Priority to associated label
+                label_by = label_acc.name
+            except:
+                label_by = ''
         # Return the role type (if, not in the know list of roles,
         # return ukn - unknown), strip the above characters from name
         # also return labely_by string
@@ -451,22 +458,26 @@ class Utils:
         """
         if not acc or not name:
             return 0
-        if classType:
-            # Accessibility role type returns space, when multiple
-            # words exist in object type. ex: 'push button'
-            # User might mistype with multiple space, to avoid
-            # any confusion, using _. So, user will be inputing
-            # push_button
-            roleName = acc.getRoleName().replace(' ', '_')
-        else:
-            roleName = None
-        if roleName != classType:
-            # If type doesn't match, don't proceed further
+        try:
+            if classType:
+                # Accessibility role type returns space, when multiple
+                # words exist in object type. ex: 'push button'
+                # User might mistype with multiple space, to avoid
+                # any confusion, using _. So, user will be inputing
+                # push_button
+                roleName = acc.getRoleName().replace(' ', '_')
+            else:
+                roleName = None
+            if roleName != classType:
+                # If type doesn't match, don't proceed further
+                return 0
+            if acc.name and re.match(fnmatch.translate(name), acc.name, re.M | re.U):
+                # Since, type already matched and now the given name
+                # and accessibile name matched, mission accomplished
+                return 1
+        except:
+            # In at-spi2 gi._glib.GError exception is thrown
             return 0
-        if acc.name and re.match(fnmatch.translate(name), acc.name, re.M | re.U):
-            # Since, type already matched and now the given name
-            # and accessibile name matched, mission accomplished
-            return 1
         # Get LDTP format accessibile name
         _ldtpize_accessible_name = self._ldtpize_accessible(acc)
         # Concat object type and object name

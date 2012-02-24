@@ -337,9 +337,13 @@ class GuiExistsWaiter(Waiter):
         self.success = bool(gui)
 
     def event_cb(self, event):
+      try:
         if self._match_name_to_acc(self._frame_name, event.source):
             self.top_level = event.source
             self.success = True
+      except:
+        if self._ldtp_debug:
+          print traceback.format_exc()
 
 class GuiNotExistsWaiter(Waiter):
     events = ["window:destroy"]
@@ -353,8 +357,12 @@ class GuiNotExistsWaiter(Waiter):
         self.success = not bool(gui)
 
     def event_cb(self, event):
+      try:
         if self._match_name_to_acc(self._frame_name, event.source):
             self.success = True
+      except:
+        if self._ldtp_debug:
+          print traceback.format_exc()
 
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
@@ -381,7 +389,8 @@ class ObjectExistsWaiter(GuiExistsWaiter):
             else:
                 self.success = True
         except:
-            pass
+            if self._ldtp_debug:
+              print traceback.format_exc()
 
     def event_cb(self, event):
         GuiExistsWaiter.event_cb(self, event)

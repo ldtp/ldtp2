@@ -91,11 +91,15 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             self._process_stats[key].stop()
 
     def _registered_event_cb(self, event):
+      try:
         if event and event.source and event.type:
             abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                 event.source)
             window_name = u'%s%s' % (abbrev_role, abbrev_name)
             self._callback_event.append(u"%s-%s" % (event.type, window_name))
+      except:
+        if self._ldtp_debug:
+          print traceback.format_exc()
 
     def _registered_kb_event_cb(self, event):
         if not event:
@@ -114,6 +118,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                                                             event.modifiers))
 
     def _event_cb(self, event):
+      try:
         if event and event.type == "window:create" and event.source:
             for window in self._callback:
                 if window and self._match_name_to_acc(window, event.source):
@@ -130,6 +135,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             if win_name in self._window_uptime:
                 self._window_uptime[win_name].append( \
                     time.strftime("%Y %m %d %H %M %S"))
+      except:
+        if self._ldtp_debug:
+          print traceback.format_exc()
 
     def getapplist(self):
         """
