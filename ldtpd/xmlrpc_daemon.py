@@ -89,6 +89,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         request.setHeader("content-type", "text/xml")
         try:
             args, functionPath = xmlrpclib.loads(request.content.read())
+            self.args = args
             if args and isinstance(args[-1], dict):
                 # Passing args and kwargs to _ldtp_callback
                 # fail, so using self, kind of work around !
@@ -108,7 +109,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                         except ValueError:
                             time.sleep(0.5)
             else:
-                kwargs = {}
+                self.kwargs = {}
         except Exception, e:
             f = xmlrpc.Fault(
                 self.FAILURE, "Can't deserialize input: %s" % (e,))
