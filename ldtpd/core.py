@@ -191,9 +191,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def handletablecell(self):
         self._handle_table_cell = True
+        return 1
 
     def unhandletablecell(self):
         self._handle_table_cell = False
+        return 1
 
     def delaycmdexec(self, delay = None):
         """
@@ -752,7 +754,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 ObjectExistsWaiter(window_name, object_name, guiTimeOut, state)
             return int(waiter.run())
         except:
-            pass
+          if self._ldtp_debug:
+            print traceback.format_exc()
         return 0
 
     def grabfocus(self, window_name, object_name):
