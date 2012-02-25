@@ -307,6 +307,8 @@ class Utils:
                     # either added / removed / changed
                     index = self.cached_apps.index(app)
                     self.cached_apps[index][1] = True
+                    if hasattr(app, 'setCacheMask'):
+                        app.setCacheMask(pyatspi.cache.ALL)
                     break
             if cache:
                 # If app doesn't exist in cached apps, then add it
@@ -331,6 +333,8 @@ class Utils:
                 if app == tmpapp[0]:
                     flag = True
                     break
+            if hasattr(app, 'setCacheMask'):
+                app.setCacheMask(pyatspi.cache.ALL)
             # App already in list, don't add again
             if flag: continue
             self.cached_apps.append([app, True])
@@ -859,7 +863,7 @@ class Utils:
                 return gui, name
         return None, None
 
-    def _get_object(self, window_name, obj_name):
+    def _get_object(self, window_name, obj_name, retry = True):
         _window_handle, _window_name = \
             self._get_window_handle(window_name)
         if not _window_handle:
@@ -867,7 +871,7 @@ class Utils:
                                           window_name)
         appmap = self._appmap_pairs(_window_handle, _window_name)
         obj = self._get_object_in_window(appmap, obj_name)
-        if not obj:
+        if not obj and retry:
             appmap = self._appmap_pairs(_window_handle, _window_name,
                                         force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
@@ -935,7 +939,7 @@ class Utils:
                         return None
             return obj
         _current_obj = _internal_get_object(window_name, obj_name, obj)
-        if not _current_obj:
+        if not _current_obj and retry:
             # retry once, before giving up
             appmap = self._appmap_pairs(_window_handle, _window_name,
                                         force_remap = True)
