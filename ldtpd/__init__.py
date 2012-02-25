@@ -51,6 +51,14 @@ def main(port=4118, parentpid=None):
        # works with gtk2, which fails with gtk3
        from twisted.internet import glib2reactor
        glib2reactor.install()
+    elif gtkVersion >= '3.0':
+        try:
+            # Exist in Ubuntu 12.04, but not on
+            # Ubuntu 11.10 / Fedora 16
+            from twisted.internet import gtk3reactor
+            gtk3reactor.install()
+        except:
+            pass
     from twisted.internet import reactor
     from twisted.web import server, xmlrpc
     from xmlrpc_daemon import XMLRPCLdtpd
