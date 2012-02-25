@@ -422,7 +422,8 @@ class GuiNotExistsWaiter(Waiter):
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
       GuiExistsWaiter.__init__(self, frame_name, timeout)
-      self.timeout_seconds = 2
+      if not self._atspi2_ver:
+        self.timeout_seconds = 2
       self._obj_name = obj_name
       self._state = state
       self.flag = False
@@ -460,7 +461,8 @@ class ObjectExistsWaiter(GuiExistsWaiter):
 class ObjectNotExistsWaiter(GuiNotExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout):
         GuiNotExistsWaiter.__init__(self, frame_name, timeout)
-        self.timeout_seconds = 2
+        if not self._atspi2_ver:
+          self.timeout_seconds = 2
         self._obj_name = obj_name
 
     def poll(self):
