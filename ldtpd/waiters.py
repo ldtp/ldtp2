@@ -67,9 +67,9 @@ class Waiter(Utils):
         self._timeout_count = 1
 
         try:
-            self.poll()
+          self.poll()
         except:
-            pass
+          pass
 
         if self.success or self.timeout == 0:
           # Return the current state on success
@@ -421,35 +421,35 @@ class GuiNotExistsWaiter(Waiter):
 
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
-        GuiExistsWaiter.__init__(self, frame_name, timeout)
-        self.timeout_seconds = 2
-        self._obj_name = obj_name
-        self._state = state
+      GuiExistsWaiter.__init__(self, frame_name, timeout)
+      self.timeout_seconds = 2
+      self._obj_name = obj_name
+      self._state = state
 
     def poll(self):
         try:
-            if re.search(';', self._obj_name):
-                obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
-            else:
-                obj = self._get_object(self._frame_name, self._obj_name)
-            if self._state:
-                _state_inst = obj.getState()
-                _obj_state = _state_inst.getStates()
-                state = 'STATE_%s' % self._state.upper()
-                if (state in self._states and \
-                    self._states[state] in _obj_state) or \
-                       (state in self._states_old and \
-                        self._states_old[state] in _obj_state):
-                    self.success = True
-            else:
-                self.success = True
+          if re.search(';', self._obj_name):
+            obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
+          else:
+            obj = self._get_object(self._frame_name, self._obj_name, False)
+          if self._state:
+            _state_inst = obj.getState()
+            _obj_state = _state_inst.getStates()
+            state = 'STATE_%s' % self._state.upper()
+            if (state in self._states and \
+                  self._states[state] in _obj_state) or \
+                  (state in self._states_old and \
+                     self._states_old[state] in _obj_state):
+              self.success = True
+          else:
+            self.success = True
         except:
             if self._ldtp_debug:
               print traceback.format_exc()
 
     def event_cb(self, event):
-        GuiExistsWaiter.event_cb(self, event)
-        self.success = False
+      GuiExistsWaiter.event_cb(self, event)
+      self.success = False
 
 class ObjectNotExistsWaiter(GuiNotExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout):
@@ -462,7 +462,7 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
             if re.search(';', self._obj_name):
                 self._get_menu_hierarchy(self._frame_name, self._obj_name)
             else:
-                self._get_object(self._frame_name, self._obj_name)
+                self._get_object(self._frame_name, self._obj_name, False)
             self.success = False
         except:
             self.success = True
