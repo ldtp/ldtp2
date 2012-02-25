@@ -89,6 +89,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
         request.setHeader("content-type", "text/xml")
         try:
             args, functionPath = xmlrpclib.loads(request.content.read())
+            self.args = self.kwargs = None
             self.args = args
             if args and isinstance(args[-1], dict):
                 # Passing args and kwargs to _ldtp_callback
