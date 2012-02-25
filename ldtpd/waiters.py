@@ -425,13 +425,19 @@ class ObjectExistsWaiter(GuiExistsWaiter):
       self.timeout_seconds = 2
       self._obj_name = obj_name
       self._state = state
+      self.flag = False
 
     def poll(self):
         try:
           if re.search(';', self._obj_name):
             obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
           else:
-            obj = self._get_object(self._frame_name, self._obj_name, False)
+            obj = self._get_object(self._frame_name, self._obj_name, self.flag)
+            # at-spi2 work around, scanning the same object inside the window
+            # repeatedly, takes more time
+            # Retry window scanning alternate time
+            # Note: This will get effect only for at-spi2
+            self.flag = not self.flag
           if self._state:
             _state_inst = obj.getState()
             _obj_state = _state_inst.getStates()
@@ -462,7 +468,7 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
             if re.search(';', self._obj_name):
                 self._get_menu_hierarchy(self._frame_name, self._obj_name)
             else:
-                self._get_object(self._frame_name, self._obj_name, False)
+                self._get_object(self._frame_name, self._obj_name, True)
             self.success = False
         except:
             self.success = True

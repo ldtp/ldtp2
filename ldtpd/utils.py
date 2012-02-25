@@ -186,6 +186,8 @@ class Utils:
         self._custom_logger = _custom_logger
         self._desktop = pyatspi.Registry.getDesktop(0)
         self._ldtp_debug = os.environ.get('LDTP_DEBUG', None)
+        # Initialize atspi2 version to False
+        self._atspi2_ver = False
         if Utils.cached_apps is None:
             pyatspi.Registry.registerEventListener(
                 self._on_window_event, 'window')
@@ -325,6 +327,7 @@ class Utils:
             # This exist only in pyatspi2
             # Don't do the work around
             return
+        self._atspi2_ver = True
         for app in self._desktop:
             # Work around for at-spi2
             if not app: continue
@@ -691,14 +694,18 @@ class Utils:
                     break
                 self._populate_appmap(child, parent, index)
 
-    def _appmap_pairs(self, gui, window_name, force_remap = False):
+    def _appmap_pairs(self, gui, window_name, force_remap = False, retry = True):
         self.ldtpized_list = {}
         self.ldtpized_obj_index = {}
         if not force_remap:
             self._atspi2_workaround()
+            if not self._atspi2_ver:
+                # No issue in retrying with at-spi1
+                # So, always set to True
+                retry = True
             for app in self.cached_apps:
                 try:
-                    if app[0] and gui and app[0] == gui.parent and \
+                    if retry and app[0] and gui and app[0] == gui.parent and \
                             app[1] == True:
                         # Means force_remap
                         force_remap = True
@@ -869,7 +876,10 @@ class Utils:
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        appmap = self._appmap_pairs(_window_handle, _window_name)
+        # retry is at-spi2 work around, as scanning same window
+        # multiple times exponentially increase the time
+        # searching the object
+        appmap = self._appmap_pairs(_window_handle, _window_name, retry = retry)
         obj = self._get_object_in_window(appmap, obj_name)
         if not obj and retry:
             appmap = self._appmap_pairs(_window_handle, _window_name,
