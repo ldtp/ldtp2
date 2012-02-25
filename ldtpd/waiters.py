@@ -72,7 +72,9 @@ class Waiter(Utils):
             pass
 
         if self.success or self.timeout == 0:
-            return self.success
+          # Return the current state on success
+          # or timeout is 0
+          return self.success
 
         try:
           if self.useMainLoop:
@@ -97,7 +99,7 @@ class Waiter(Utils):
                                        self._timeout_thread_cb)
             self.timer.Start()
             while not self.timer.IsStop():
-              time.sleep(0.1)
+              time.sleep(0.5)
           if self.events:
             pyatspi.Registry.deregisterEventListener(
               self._event_cb, *self.events)
