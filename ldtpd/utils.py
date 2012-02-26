@@ -197,10 +197,12 @@ class Utils:
                 self._on_window_event, 'window:destroy')
             # Notify on any changes in all windows, based on this info,
             # its decided, whether force_remap is required or not
-            pyatspi.Registry.registerEventListener(self._obj_changed, 
-                                                   'object:children-changed')
-            pyatspi.Registry.registerEventListener(
-                self._obj_changed, 'object:property-change:accessible-name')
+            # Commenting the following lines of code
+            # as it sucks the execution time in at-spi2
+            #pyatspi.Registry.registerEventListener(self._obj_changed, 
+            #                                       'object:children-changed')
+            #pyatspi.Registry.registerEventListener(
+            #    self._obj_changed, 'object:property-change:accessible-name')
 
             Utils.cached_apps = list()
             if lazy_load:
@@ -694,18 +696,14 @@ class Utils:
                     break
                 self._populate_appmap(child, parent, index)
 
-    def _appmap_pairs(self, gui, window_name, force_remap = False, retry = True):
+    def _appmap_pairs(self, gui, window_name, force_remap = False):
         self.ldtpized_list = {}
         self.ldtpized_obj_index = {}
         if not force_remap:
             self._atspi2_workaround()
-            if not self._atspi2_ver:
-                # No issue in retrying with at-spi1
-                # So, always set to True
-                retry = True
             for app in self.cached_apps:
                 try:
-                    if retry and app[0] and gui and app[0] == gui.parent and \
+                    if app[0] and gui and app[0] == gui.parent and \
                             app[1] == True:
                         # Means force_remap
                         force_remap = True
@@ -870,18 +868,15 @@ class Utils:
                 return gui, name
         return None, None
 
-    def _get_object(self, window_name, obj_name, retry = True):
+    def _get_object(self, window_name, obj_name):
         _window_handle, _window_name = \
             self._get_window_handle(window_name)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
-        # retry is at-spi2 work around, as scanning same window
-        # multiple times exponentially increase the time
-        # searching the object
-        appmap = self._appmap_pairs(_window_handle, _window_name, retry = retry)
+        appmap = self._appmap_pairs(_window_handle, _window_name)
         obj = self._get_object_in_window(appmap, obj_name)
-        if not obj and retry:
+        if not obj:
             appmap = self._appmap_pairs(_window_handle, _window_name,
                                         force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
@@ -949,7 +944,7 @@ class Utils:
                         return None
             return obj
         _current_obj = _internal_get_object(window_name, obj_name, obj)
-        if not _current_obj and retry:
+        if not _current_obj:
             # retry once, before giving up
             appmap = self._appmap_pairs(_window_handle, _window_name,
                                         force_remap = True)
