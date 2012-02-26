@@ -34,7 +34,6 @@ except:
   import wnck
   import gobject
   gtk3 = False
-import ttimer
 import fnmatch
 import pyatspi
 import traceback
@@ -49,18 +48,11 @@ if not gtk3:
 
 class Waiter(Utils):
     events = []
-    def __init__(self, timeout, useMainLoop = False):
+    def __init__(self, timeout):
         Utils.__init__(self)
         self.timer = None
         self.timeout = timeout
         self.timeout_seconds = 1
-        # Required for wnck functions in gtk3 and
-        # for all APIs required if gtk < 3
-        self.useMainLoop = useMainLoop
-        if not gtk3:
-          # Running with thread timer hangs
-          # accessibility stack
-          self.useMainLoop = True
 
     def run(self):
         self.success = False
@@ -77,29 +69,15 @@ class Waiter(Utils):
           return self.success
 
         try:
-          if self.useMainLoop:
-            gobject.timeout_add_seconds(self.timeout_seconds,
-                                        self._timeout_cb)
+          gobject.timeout_add_seconds(self.timeout_seconds,
+                                      self._timeout_cb)
           if self.events:
             pyatspi.Registry.registerEventListener(
               self._event_cb, *self.events)
-          if self.useMainLoop:
-            # Required for wnck functions
-            if _main_loop:
-              _main_loop.run()
-            else:
-              gtk.main()
+          if _main_loop:
+            _main_loop.run()
           else:
-            # In Ubuntu 12.04, over a period of time
-            # waittillguiexist for non-existent window
-            # takes 4 minutes of time, work-around to
-            # that issue
-            self.timer = ttimer.ttimer(self.timeout_seconds,
-                                       self.timeout,
-                                       self._timeout_thread_cb)
-            self.timer.Start()
-            while not self.timer.IsStop():
-              time.sleep(0.5)
+            gtk.main()
           if self.events:
             pyatspi.Registry.deregisterEventListener(
               self._event_cb, *self.events)
@@ -125,20 +103,15 @@ class Waiter(Utils):
         if self._timeout_count * self.timeout_seconds > self.timeout or \
                self.success:
             try:
-              if self.useMainLoop:
-                # Required for wnck functions
-                if _main_loop:
-                  _main_loop.quit()
-                else:
-                  if gtk.main_level():
-                    gtk.main_quit()
-              elif self.timer:
-                  self.timer.Stop()
+              # Required for wnck functions
+              if _main_loop:
+                _main_loop.quit()
+              else:
+                if gtk.main_level():
+                  gtk.main_quit()
             except RuntimeError:
               # In Mandriva RuntimeError exception is thrown
               # If, gtk.main was already quit
-              pass
-            except KeyboardInterrupt:
               pass
             return False
         return True
@@ -154,20 +127,15 @@ class Waiter(Utils):
           print traceback.format_exc()
       if self.success:
         try:
-          if self.useMainLoop:
-            # Required for wnck functions
-            if _main_loop:
-              _main_loop.quit()
-            else:
-              if gtk.main_level():
-                gtk.main_quit()
-          elif self.timer:
-            self.timer.Stop()
+          # Required for wnck functions
+          if _main_loop:
+            _main_loop.quit()
+          else:
+            if gtk.main_level():
+              gtk.main_quit()
         except RuntimeError:
           # In Mandriva RuntimeError exception is thrown
           # If, gtk.main was already quit
-          pass
-        except KeyboardInterrupt:
           pass
 
     def event_cb(self, event):
@@ -184,7 +152,7 @@ class NullWaiter(Waiter):
 
 class MaximizeWindow(Waiter):
     def __init__(self, frame_name):
-      Waiter.__init__(self, 0, True)
+      Waiter.__init__(self, 0)
       self._frame_name = frame_name
 
     def poll(self):
@@ -217,7 +185,7 @@ class MaximizeWindow(Waiter):
 
 class MinimizeWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, 0, True)
+        Waiter.__init__(self, 0)
         self._frame_name = frame_name
 
     def poll(self):
@@ -250,7 +218,7 @@ class MinimizeWindow(Waiter):
 
 class UnmaximizeWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, 0, True)
+        Waiter.__init__(self, 0)
         self._frame_name = frame_name
 
     def poll(self):
@@ -283,7 +251,7 @@ class UnmaximizeWindow(Waiter):
 
 class UnminimizeWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, 0, True)
+        Waiter.__init__(self, 0)
         self._frame_name = frame_name
 
     def poll(self):
@@ -316,7 +284,7 @@ class UnminimizeWindow(Waiter):
 
 class ActivateWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, 0, True)
+        Waiter.__init__(self, 0)
         self._frame_name = frame_name
 
     def poll(self):
@@ -347,7 +315,7 @@ class ActivateWindow(Waiter):
 
 class CloseWindow(Waiter):
     def __init__(self, frame_name):
-        Waiter.__init__(self, 0, True)
+        Waiter.__init__(self, 0)
         self._frame_name = frame_name
 
     def poll(self):
@@ -422,23 +390,16 @@ class GuiNotExistsWaiter(Waiter):
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
       GuiExistsWaiter.__init__(self, frame_name, timeout)
-      if not self._atspi2_ver:
-        self.timeout_seconds = 2
+      self.timeout_seconds = 2
       self._obj_name = obj_name
       self._state = state
-      self.flag = False
 
     def poll(self):
         try:
           if re.search(';', self._obj_name):
             obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
           else:
-            obj = self._get_object(self._frame_name, self._obj_name, self.flag)
-            # at-spi2 work around, scanning the same object inside the window
-            # repeatedly, takes more time
-            # Retry window scanning alternate time
-            # Note: This will get effect only for at-spi2
-            self.flag = not self.flag
+            obj = self._get_object(self._frame_name, self._obj_name)
           if self._state:
             _state_inst = obj.getState()
             _obj_state = _state_inst.getStates()
@@ -461,8 +422,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
 class ObjectNotExistsWaiter(GuiNotExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout):
         GuiNotExistsWaiter.__init__(self, frame_name, timeout)
-        if not self._atspi2_ver:
-          self.timeout_seconds = 2
+        self.timeout_seconds = 2
         self._obj_name = obj_name
 
     def poll(self):
@@ -470,7 +430,7 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
             if re.search(';', self._obj_name):
                 self._get_menu_hierarchy(self._frame_name, self._obj_name)
             else:
-                self._get_object(self._frame_name, self._obj_name, True)
+                self._get_object(self._frame_name, self._obj_name)
             self.success = False
         except:
             self.success = True
