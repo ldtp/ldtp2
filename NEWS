@@ -1,4 +1,8 @@
-LDTP 2.3.0 released Download - Thursday Feb 161 2012
+LDTP 2.3.1 released Download - Saturday Feb 25 2012
+  Added twisted gtk3reactor
+  Operate on window name using index, will be helpful with i18n, l10n testing
+  at-spi2 related fixes to improve test execution time
+LDTP 2.3.0 released Download - Thursday Feb 16 2012
   Fixed twisted gtk2 import in gtk3 environment
   Updated keycodes based on latest Linux distribution
   Added Windows client version of LDTP
