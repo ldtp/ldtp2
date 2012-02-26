@@ -23,7 +23,6 @@ import os
 import re
 import time
 import core
-import thread
 from core import Ldtpd
 from twisted.web import xmlrpc
 import xmlrpclib
@@ -53,7 +52,6 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __init__(self):
         xmlrpc.XMLRPC.__init__(self, allowNone = True)
         Ldtpd.__init__(self)
-        self.args = self.kwargs = None
 
     def _listFunctions(self):
         return [a[7:] for a in \
@@ -75,27 +73,16 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
 
             return xmlrpclib.Fault(self.FAILURE, value)
 
-    def _ldtp_callback(self, request, function):
-        try:
-            xmlrpc.defer.maybeDeferred(function, *self.args, **self.kwargs).\
-                addErrback(self._ebRender).\
-                addCallback(self._cbRender, request)
-        except:
-            if ldtp_debug:
-                print traceback.format_exc()
-
     def render_POST(self, request):
         request.content.seek(0, 0)
         request.setHeader("content-type", "text/xml")
         try:
             args, functionPath = xmlrpclib.loads(request.content.read())
-            self.args = self.kwargs = None
-            self.args = args
             if args and isinstance(args[-1], dict):
                 # Passing args and kwargs to _ldtp_callback
                 # fail, so using self, kind of work around !
-                self.kwargs = args[-1]
-                self.args = args[:-1]
+                kwargs = args[-1]
+                args = args[:-1]
                 if delay or self._delaycmdexec:
                     pattern = '(wait|exist|has|get|verify|enabled|'
                     pattern += 'launch|image|system)'
@@ -111,7 +98,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                         except ValueError:
                             time.sleep(0.5)
             else:
-                self.kwargs = {}
+                kwargs = {}
         except Exception, e:
             f = xmlrpc.Fault(
                 self.FAILURE, "Can't deserialize input: %s" % (e,))
@@ -129,21 +116,14 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                 if _ldtp_debug:
                     debug_st = u'%s(%s)' % \
                         (functionPath,
-                         ', '.join(map(repr, self.args) + \
+                         ', '.join(map(repr, args) + \
                                        ['%s=%s' % (k, repr(v)) \
-                                            for k, v in self.kwargs.items()]))
+                                            for k, v in kwargs.items()]))
                     print debug_st
                     logger.debug(debug_st)
-                if core.gtk3:
-                    # In GTK3, with existing method, blocks
-                    # parallel request, so starting the current
-                    # client request in thread
-                    thread.start_new_thread(self._ldtp_callback,
-                                            (request, function))
-                else:
-                    xmlrpc.defer.maybeDeferred(function, *self.args,
-                                               **self.kwargs).\
-                                               addErrback(self._ebRender).\
-                                               addCallback(self._cbRender,
-                                                           request)
+                xmlrpc.defer.maybeDeferred(function, *args,
+                                           **kwargs).\
+                                           addErrback(self._ebRender).\
+                                           addCallback(self._cbRender,
+                                                       request)
         return xmlrpc.server.NOT_DONE_YET
