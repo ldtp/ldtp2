@@ -19,6 +19,7 @@ See "COPYING" in the source distribution for more information.
 Headers in this file shall remain intact.
 """
 
+wnckModule = False
 from utils import Utils
 import re
 import time
@@ -27,13 +28,18 @@ try:
   from gi.repository import Wnck as wnck
   from gi.repository import Gtk as gtk
   from gi.repository import GObject as gobject
-  gtk3 = True
+  wnckModule = gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck
-  import gtk
-  import wnck
-  import gobject
   gtk3 = False
+  import gtk
+  import gobject
+  try:
+    import wnck
+    wnckModule = True
+  except:
+    # Not all environments support wnck package
+    pass
 import fnmatch
 import pyatspi
 import traceback

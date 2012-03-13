@@ -20,6 +20,7 @@ See 'COPYING' in the source distribution for more information.
 Headers in this file shall remain intact.
 """
 
+wnckModule = False
 from pyatspi import findDescendant, Registry
 import locale
 import subprocess
@@ -27,11 +28,16 @@ try:
   # If we have gtk3+ gobject introspection, use that
   from gi.repository import Wnck as wnck
   from gi.repository import Gtk as gtk
-  gtk3 = True
+  wnckModule = gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck
   import gtk
-  import wnck
+  try:
+    import wnck
+    wnckModule = True
+  except:
+    # Not all environments support wnck package
+    pass
   gtk3 = False
 from utils import Utils, ProcessStats
 from constants import abbreviated_roles
@@ -533,6 +539,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window maximized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = MaximizeWindow(window_name)
 
         return int(waiter.run())
@@ -548,6 +556,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window minimized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = MinimizeWindow(window_name)
 
         return int(waiter.run())
@@ -563,6 +573,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window unmaximized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = UnmaximizeWindow(window_name)
 
         return int(waiter.run())
@@ -578,6 +590,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = UnminimizeWindow(window_name)
 
         return int(waiter.run())
@@ -593,6 +607,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = ActivateWindow(window_name)
 
         return int(waiter.run())
@@ -608,6 +624,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: 1 if window unminimized, 0 if not.
         @rtype: integer
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         waiter = CloseWindow(window_name)
 
         return int(waiter.run())
@@ -1300,6 +1318,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 matching name and type as list of string [objectname]
         @rtype: (string, list)
         """
+        if not wnckModule:
+          raise LdtpServerException('Install python wnck module')
         self.wait(wait_time)
         # Following lines from Accerciser, _inspectUnderMouse method
         # quick_select.py file
