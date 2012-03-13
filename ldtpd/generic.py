@@ -23,12 +23,11 @@ import gc
 import os
 try:
   # If we have gtk3+ gobject introspection, use that
-  from gi.repository import Wnck as wnck, Gtk as gtk, Gdk as gdk
+  from gi.repository import Gtk as gtk, Gdk as gdk
   gtk3 = True
 except:
-  # No gobject introspection, use gtk2 libwnck
+  # No gobject introspection, use gtk2
   import gtk
-  import wnck
   gtk3 = False
 import pyatspi 
 import tempfile
