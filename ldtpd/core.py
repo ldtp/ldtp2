@@ -860,7 +860,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._grab_focus(obj)
 
         if self._check_state(obj, pyatspi.STATE_CHECKED) == False:
-            self._click_object(obj)
+            self._click_object(obj, '(click|press|activate|check)')
 
         return 1
 
@@ -882,7 +882,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._grab_focus(obj)
 
         if self._check_state(obj, pyatspi.STATE_CHECKED):
-            self._click_object(obj)
+            self._click_object(obj, '(click|press|activate|uncheck)')
 
         return 1
     
