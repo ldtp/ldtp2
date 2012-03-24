@@ -976,7 +976,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
         @param index: Index in panel to be selected. 
-        @type object_name: integer
+        @type index: integer
 
         @return: 1 on success, exception on failure.
         @rtype: integer
@@ -992,6 +992,35 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
           raise LdtpServerException("Unable to get child at index")
         self._grab_focus(child)
         return 1
+
+    def selectpanelname(self, window_name, object_name, name):
+        """
+        Select panel based on name.
+        
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param name: name in panel to be selected. 
+        @type name: string
+
+        @return: 1 on success, exception on failure.
+        @rtype: integer
+        """
+        obj = self._get_object(window_name, object_name)
+
+        if obj.childCount <= 0:
+          raise LdtpServerException("Panel doesn't have any children")
+        for i in range(obj.childCount):
+          child = obj.getChildAtIndex(i)
+          if not child:
+            continue
+          if self._glob_match(name, child.name):
+            self._grab_focus(child)
+            return 1
+        raise LdtpServerException("Unable to select panel child based on name")
 
     def verifyuncheck(self, window_name, object_name):
         """
