@@ -28,6 +28,7 @@ try:
   # If we have gtk3+ gobject introspection, use that
   from gi.repository import Wnck as wnck
   from gi.repository import Gtk as gtk
+  from gi.repository import Gdk as gdk
   wnckModule = gtk3 = True
 except:
   # No gobject introspection, use gtk2 libwnck
