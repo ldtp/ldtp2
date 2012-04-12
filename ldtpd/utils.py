@@ -117,32 +117,11 @@ class ProcessStats(threading.Thread):
             # If len(i['process_name']) > 15, then the string is truncated by
             # statgrab module, so in re.search use i['process_name'] as search
             # criteria
-            if not re.search(str(i['process_name']), self._appname,
-                             re.U | re.L):
+            if not re.search(str(i['proctitle']), self._appname,
+                              re.U | re.L):
                 # If process name doesn't match, continue
                 continue
-            # If process name matches
-            # Get process title
-            # ex output (string):
-            # /usr/lib/gnome-panel/clock-applet --oaf-activate-iid= \
-            #        OAFIID:GNOME_ClockApplet_Factory --oaf-ior-fd=32
-            title = str(i['proctitle'])
-            # Split the title to get exact string
-            # ex output (list of string):
-            # ['/usr/lib/gnome-panel/clock-applet',
-            # '--oaf-activate-iid=OAFIID:GNOME_ClockApplet_Factory \
-            #        --oaf-ior-fd=32 ']
-            # Just split the first separater
-            proctitle = re.split(" ", title, 1) # Split by space
-            # ex output (list of string)
-            # ['', 'usr', 'lib', 'gnome-panel', 'clock-applet']
-             # Split by / and use the last string, which is process name
-            procname = re.split("/", proctitle[0])[-1]
-            if not re.match(self._appname, procname):
-                # If process name and application name doesn't match
-                # continue, don't add it to the list
-                continue
-            proc_list.append([i, procname])
+            proc_list.append([i, self._appname])
         return proc_list
 
     def run(self):
@@ -161,7 +140,10 @@ class ProcessStats(threading.Thread):
                            (procname, str(i['pid']),
                             str(round(i['cpu_percent'], 2))))
             # Wait for interval seconds before gathering stats again
-            time.sleep(self._interval)
+            try:
+                time.sleep(self._interval)
+            except KeyboardInterrupt:
+                self._stop = True
 
     def stop(self):
         self._stop = True
