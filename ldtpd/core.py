@@ -358,6 +358,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         _stat_inst = ProcessStats(process_name)
         _stat_list = []
         for i, procname in _stat_inst.get_cpu_memory_stat():
+            print i, procname
             # Resident memory will be in bytes, to convert it to MB
             # divide it by 1024*1024
             _stat_list.append(i['proc_resident'] / (1024*1024))

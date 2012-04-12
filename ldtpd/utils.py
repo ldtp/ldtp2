@@ -117,8 +117,13 @@ class ProcessStats(threading.Thread):
             # If len(i['process_name']) > 15, then the string is truncated by
             # statgrab module, so in re.search use i['process_name'] as search
             # criteria
-            if not re.search(str(i['proctitle']), self._appname,
-                              re.U | re.L):
+            proctitle = str(i['proctitle'])
+            if not proctitle:
+                # For some of the process proctitle is ''
+                # in that case let us use process_name
+                proctitle = str(i['process_name'])
+            if not re.search(self._appname, proctitle,
+                             re.U | re.L):
                 # If process name doesn't match, continue
                 continue
             proc_list.append([i, self._appname])
