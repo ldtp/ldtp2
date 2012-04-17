@@ -398,6 +398,14 @@ if _ldtp_windows_env:
         # On Linux just with window name, grab focus doesn't work
         # So, we can't make this call generic
         return _remote_grabfocus(window_name, object_name)
+    def copytext(window_name, object_name, start, end = -1):
+        return _remote_copytext(window_name, object_name, start, end)
+    def cuttext(window_name, object_name, start, end = -1):
+        return _remote_cuttext(window_name, object_name, start, end)
+    def deletetext(window_name, object_name, start, end = -1):
+        return _remote_deletetext(window_name, object_name, start, end)
+    def startprocessmonitor(process_name, interval = 2):
+        return _remote_startprocessmonitor(process_name, interval)
 ### WINDOWS
 
 def onwindowcreate(window_name, fn_name, *args):
