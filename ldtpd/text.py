@@ -108,7 +108,7 @@ class Text(Utils):
 
         return 1
 
-    def settextvalue(self, window_name, object_name, data=''):
+    def settextvalue(self, window_name, object_name, data):
         """
         Type string sequence.
         
@@ -254,7 +254,7 @@ class Text(Utils):
 
         return 1
 
-    def appendtext(self, window_name, object_name, data=''):
+    def appendtext(self, window_name, object_name, data¯):
         """
         Append string sequence.
         
