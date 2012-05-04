@@ -18,6 +18,7 @@ Headers in this file shall remain intact.
 """
 
 require "base64"
+require "rbconfig"
 require "tempfile"
 require "xmlrpc/client"
 
@@ -88,10 +89,28 @@ private
   end
 public
   @@child_pid = 0
+  if ENV['LDTP_SERVER_ADDR']
+    @@ldtp_server_addr = ENV['LDTP_SERVER_ADDR']
+  else
+    @@ldtp_server_addr = 'localhost'
+  end
+  if ENV['LDTP_SERVER_PORT']
+    @@ldtp_server_port = Integer(ENV['LDTP_SERVER_PORT'])
+  else
+    @@ldtp_server_port = 4118
+  end
+  @@is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+  if ENV['LDTP_WINDOWS']
+    @@ldtp_windows_env = true
+  elsif ENV['LDTP_LINUX']
+    @@ldtp_windows = false
+  elsif @@is_windows
+    @@ldtp_windows_env = true
+  end
   def initialize(window_name = "")
     @poll_events = {}
     @window_name = window_name
-    @server = XMLRPC::Client.new("localhost", "/RPC2", 4118)
+    @server = XMLRPC::Client.new(@@ldtp_server_addr, "/RPC2", @@ldtp_server_port)
     begin
       call_ldtp_noargs("isalive")
     rescue => detail
