@@ -154,7 +154,7 @@ class Mouse(Utils):
         """
         size = self._get_size(self._desktop)
         if (source_x < size.x or source_y < size.y or \
-                dest_x > size.width or dest_y > size.height) and \
+                dest_x > size.width or dest_y > size.height) or \
                 (source_x > size.width or source_y > size.height or \
                      dest_x < size.x or dest_y < size.y):
             return 0
