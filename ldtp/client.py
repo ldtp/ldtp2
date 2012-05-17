@@ -83,9 +83,9 @@ class Transport(xmlrpclib.Transport):
         pid = os.getpid()
         if _ldtp_windows_env:
             if _ldtp_debug:
-                cmd = 'start cmd /K WinLdtpdService.exe'
+                cmd = 'start cmd /K CobraWinLDTP.exe'
             else:
-                cmd = 'WinLdtpdService.exe'
+                cmd = 'CobraWinLDTP.exe'
             subprocess.Popen(cmd, shell = True)
             self._daemon = True
         else:
@@ -194,7 +194,7 @@ class Transport(xmlrpclib.Transport):
             if _ldtp_windows_env and self._daemon:
                 # If started by the current current, then terminate
                 # else, silently quit
-                subprocess.Popen('taskkill /F /IM WinLdtpdService.exe',
+                subprocess.Popen('taskkill /F /IM CobraWinLDTP.exe',
                                  shell = True, stdout = subprocess.PIPE,
                                  stderr = subprocess.PIPE).communicate()
             else:
