@@ -406,6 +406,8 @@ if _ldtp_windows_env:
         return _remote_deletetext(window_name, object_name, start, end)
     def startprocessmonitor(process_name, interval = 2):
         return _remote_startprocessmonitor(process_name, interval)
+    def gettextvalue(window_name, object_name, startPosition = 0, endPosition = 0):
+        return _remote_gettextvalue(window_name, object_name, startPosition, endPosition)
 ### WINDOWS
 
 def onwindowcreate(window_name, fn_name, *args):
