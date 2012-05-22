@@ -1,5 +1,5 @@
 /*
-LDTP v2 ruby client.
+LDTP v2 java client.
 
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009-12 Nagappan Alagappan
