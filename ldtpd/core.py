@@ -994,6 +994,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._grab_focus(child)
         return 1
 
+    selectpanelindex = selectpanel
+
     def selectpanelname(self, window_name, object_name, name):
         """
         Select panel based on name.
