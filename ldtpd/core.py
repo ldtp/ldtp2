@@ -194,6 +194,13 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         return window_list
 
     def isalive(self):
+        """
+        Client will use this to verify whether the server instance is alive or not.
+
+        @return: True on success.
+        @rtype: boolean
+        """
+
         return True
 
     def handletablecell(self):
