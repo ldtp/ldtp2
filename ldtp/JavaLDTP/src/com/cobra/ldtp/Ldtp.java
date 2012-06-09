@@ -71,9 +71,7 @@ public class Ldtp {
 	    }
 	}
 	config = new XmlRpcClientConfigImpl();
-	// FIXME: Use the custom URL
-	//String url = String.fromat("http://%s:%s/RPC2", serverAddr, serverPort);
-	String url = "http://localhost:4118/RPC2";
+	String url = String.format("http://%s:%s/RPC2", serverAddr, serverPort);
 	try {
 	    config.setServerURL(new URL(url));
 	} catch (java.net.MalformedURLException ex) {
