@@ -50,3 +50,24 @@ How do I contact LDTP team incase of any help ?
 If you are interested in contributing to LDTP ?
 
   - You are welcome to do that. Check TODO page and pitch in where ever you can contribute ;) - ping us in the mailing list
+
+For Java compilation:
+
+Download commons-codec-1.6.jar, ws-commons-util-1.0.2.jar, xmlrpc-client-3.1.3.jar, xmlrpc-common-3.1.3.jar and place it in JavaLDTP/lib/
+
+Download jar files from this location or any other apache mirror. Make sure you have the version mentioned in the jar or latest
+http://mirror.cc.columbia.edu/pub/software/apache/commons/codec/binaries/commons-codec-1.6-bin.zip
+http://www.apache.org/dyn/closer.cgi/ws/xmlrpc/
+
+In eclipse its compiled by default. FIXME: Write how to compile from command line
+
+# Note: The following steps created for Windows installer
+To create Ldtp.jar
+
+cd ldtp\JavaLDTP\bin
+jar cvf ..\..\Ldtp.jar * # Note: Tested this on Mac with a forward slash though, haven't created Jar on Windows
+
+To use LDTP Java library:
+
+Include Ldtp.jar file available under ldtp folder in your project
+
