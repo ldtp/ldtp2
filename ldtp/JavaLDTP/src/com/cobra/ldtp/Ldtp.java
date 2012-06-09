@@ -1,3 +1,4 @@
+package com.cobra.ldtp;
 /*
 LDTP v2 java client.
 
@@ -2505,9 +2506,8 @@ public class Ldtp {
 	    filename = f.getAbsolutePath();
 	    f.delete();
 	    data = getString("imagecapture", params);
-	    Base64 base64 = new Base64();
 	    FileOutputStream fp = new FileOutputStream(filename);
-	    fp.write(base64.decodeBase64(data));
+	    fp.write(Base64.decodeBase64(data));
 	    fp.close();
 	} catch (java.io.FileNotFoundException ex) {
 	    throw new LdtpExecutionError(ex.getMessage());
@@ -2517,9 +2517,9 @@ public class Ldtp {
 	return filename;
     }
     public static void main(String[] args) {
-	int i;
 
 	/*
+	int i;
 	Ldtp ldtp = new Ldtp("*-gedit");
 	String[] windowList = ldtp.getWindowList();
 	for(i = 0; i < windowList.length; i++)
