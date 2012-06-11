@@ -40,9 +40,9 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  */
 public class Ldtp {
     Process p = null;
-    String windowName;
-    String serverAddr;
-    String serverPort;
+    String windowName = null;
+    String serverAddr = null;
+    String serverPort = null;
     ProcessBuilder pb;
     Boolean windowsEnv = false;
     XmlRpcClient client = null;
@@ -51,42 +51,45 @@ public class Ldtp {
      * connectToServer (private), which connects to the running instance of LDTP server
      */
     private void connectToServer() {
-	serverAddr = System.getenv("LDTP_SERVER_ADDR");
-	if (serverAddr == null)
-	    serverAddr = "localhost";
-	serverPort = System.getenv("LDTP_SERVER_PORT");
-	if (serverPort == null)
-	    serverPort = "4118";
-	String tmpEnv = System.getenv("LDTP_WINDOWS");
-	if (tmpEnv != null)
-	    windowsEnv = true;
-	else {
-	    tmpEnv = System.getenv("LDTP_LINUX");
-	    if (tmpEnv != null)
-		windowsEnv = false;
-	    else {
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("win") >= 0)
-		    windowsEnv = true;
-	    }
-	}
-	config = new XmlRpcClientConfigImpl();
-	String url = String.format("http://%s:%s/RPC2", serverAddr, serverPort);
-	try {
-	    config.setServerURL(new URL(url));
-	} catch (java.net.MalformedURLException ex) {
-	    throw new LdtpExecutionError(ex.getMessage());
-	}
-	client = new XmlRpcClient();
-	client.setConfig(config);
-	Boolean alive = isAlive();
-	if (!alive) {
-	    launchLdtpProcess();
-	    // Verify we are able to connect after launching the server
-	    alive = isAlive();
-	    if (!alive)
-		throw new LdtpExecutionError("Unable to connect to server");
-	}
+    	if (serverAddr == null)
+    		serverAddr = System.getenv("LDTP_SERVER_ADDR");
+    	if (serverAddr == null)
+    		serverAddr = "localhost";
+    	if (serverPort == null)
+    		serverPort = System.getenv("LDTP_SERVER_PORT");
+    	if (serverPort == null)
+    		serverPort = "4118";
+    	String tmpEnv = System.getenv("LDTP_WINDOWS");
+    	if (tmpEnv != null)
+    		windowsEnv = true;
+    	else {
+    		tmpEnv = System.getenv("LDTP_LINUX");
+    		if (tmpEnv != null)
+    			windowsEnv = false;
+    		else {
+    			String os = System.getProperty("os.name").toLowerCase();
+    			if (os.indexOf("win") >= 0)
+    				windowsEnv = true;
+    		}
+    	}
+    	config = new XmlRpcClientConfigImpl();
+    	String url = String.format("http://%s:%s/RPC2", serverAddr, serverPort);
+    	try {
+    		config.setServerURL(new URL(url));
+    	} catch (java.net.MalformedURLException ex) {
+    		throw new LdtpExecutionError(ex.getMessage());
+    	}
+    	client = new XmlRpcClient();
+    	client.setConfig(config);
+    	Boolean alive = isAlive();
+    	if (!alive) {
+    		if (serverAddr.contains("localhost"))
+    			launchLdtpProcess();
+    		// Verify we are able to connect after launching the server
+    		alive = isAlive();
+    		if (!alive)
+    			throw new LdtpExecutionError("Unable to connect to server");
+    	}
     }
     /**
      * isAlive (private) Check the connection to LDTP server
@@ -148,11 +151,49 @@ public class Ldtp {
      * @param windowName Window to be manipulated
      */
     public Ldtp(String windowName) {
-	if (windowName == null || windowName == "") {
-	    throw new LdtpExecutionError("Window name missing");
-	}
-	this.windowName = windowName;
-	connectToServer();
+    	this(windowName, null);
+    }
+    /**
+     * Ldtp (constructor)
+     *
+     * @param windowName Window to be manipulated
+     * @param serverAddr Server address to connect to
+     */
+    public Ldtp(String windowName, String serverAddr) {
+    	this(windowName, serverAddr, null);
+    }
+    /**
+     * Ldtp (constructor)
+     *
+     * @param windowName Window to be manipulated
+     * @param serverAddr Server address to connect to
+     * @param serverPort Server port to connect to
+     */
+    public Ldtp(String windowName, String serverAddr, String serverPort) {
+    	this(windowName, serverAddr, serverPort, null);
+    }
+    /**
+     * Ldtp (constructor)
+     *
+     * @param windowName Window to be manipulated
+     * @param serverAddr Server address to connect to
+     * @param serverPort Server port to connect to
+     * @param windowsEnv Running the test in windows environment ("true" or "false" string value)
+     */
+    public Ldtp(String windowName, String serverAddr, String serverPort, String windowsEnv) {
+    	if (windowName == null || windowName == "") {
+    		throw new LdtpExecutionError("Window name missing");
+    	}
+    	this.serverAddr = serverAddr;
+    	this.serverPort = serverPort;
+    	this.windowName = windowName;
+    	if (windowsEnv != null) {
+    		if (windowsEnv.contains("true"))
+    			this.windowsEnv = true;
+    		else
+    			this.windowsEnv = false;
+    	}
+    	connectToServer();
     }
     /**
      * setWindowName Change window name
