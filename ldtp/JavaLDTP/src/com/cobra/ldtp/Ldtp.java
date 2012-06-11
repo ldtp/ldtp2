@@ -146,7 +146,7 @@ public class Ldtp {
 	}
     }
     /**
-     * Ldtp (constructor)
+     * Ldtp
      *
      * @param windowName Window to be manipulated
      */
@@ -154,7 +154,7 @@ public class Ldtp {
     	this(windowName, null);
     }
     /**
-     * Ldtp (constructor)
+     * Ldtp
      *
      * @param windowName Window to be manipulated
      * @param serverAddr Server address to connect to
@@ -163,7 +163,7 @@ public class Ldtp {
     	this(windowName, serverAddr, null);
     }
     /**
-     * Ldtp (constructor)
+     * Ldtp
      *
      * @param windowName Window to be manipulated
      * @param serverAddr Server address to connect to
@@ -173,7 +173,7 @@ public class Ldtp {
     	this(windowName, serverAddr, serverPort, null);
     }
     /**
-     * Ldtp (constructor)
+     * Ldtp
      *
      * @param windowName Window to be manipulated
      * @param serverAddr Server address to connect to
@@ -1288,7 +1288,7 @@ public class Ldtp {
 	return doAction("keyrelease", params);
     }
     /**
-     * enterString Generates keyboard input
+     * enterString Generates keyboard input on the current focused window
      *
      * @param data Input string
      * @return Return 1 on success
