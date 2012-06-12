@@ -520,7 +520,7 @@ class ComboBox(Utils, LayeredPane):
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
 
-        @return: 1 on success.
+        @return: 1 on success 0 on failure.
         @rtype: integer
         """
         try:
@@ -552,7 +552,7 @@ class ComboBox(Utils, LayeredPane):
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
 
-        @return: 1 on success.
+        @return: 1 on success 0 on failure.
         @rtype: integer
         """
         return self.verifydropdown(window_name, object_name)
@@ -568,7 +568,7 @@ class ComboBox(Utils, LayeredPane):
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
 
-        @return: 1 on success.
+        @return: 1 on success 0 on failure.
         @rtype: integer
         """
         try:
