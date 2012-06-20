@@ -31,209 +31,292 @@ class LdtpExecutionError < RuntimeError
 end
 
 class Ldtp
-  def window_name=(new_window_name)
-    @window_name = new_window_name
+  def initialize(window_name, server_addr="localhost", server_port=4118)
+    @@child_pid = 0
+    @poll_events = {}
+    @@ldtp_windows_env = false
+    @@is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+    if ENV['LDTP_WINDOWS']
+      @@ldtp_windows_env = true
+    elsif ENV['LDTP_LINUX']
+      @@ldtp_windows = false
+    elsif @@is_windows
+      @@ldtp_windows_env = true
+    end
+    if ENV['LDTP_SERVER_ADDR']
+      @@ldtp_server_addr = ENV['LDTP_SERVER_ADDR']
+    end
+    if ENV['LDTP_SERVER_PORT']
+      @@ldtp_server_port = Integer(ENV['LDTP_SERVER_PORT'])
+    end
+    if window_name == nil || window_name == ""
+      raise LdtpExecutionError.new("Invalid argument passed to window_name")
+    end
+    @window_name = window_name
+    @client = XMLRPC::Client.new( server_addr, "/RPC2", server_port )
+    begin
+      ok, param = @client.call2("isalive")
+    rescue => detail
+      start_ldtp
+      begin
+        ok, param = @client.call2("isalive")
+      rescue => detail
+        raise LdtpExecutionError.new("Unable to connect to server %s" % [server_addr])
+      end
+    end
   end
 private
-  def call_ldtp(fnname, arg, *varargs)
-    if @window_name == ""
-      raise LdtpExecutionError.new("window_name is empty")
-    end
-    if varargs.length > 0
-      # If "" args are passed, then join trims
-      ok, param = @server.call2(fnname, @window_name, arg, varargs.join(', '))
-    else
-      # Due to above issue, having two calls
-      # FIXME: Find better alternative
-      ok, param = @server.call2(fnname, @window_name, arg)
-    end
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def call_ldtp_noargs(fnname)
-    ok, param = @server.call2(fnname)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def call_ldtp_arg(fnname, arg)
-    ok, param = @server.call2(fnname, arg)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def call_ldtp_int(fnname, arg, time)
-    # Takes integer argument at end
-    # The above join converts it to string on join
-    if @window_name == ""
-      raise LdtpExecutionError.new("window_name is empty")
-    end
-    ok, param = @server.call2(fnname, @window_name, arg, time)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
   def start_ldtp
-    io = IO.popen("python -c 'import ldtpd; ldtpd.main()'")
+    # FIXME: Launch windows exe
+    if @@ldtp_windows_env
+      io = IO.popen("CobraWinLDTP.exe")
+    else
+      io = IO.popen("ldtp")
+    end
     @@child_pid = io.pid
     sleep 5
   end
 public
-  @@child_pid = 0
-  if ENV['LDTP_SERVER_ADDR']
-    @@ldtp_server_addr = ENV['LDTP_SERVER_ADDR']
-  else
-    @@ldtp_server_addr = 'localhost'
-  end
-  if ENV['LDTP_SERVER_PORT']
-    @@ldtp_server_port = Integer(ENV['LDTP_SERVER_PORT'])
-  else
-    @@ldtp_server_port = 4118
-  end
-  @@is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-  if ENV['LDTP_WINDOWS']
-    @@ldtp_windows_env = true
-  elsif ENV['LDTP_LINUX']
-    @@ldtp_windows = false
-  elsif @@is_windows
-    @@ldtp_windows_env = true
-  end
-  def initialize(window_name = "")
-    @poll_events = {}
-    @window_name = window_name
-    @server = XMLRPC::Client.new(@@ldtp_server_addr, "/RPC2", @@ldtp_server_port)
-    begin
-      call_ldtp_noargs("isalive")
-    rescue => detail
-      start_ldtp
-    end
-  end
   def Ldtp.childpid
     @@child_pid
   end
-  # Launch
+  def Ldtp.windowsenv
+    @@ldtp_windows_env
+  end
+  def wait(timeout=5)
+    ok, param = @client.call2("wait", timeout)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def waittillguiexist(object_name = "", guiTimeOut = 30, state = "")
+    ok, param = @client.call2("waittillguiexist", @window_name, object_name,
+                              guiTimeOut, state)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def waittillguinotexist(object_name = "", guiTimeOut = 30, state = "")
+    ok, param = @client.call2("waittillguinotexist", @window_name, object_name,
+                              guiTimeOut, state)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def guiexist(object_name = "")
+    ok, param = @client.call2("guiexist", @window_name, object_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def generatemouseevent(x, y, eventType = "b1c")
+    ok, param = @client.call2("generatemouseevent", x, y, eventType)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def getapplist()
+    ok, param = @client.call2("getapplist")
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def getwindowlist()
+    ok, param = @client.call2("getwindowlist")
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def registerevent(event_name, fnname, *args)
+    @poll_events[event_name] = [fnname, args]
+    ok, param = @client.call2("registerevent", event_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def deregisterevent(event_name)
+    if @poll_events.has_key?(event_name)
+      @poll_events.delete(event_name)
+    end
+    ok, param = @client.call2("deregisterevent", event_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def registerkbevent(keys, modifiers, fnname, *args)
+    event_name = "kbevent%s%s" % [keys, modifiers]
+    @poll_events[event_name] = [fnname, args]
+    ok, param = @client.call2("registerkbevent", event_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def deregisterkbevent(keys, modifiers)
+    event_name = "kbevent%s%s" % [keys, modifiers]
+    if @poll_events.has_key?(event_name)
+      @poll_events.delete(event_name)
+    end
+    ok, param = @client.call2("deregisterkbevent", event_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
   def launchapp(cmd, args = [], delay = 0, env = 1, lang = "C")
-    ok, param = @server.call2("launchapp", cmd, args, delay, env, lang)
-    if ok then
-      return param
-    else
-      # puts param.faultCode
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def delaycmdexec(delay)
-    return call_ldtp("delaycmdexec", delay)
-  end
-  # Wait / State
-  def getallstates(obj_name)
-    return call_ldtp("getallstates", obj_name)
-  end
-  def stateenabled(obj_name)
-    return call_ldtp("stateenabled", obj_name)
-  end
-  def hasstate(obj_name, state, guiTimeOut = 0)
-    if @window_name == ""
-      raise LdtpExecutionError.new("window_name is empty")
-    end
-    ok, param = @server.call2("hasstate", @window_name, obj_name, state, guiTimeOut)
+    ok, param = @client.call2("launchapp", cmd, args, delay, env, lang)
     if ok then
       return param
     else
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def wait(timeout = 5)
-    ok, param = @server.call2("wait", timeout)
+  def hasstate(object_name, state, guiTimeOut = 0)
+    ok, param = @client.call2("hasstate", @window_name, object_name,
+                              state, guiTimeOut)
     if ok then
       return param
     else
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def guiexist params = {}
-    opts = {
-      :obj_name => "",
-    }.merge params
-    status = call_ldtp("guiexist", opts[:obj_name])
-    return status
-  end
-  def waittillguiexist params = {}
-    opts = {
-      :obj_name => "",
-      :guiTimeOut => 30
-    }.merge params
-    # Increase the timeout as the default ruby xmlrpc
-    # timeout is 30 seconds
-    @server.timeout = opts[:guiTimeOut] + 10
-    begin
-      status = call_ldtp_int("waittillguiexist", opts[:obj_name], opts[:guiTimeOut])
-    ensure
-      # Set back to default timeout
-      @server.timeout = 30
-    end
-    return status
-  end
-  def waittillguinotexist params = {}
-    opts = {
-      :obj_name => "",
-      :guiTimeOut => 30
-    }.merge params
-    # Increase the timeout as the default ruby xmlrpc
-    # timeout is 30 seconds
-    @server.timeout = opts[:guiTimeOut] + 10
-    begin
-      status = call_ldtp_int("waittillguinotexist", opts[:obj_name], opts[:guiTimeOut])
-    ensure
-      # Set back to default timeout
-      @server.timeout = 30
-    end
-    return status
-  end
-  # Image
-  def imagecapture params = {}
-    opts = {
-      :window_name => "",
-      :x => 0,
-      :y => 0,
-      :width => 0,
-      :height => 0
-    }.merge params
-    ok, param = @server.call2("imagecapture", opts[:window_name],
-                              opts[:x], opts[:y], opts[:width], opts[:height])
+  def selectrow(object_name, row_text)
+    ok, param = @client.call2("selectrow", @window_name, object_name,
+                              row_text, false)
     if ok then
-      file = Tempfile.new(['ldtp_', '.png'])
-      filename = file.path
-      file.close(true)
-      File.open(filename, 'wb') {|f| f.write(Base64.decode64(param))}
-      return filename
+      return param
     else
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  # Keyboard / Mouse
-  def generatekeyevent(data)
-    return call_ldtp_arg("generatekeyevent", data)
+  def getchild(child_name = "", role = "", parent = "")
+    ok, param = @client.call2("getchild", @window_name, object_name,
+                              role, parent)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
   end
-  def enterstring(window_name = "", obj_name = "", data = "")
-    if obj_name == "" and data =="":
-        return call_ldtp_arg("enterstring", window_name)
+  def getcpustat(process_name)
+    ok, param = @client.call2("getcpustat", process_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
     end
-    if window_name == ""
-      window_name = @window_name
+  end
+  def getmemorystat(process_name)
+    ok, param = @client.call2("getmemorystat", process_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
     end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
+  end
+  def getlastlog()
+    ok, param = @client.call2("getlastlog")
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
     end
-    ok, param = @server.call2("enterstring", window_name, obj_name, data)
+  end
+  def getobjectnameatcoords(wait_time = 0)
+    ok, param = @client.call2("getobjectnameatcoords", wait_time)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def enterstring(param1, param2 = "")
+    if param2 == "":
+        ok, param = @client.call2("enterstring", param1, "", "")
+    else
+        ok, param = @client.call2("enterstring", @window_name, param1, param2)
+    end
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def setvalue(object_name, data)
+    ok, param = @client.call2("setvalue", @window_name, object_name, data)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def grabfocus(object_name = "")
+      # On Linux just with window name, grab focus doesn't work
+      # So, we can't make this call generic
+    ok, param = @client.call2("grabfocus", @window_name, object_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def copytext(object_name, start, end_index = -1)
+    ok, param = @client.call2("copytext", @window_name, object_name,
+                              start, end_index)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def cuttext(object_name, start, end_index = -1)
+    ok, param = @client.call2("cuttext", @window_name, object_name,
+                              start, end_index)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def deletetext(object_name, start, end_index = -1)
+    ok, param = @client.call2("deletetext", @window_name, object_name,
+                              start, end_index)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def startprocessmonitor(process_name, interval = 2)
+    ok, param = @client.call2("startprocessmonitor", process_name, interval)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def stopprocessmonitor(process_name)
+    ok, param = @client.call2("stopprocessmonitor", process_name)
     if ok then
       return param
     else
@@ -241,13 +324,48 @@ public
     end
   end
   def keypress(data)
-    return call_ldtp_arg("keypress", data)
+    ok, param = @client.call2("keypress", data)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
   end
   def keyrelease(data)
-    return call_ldtp_arg("keyrelease", data)
+    ok, param = @client.call2("keyrelease", data)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
   end
-  def generatemouseevent(x, y, eventType = 'b1p')
-    ok, param = @server.call2("generatemouseevent", x, y, eventType)
+  def gettextvalue(object_name, startPosition = 0, endPosition = 0)
+    ok, param = @client.call2("gettextvalue", @window_name, object_name,
+                              startPosition, endPosition)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def closewindow(window_name = "")
+    ok, param = @client.call2("closewindow", window_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def maximizewindow(window_name = "")
+    ok, param = @client.call2("maximizewindow", window_name)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def minimizewindow(window_name = "")
+    ok, param = @client.call2("minimizewindow", window_name)
     if ok then
       return param
     else
@@ -262,564 +380,64 @@ public
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def mouseleftclick(obj_name)
-    return call_ldtp("mouseleftclick", obj_name)
-  end
-  def mousemove(obj_name)
-    return call_ldtp("mousemove", obj_name)
-  end
-  def mouserightclick(obj_name)
-    return call_ldtp("mouserightclick", obj_name)
-  end
-  def doubleclick(obj_name)
-    return call_ldtp("doubleclick", obj_name)
-  end
-  # Menu
-  def selectmenuitem(obj_name)
-    return call_ldtp("selectmenuitem", obj_name)
-  end
-  def doesmenuitemexist(obj_name)
-    return call_ldtp("doesmenuitemexist", obj_name)
-  end
-  def menuitemenabled(obj_name)
-    return call_ldtp("menuitemenabled", obj_name)
-  end
-  def listsubmenus(obj_name)
-    return call_ldtp("listsubmenus", obj_name)
-  end
-  def menucheck(obj_name)
-    return call_ldtp("menucheck", obj_name)
-  end
-  def menuuncheck(obj_name)
-    return call_ldtp("menuuncheck", obj_name)
-  end
-  def verifymenucheck(obj_name)
-    return call_ldtp("verifymenucheck", obj_name)
-  end
-  def verifymenuuncheck(obj_name)
-    return call_ldtp("verifymenuuncheck", obj_name)
-  end
-  def invokemenu(obj_name)
-    return call_ldtp("invokemenu", obj_name)
-  end
-  # Check box / Radio button / Toogle
-  def check(obj_name)
-    return call_ldtp("check", obj_name)
-  end
-  def uncheck(obj_name)
-    return call_ldtp("uncheck", obj_name)
-  end
-  def verifytoggled(obj_name)
-    return call_ldtp("verifytoggled", obj_name)
-  end
-  def verifypushbutton(obj_name)
-    return call_ldtp("verifypushbutton", obj_name)
-  end
-  def verifycheck(obj_name)
-    return call_ldtp("verifycheck", obj_name)
-  end
-  def verifyuncheck(obj_name)
-    return call_ldtp("verifyuncheck", obj_name)
-  end
-  # Panel
-  def getpanelchildcount(obj_name)
-    return call_ldtp("getpanelchildcount", obj_name)
-  end
-  # General
-  def click(obj_name)
-    return call_ldtp("click", obj_name)
-  end
-  def getapplist
-    return call_ldtp_noargs("getapplist")
-  end
-  def getwindowlist
-    return call_ldtp_noargs("getwindowlist")
-  end
-  def press(obj_name)
-    return call_ldtp("press", obj_name)
-  end
-  def objectexist(obj_name)
-    return call_ldtp("objectexist", obj_name)
-  end
-  def grabfocus(obj_name)
-    return call_ldtp("grabfocus", obj_name)
-  end
-  def getobjectsize(obj_name)
-    return call_ldtp("getobjectsize", obj_name)
-  end
-  # Table
-  def handletablecell
-    return call_ldtp_noargs("handletablecell")
-  end
-  def unhandletablecell
-    return call_ldtp_noargs("unhandletablecell")
-  end
-  # Log
-  def getlastlog()
-    return call_ldtp_noargs("getlastlog")
-  end
-  # Process monitor
-  def startprocessmonitor(process_name, interval = 2)
-    ok, param = @server.call2("startprocessmonitor", process_name, interval)
+  def delaycmdexec(delay)
+    ok, param = @client.call2("delaycmdexec", delay)
     if ok then
       return param
     else
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def stopprocessmonitor(process_name)
-    return call_ldtp_arg("stopprocessmonitor", process_name)
-  end
-  def getcpustat(process_name)
-    return call_ldtp_arg("getcpustat", process_name)
-  end
-  def getmemorystat(process_name)
-    return call_ldtp_arg("getmemorystat", process_name)
-  end
-  # Window management
-  def windowuptime(window_name = "")
-    if window_name == ""
-      window_name = @window_name
-    end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    return call_ldtp_arg("windowuptime", window_name)
-  end
-  def getobjectlist(window_name = "")
-    if window_name == ""
-      window_name = @window_name
-    end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    return call_ldtp_arg("getobjectlist", window_name)
-  end
-  def getobjectinfo(obj_name)
-    return call_ldtp("getobjectinfo", obj_name)
-  end
-  def getobjectproperty(obj_name, property)
-    return call_ldtp("getobjectproperty", obj_name, property)
-  end
-  def getchild(window_name = "", child_name = '', role = '', parent = '')
-    if window_name == ""
-      window_name = @window_name
-    end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("getchild", @window_name, child_name, role, parent)
+  def imagecapture params = {}
+    opts = {
+      :window_name => "",
+      :x => 0,
+      :y => 0,
+      :width => 0,
+      :height => 0
+    }.merge params
+    ok, param = @client.call2("imagecapture", opts[:window_name],
+                              opts[:x], opts[:y], opts[:width], opts[:height])
     if ok then
-      return param
+      file = Tempfile.new(['ldtp_', '.png'])
+      filename = file.path
+      file.close(true)
+      File.open(filename, 'wb') {|f| f.write(Base64.decode64(param))}
+      return filename
     else
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def remap(window_name = "")
-    if window_name == ""
-      window_name = @window_name
-    end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    return call_ldtp_arg("remap", window_name)
+  def onwindowcreate(fn_name, *args)
+      @poll_events[window_name] = [fnname, args]
+      # FIXME: Implement the method
   end
-  def getwindowsize(window_name = "")
-    if window_name == ""
-      window_name = @window_name
-    end
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    return call_ldtp_arg("getwindowsize", window_name)
-  end
-  def getobjectnameatcoords(wait_time = 0)
-    return call_ldtp_arg("getobjectnameatcoords", wait_time)
-  end
-  def onwindowcreate(window_name, fnname, *args)
-    @poll_events[window_name] = [fnname, args]
-    return call_ldtp_arg("onwindowcreate", window_name)
-  end
-  def removecallback(window_name)
+  def removecallback(fn_name)
     if @poll_events.has_key?(window_name)
       @poll_events.delete(window_name)
     end
-    return call_ldtp_arg("removecallback", window_name)
+      # FIXME: Implement the method
   end
-  def registerevent(window_name, fnname, *args)
-    @poll_events[window_name] = [fnname, args]
-    return call_ldtp_arg("registerevent", window_name)
-  end
-  def deregisterevent(window_name)
-    if @poll_events.has_key?(window_name)
-      @poll_events.delete(window_name)
-    end
-    return call_ldtp_arg("deregisterevent", window_name)
-  end
-  def registerkbevent(window_name, fnname, *args)
-    @poll_events[window_name] = [fnname, args]
-    return call_ldtp_arg("registerkbevent", window_name)
-  end
-  def deregisterkbevent(window_name)
-    if @poll_events.has_key?(window_name)
-      @poll_events.delete(window_name)
-    end
-    return call_ldtp_arg("deregisterkbevent", window_name)
-  end
-  def maximizewindow(window_name = "")
-    return call_ldtp_arg("maximizewindow", window_name)
-  end
-  def minimizewindow(window_name = "")
-    return call_ldtp_arg("minimizewindow", window_name)
-  end
-  def unmaximizewindow(window_name = "")
-    return call_ldtp_arg("unmaximizewindow", window_name)
-  end
-  def unminimizewindow(window_name = "")
-    return call_ldtp_arg("unminimizewindow", window_name)
-  end
-  def activatewindow(window_name = "")
-    return call_ldtp_arg("activatewindow", window_name)
-  end
-  def closewindow(window_name = "")
-    return call_ldtp_arg("closewindow", window_name)
-  end
-  # Status bar
-  def getstatusbartext(obj_name)
-    return call_ldtp("getstatusbartext", obj_name)
-  end
-  # Text
-  def settextvalue(obj_name, data)
-    return call_ldtp("settextvalue", obj_name, data)
-  end
-  def gettextvalue(obj_name)
-    return call_ldtp("gettextvalue", obj_name)
-  end
-  def verifypartialmatch(obj_name, partial_text)
-    return call_ldtp("verifypartialmatch", obj_name, partial_text)
-  end
-  def verifysettext(obj_name, text)
-    return call_ldtp("verifysettext", obj_name, text)
-  end
-  def activatetext(obj_name)
-    return call_ldtp("activatetext", obj_name)
-  end
-  def appendtext(obj_name, text)
-    return call_ldtp("appendtext", obj_name, text)
-  end
-  def istextstateenabled(obj_name)
-    return call_ldtp("istextstateenabled", obj_name)
-  end
-  def getcharcount(obj_name)
-    return call_ldtp("getcharcount", obj_name)
-  end
-  def getcursorposition(obj_name)
-    return call_ldtp("getcursorposition", obj_name)
-  end
-  def setcursorposition(obj_name, cursor_position)
-    return call_ldtp_int("setcursorposition", obj_name, cursor_position)
-  end
-  def cuttext(obj_name, start_position, end_position = -1)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("cuttext", @window_name, obj_name, start_position, end_position)
+  def method_missing(sym, *args, &block)
+    ok, param = @client.call2 sym, @window_name, *args, &block
     if ok then
       return param
     else
       raise LdtpExecutionError.new(param.faultString)
     end
-  end
-  def copytext(obj_name, start_position, end_position = -1)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("copytext", @window_name, obj_name, start_position, end_position)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def deletetext(obj_name, start_position, end_position = -1)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("deletetext", @window_name, obj_name, start_position, end_position)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def pastetext(obj_name, position = 0)
-    return call_ldtp_int("pastetext", obj_name, position)
-  end
-  # Combo box
-  def unselectitem(obj_name, item_name)
-    return call_ldtp("unselectitem", obj_name, item_name)
-  end
-  def unselectindex(obj_name, item_index)
-    return call_ldtp_int("unselectindex", obj_name, item_index)
-  end
-  def ischildselected(obj_name, item_name)
-    return call_ldtp("ischildselected", obj_name, item_name)
-  end
-  def ischildindexselected(obj_name, item_index)
-    return call_ldtp_int("ischildindexselected", obj_name, item_index)
-  end
-  def selecteditemcount(obj_name)
-    return call_ldtp("selecteditemcount", obj_name)
-  end
-  def selectall(obj_name)
-    return call_ldtp("selectall", obj_name)
-  end
-  def unselectall(obj_name)
-    return call_ldtp("unselectall", obj_name)
-  end
-  def selectitem(obj_name, item_name)
-    return call_ldtp("selectitem", obj_name, item_name)
-  end
-  def selectindex(obj_name, item_index)
-    return call_ldtp_int("selectindex", obj_name, item_index)
-  end
-  def getallitem(obj_name)
-    return call_ldtp("getallitem", obj_name)
-  end
-  def showlist(obj_name)
-    return call_ldtp("showlist", obj_name)
-  end
-  def hidelist(obj_name)
-    return call_ldtp("hidelist", obj_name)
-  end
-  def verifydropdown(obj_name)
-    return call_ldtp("verifydropdown", obj_name)
-  end
-  def verifyshowlist(obj_name)
-    return call_ldtp("verifyshowlist", obj_name)
-  end
-  def verifyhidelist(obj_name)
-    return call_ldtp("verifyhidelist", obj_name)
-  end
-  def verifyselect(obj_name, item_name)
-    return call_ldtp("verifyselect", obj_name, item_name)
-  end
-  # Table
-  def getrowcount(obj_name)
-    return call_ldtp("getrowcount", obj_name)
-  end
-  def selectrow(obj_name, row_text)
-    return call_ldtp("selectrow", obj_name, row_text)
-  end
-  def selectrowpartialmatch(obj_name, row_text)
-    return call_ldtp("selectrowpartialmatch", obj_name, row_text)
-  end
-  def selectrowindex(obj_name, row_index)
-    return call_ldtp_int("selectrowindex", obj_name, row_index)
-  end
-  def selectlastrow(obj_name)
-    return call_ldtp("selectlastrow", obj_name)
-  end
-  def setcellvalue(obj_name, row_index, column = 0, data = "")
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("setcellvalue", @window_name, obj_name, row_index, column, data)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def getcellvalue(obj_name, row_index, column = 0)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("getcellvalue", @window_name, obj_name, row_index, column)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def rightclick(obj_name, row_text)
-    return call_ldtp("rightclick", obj_name, row_text)
-  end
-  def singleclickrow(obj_name, row_text)
-    return call_ldtp("singleclickrow", obj_name, row_text)
-  end
-  def doubleclickrow(obj_name, row_text)
-    return call_ldtp("doubleclickrow", obj_name, row_text)
-  end
-  def gettablerowindex(obj_name, row_text)
-    return call_ldtp("gettablerowindex", obj_name, row_text)
-  end
-  def checkrow(obj_name, row_index, column = 0)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("checkrow", @window_name, obj_name, row_index, column)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def uncheckrow(obj_name, row_index, column = 0)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("uncheckrow", @window_name, obj_name, row_index, column)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def expandtablecell(obj_name, row_index, column = 0)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("expandtablecell", @window_name, obj_name, row_index, column)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def verifytablecell(obj_name, row_index, column, row_text = "")
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("verifytablecell", @window_name, obj_name, row_index, column, row_text)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def verifypartialtablecell(obj_name, row_index, column, row_text)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("verifypartialtablecell", @window_name, obj_name, row_index, column, row_text)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  def doesrowexist(obj_name, row_text, partial_match = false)
-    if @window_name == ""
-      raise LdtpExecutionError.new("@window_name is empty")
-    end
-    ok, param = @server.call2("doesrowexist", @window_name, obj_name, row_text, partial_match)
-    if ok then
-      return param
-    else
-      raise LdtpExecutionError.new(param.faultString)
-    end
-  end
-  # Page tab
-  def selecttab(obj_name, tab_name)
-    return call_ldtp("selecttab", obj_name, tab_name)
-  end
-  def selecttabindex(obj_name, tab_index)
-    return call_ldtp_int("selecttabindex", obj_name, tab_index)
-  end
-  def verifytabname(obj_name, tab_name)
-    return call_ldtp("verifytabname", obj_name, tab_name)
-  end
-  def gettabcount(obj_name)
-    return call_ldtp("gettabcount", obj_name)
-  end
-  def gettabname(obj_name, tab_index)
-    return call_ldtp_int("gettabname", obj_name, tab_index)
-  end
-  # Value
-  def setvalue(obj_name, data)
-    return call_ldtp("setvalue", obj_name, data)
-  end
-  def getvalue(obj_name)
-    return call_ldtp("getvalue", obj_name)
-  end
-  def getslidervalue(obj_name)
-    return call_ldtp("getslidervalue", obj_name)
-  end
-  def verifysetvalue(obj_name, data)
-    return call_ldtp("verifysetvalue", obj_name, data)
-  end
-  def getminvalue(obj_name)
-    return call_ldtp("getminvalue", obj_name)
-  end
-  def getmaxvalue(obj_name)
-    return call_ldtp("getmaxvalue", obj_name)
-  end
-  def getminincrement(obj_name)
-    return call_ldtp("getminincrement", obj_name)
-  end
-  def getmin(obj_name)
-    return call_ldtp("getmin", obj_name)
-  end
-  def getmax(obj_name)
-    return call_ldtp("getmax", obj_name)
-  end
-  def verifyslidervertical(obj_name)
-    return call_ldtp("verifyslidervertical", obj_name)
-  end
-  def verifysliderhorizontal(obj_name)
-    return call_ldtp("verifysliderhorizontal", obj_name)
-  end
-  def verifyscrollbarvertical(obj_name)
-    return call_ldtp("verifyscrollbarvertical", obj_name)
-  end
-  def verifyscrollbarhorizontal(obj_name)
-    return call_ldtp("verifyscrollbarhorizontal", obj_name)
-  end
-  def scrollup(obj_name)
-    return call_ldtp("scrollup", obj_name)
-  end
-  def scrolldown(obj_name)
-    return call_ldtp("scrolldown", obj_name)
-  end
-  def scrollleft(obj_name)
-    return call_ldtp("scrollleft", obj_name)
-  end
-  def scrollright(obj_name)
-    return call_ldtp("scrollright", obj_name)
-  end
-  def setmin(obj_name)
-    return call_ldtp("setmin", obj_name)
-  end
-  def setmax(obj_name)
-    return call_ldtp("setmax", obj_name)
-  end
-  def increase(obj_name, iterations)
-    return call_ldtp_int("increase", obj_name, iterations)
-  end
-  def decrease(obj_name, iterations)
-    return call_ldtp_int("decrease", obj_name, iterations)
-  end
-  def onedown(obj_name, iterations)
-    return call_ldtp_int("onedown", obj_name, iterations)
-  end
-  def oneup(obj_name, iterations)
-    return call_ldtp_int("oneup", obj_name, iterations)
-  end
-  def oneright(obj_name, iterations)
-    return call_ldtp_int("oneright", obj_name, iterations)
-  end
-  def oneleft(obj_name, iterations)
-    return call_ldtp_int("oneleft", obj_name, iterations)
   end
 end
 at_exit do
   childpid = Ldtp.childpid
   if childpid != 0
-    # LDTP launched in subprocess, kill that first
-    Process.kill('KILL', childpid)
     # Kill LDTP process
-    # FIXME: Is this correct way to do ?
-    Process.kill('KILL', childpid + 1)
+    begin
+      if Ldtp.windowsenv
+        io = IO.popen("taskkill /F /IM CobraWinLDTP.exe")
+      else
+        Process.kill('KILL', childpid)
+      end
+    rescue => detail
+    end
   end
 end
