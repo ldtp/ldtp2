@@ -170,30 +170,13 @@ public class Ldtp {
      * @param serverPort Server port to connect to
      */
     public Ldtp(String windowName, String serverAddr, String serverPort) {
-    	this(windowName, serverAddr, serverPort, null);
-    }
-    /**
-     * Ldtp
-     *
-     * @param windowName Window to be manipulated
-     * @param serverAddr Server address to connect to
-     * @param serverPort Server port to connect to
-     * @param windowsEnv Running the test in windows environment ("true" or "false" string value)
-     */
-    public Ldtp(String windowName, String serverAddr, String serverPort, String windowsEnv) {
     	if (windowName == null || windowName == "") {
     		throw new LdtpExecutionError("Window name missing");
     	}
     	this.serverAddr = serverAddr;
     	this.serverPort = serverPort;
     	this.windowName = windowName;
-    	if (windowsEnv != null) {
-    		if (windowsEnv.contains("true"))
-    			this.windowsEnv = true;
-    		else
-    			this.windowsEnv = false;
-    	}
-    	connectToServer();
+	connectToServer();
     }
     /**
      * setWindowName Change window name
