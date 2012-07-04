@@ -31,10 +31,10 @@ class LdtpExecutionError < RuntimeError
 end
 
 class Ldtp
+  @@child_pid = 0
+  @@ldtp_windows_env = false
   def initialize(window_name, server_addr="localhost", server_port=4118)
-    @@child_pid = 0
     @poll_events = {}
-    @@ldtp_windows_env = false
     @@is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
     if ENV['LDTP_WINDOWS']
       @@ldtp_windows_env = true
@@ -67,7 +67,6 @@ class Ldtp
   end
 private
   def start_ldtp
-    # FIXME: Launch windows exe
     if @@ldtp_windows_env
       io = IO.popen("CobraWinLDTP.exe")
     else
@@ -251,7 +250,7 @@ public
     end
   end
   def enterstring(param1, param2 = "")
-    if param2 == "":
+    if param2 == "" then
         ok, param = @client.call2("enterstring", param1, "", "")
     else
         ok, param = @client.call2("enterstring", @window_name, param1, param2)
