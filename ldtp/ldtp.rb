@@ -1,3 +1,4 @@
+
 """
 LDTP v2 ruby client.
 
@@ -387,20 +388,25 @@ public
       raise LdtpExecutionError.new(param.faultString)
     end
   end
-  def imagecapture params = {}
+  def imagecapture(params = {})
     opts = {
       :window_name => "",
+      :out_file => "",
       :x => 0,
       :y => 0,
-      :width => 0,
-      :height => 0
+      :width => -1,
+      :height => -1
     }.merge params
     ok, param = @client.call2("imagecapture", opts[:window_name],
                               opts[:x], opts[:y], opts[:width], opts[:height])
     if ok then
-      file = Tempfile.new(['ldtp_', '.png'])
-      filename = file.path
-      file.close(true)
+      if opts[:out_file] != "" then
+        filename = opts[:out_file]
+      else
+        file = Tempfile.new(['ldtp_', '.png'])
+        filename = file.path
+        file.close(true)
+      end
       File.open(filename, 'wb') {|f| f.write(Base64.decode64(param))}
       return filename
     else
