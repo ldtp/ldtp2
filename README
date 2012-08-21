@@ -36,8 +36,8 @@ LDTP works in the following platforms:
 
 How to write test scripts using ldtp for your module ?
 
-  - How to create LDTP test scripts in python - http://ldtp.freedesktop.org/wiki/LDTP_20test_20scripts_20in_20python
-  - Refer existing pyautosuite test scripts - http://webcvs.freedesktop.org/ldtp/pyautosuite
+  - How to create LDTP test scripts in python - http://ldtp.freedesktop.org/wiki/LDTP_test_scripts_in_python
+  - Refer existing pyautosuite test scripts - http://cgit.freedesktop.org/ldtp/pyautosuite/
   - Refer API Reference page for list of LDTP functions available - http://ldtp.freedesktop.org/user-doc/index.html
 
 How do I contact LDTP team incase of any help ?
