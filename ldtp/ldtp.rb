@@ -50,7 +50,7 @@ class Ldtp
     if ENV['LDTP_SERVER_PORT']
       @@ldtp_server_port = Integer(ENV['LDTP_SERVER_PORT'])
     end
-    if window_name == nil || window_name == ""
+    if window_name == nil || window_name == "" then
       raise LdtpExecutionError.new("Invalid argument passed to window_name")
     end
     @window_name = window_name
@@ -349,6 +349,9 @@ public
     end
   end
   def closewindow(window_name = "")
+    if window_name == nil || window_name == "" then
+       window_name = @window_name
+    end
     ok, param = @client.call2("closewindow", window_name)
     if ok then
       return param
@@ -357,6 +360,9 @@ public
     end
   end
   def maximizewindow(window_name = "")
+    if window_name == nil || window_name == "" then
+       window_name = @window_name
+    end
     ok, param = @client.call2("maximizewindow", window_name)
     if ok then
       return param
@@ -365,6 +371,9 @@ public
     end
   end
   def minimizewindow(window_name = "")
+    if window_name == nil || window_name == "" then
+       window_name = @window_name
+    end
     ok, param = @client.call2("minimizewindow", window_name)
     if ok then
       return param
