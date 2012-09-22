@@ -1,0 +1,5 @@
+This is the Perl interface to LDTP, written by Sawyer X.
+It has its own dedicated repository at: https://github.com/xsawyerx/ldtp.
+This repository will be synced on every new version in order to give
+an up-to-date reference for LDTP users.
+
