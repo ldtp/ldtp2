@@ -81,7 +81,12 @@ class Generic(Utils):
                 raise LdtpServerException('No window matches %s' % window_name)
             icomponent = acc.queryComponent()
             bb = icomponent.getExtents(pyatspi.DESKTOP_COORDS)
-            x, y, height, width = bb.x, bb.y, bb.height, bb.width
+            # If co-ordinates are provided, use it
+            x, y = x + bb.x, y + bb.y
+            if height > bb.height:
+              height = bb.height
+            if width > bb.width:
+              width = bb.width
 
         tmpFile = tempfile.mktemp('.png', 'ldtpd_')
         if gtk3:
