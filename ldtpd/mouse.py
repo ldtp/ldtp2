@@ -32,12 +32,12 @@ class Mouse(Utils):
         """
         Generate mouse event on x, y co-ordinates.
         
-        @param window_name: Window name to look for, either full name,
-        LDTP's name convention, or a Unix glob.
-        @type window_name: int
-        @param object_name: Object name to look for, either full name,
-        LDTP's name convention, or a Unix glob. Or menu heirarchy
-        @type object_name: int
+        @param x: X co-ordinate
+        @type x: int
+        @param y: Y co-ordinate
+        @type y: int
+        @param eventType: Mouse click type
+        @type eventType: string
 
         @return: 1 on success.
         @rtype: integer

@@ -1,3 +1,9 @@
+LDTP 3.0.0 released - Friday Aug 3 2012
+  Simplified the implementation verifyselect for combobox menuitem
+  Fix QT related accessibility issue
+  Java / C# / VB.NET / PowerShell / Ruby are now officially supported LDTP scripting languages other than Python
+  Firefox have check / uncheck as actions for check box
+  New APIs added (selectpanel, selectpanelname, selectpanelindex)
 LDTP 2.3.1 released Download - Saturday Feb 25 2012
   Added twisted gtk3reactor
   Operate on window name using index, will be helpful with i18n, l10n testing

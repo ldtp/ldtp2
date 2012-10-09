@@ -1,4 +1,4 @@
-'''
+"""
 LDTP v2 Core Page Tab List.
 
 @author: Eitan Isaacson <eitan@ascender.com>
@@ -17,14 +17,14 @@ merchantability or fitness for a particular purpose.
 See "COPYING" in the source distribution for more information.
 
 Headers in this file shall remain intact.
-'''
+"""
 import pyatspi 
 from utils import Utils
 from server_exception import LdtpServerException
 
 class PageTabList(Utils):
     def selecttab(self, window_name, object_name, tab_name):
-        '''
+        """
         Select tab based on name.
         
         @param window_name: Window name to type in, either full name,
@@ -38,7 +38,7 @@ class PageTabList(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
 
@@ -63,7 +63,7 @@ class PageTabList(Utils):
         raise LdtpServerException('Page tab name does not exist')
 
     def selecttabindex(self, window_name, object_name, tab_index):
-        '''
+        """
         Select tab based on index.
         
         @param window_name: Window name to type in, either full name,
@@ -77,7 +77,7 @@ class PageTabList(Utils):
 
         @return: 1 on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         if tab_index < 0 or tab_index > obj.childCount:
@@ -94,7 +94,7 @@ class PageTabList(Utils):
         raise LdtpServerException('Page tab index does not exist')
 
     def verifytabname(self, window_name, object_name, tab_name):
-        '''
+        """
         Verify tab name.
         
         @param window_name: Window name to type in, either full name,
@@ -108,7 +108,7 @@ class PageTabList(Utils):
 
         @return: 1 on success 0 on failure
         @rtype: integer
-        '''
+        """
         try:
             obj = self._get_object(window_name, object_name)
             self._grab_focus(obj)
@@ -128,7 +128,7 @@ class PageTabList(Utils):
         return 0
 
     def gettabcount(self, window_name, object_name):
-        '''
+        """
         Get tab count.
         
         @param window_name: Window name to type in, either full name,
@@ -140,13 +140,13 @@ class PageTabList(Utils):
 
         @return: tab count on success.
         @rtype: integer
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         return obj.childCount
 
     def gettabname(self, window_name, object_name, tab_index):
-        '''
+        """
         Get tab name
         
         @param window_name: Window name to type in, either full name,
@@ -160,7 +160,7 @@ class PageTabList(Utils):
 
         @return: text on success.
         @rtype: string
-        '''
+        """
         obj = self._get_object(window_name, object_name)
         self._grab_focus(obj)
         if tab_index < 0 or tab_index > obj.childCount:

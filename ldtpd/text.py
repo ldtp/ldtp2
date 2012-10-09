@@ -409,8 +409,11 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Unable to get editable text.')
 
-        if end_position == -1:
-            end_position = texti.characterCount
+        size = texti.characterCount
+        if end_position == -1 or end_position > size:
+            end_position = size
+        if start_position < 0:
+            start_position = 0
 
         texti.cutText(start_position, end_position)
 
@@ -443,8 +446,11 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Unable to get editable text.')
 
-        if end_position == -1:
-            end_position = texti.characterCount
+        size = texti.characterCount
+        if end_position == -1 or end_position > size:
+            end_position = size
+        if start_position < 0:
+            start_position = 0
 
         texti.copyText(start_position, end_position)
 
@@ -477,8 +483,11 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Unable to get editable text.')
 
-        if end_position == -1:
-            end_position = texti.characterCount
+        size = texti.characterCount
+        if end_position == -1 or end_position > size:
+            end_position = size
+        if start_position < 0:
+            start_position = 0
 
         texti.deleteText(start_position, end_position)
 
@@ -508,14 +517,20 @@ class Text(Utils):
         except NotImplementedError:
             raise LdtpServerException('Unable to get editable text.')
 
+        size = texti.characterCount
+        if position > size:
+            position = size
+        if position < 0:
+            position = 0
+
         texti.pasteText(position)
 
         return 1
 
     def getstatusbartext(self, window_name, object_name):
         """
-        Get text value
-        
+        Get status bar text
+
         @param window_name: Window name to type in, either full name,
         LDTP's name convention, or a Unix glob.
         @type window_name: string

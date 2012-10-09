@@ -56,7 +56,19 @@ class Generic(Utils):
 
         @return: screenshot with base64 encoded for the client
         @rtype: string
-        """
+        """	
+        # Validate the parameters
+        # x and y offsets cannot be nagative
+        x = max(0, x)
+        y = max(0, y)
+
+        # height and width cannot be less than 1
+        # set to None if nagative value is given
+        if width < 1:
+            width = None
+        if height < 1:
+            height = None
+	
         if window_name:
             acc = None
             for gui in self._list_guis():
@@ -81,7 +93,44 @@ class Generic(Utils):
                 raise LdtpServerException('No window matches %s' % window_name)
             icomponent = acc.queryComponent()
             bb = icomponent.getExtents(pyatspi.DESKTOP_COORDS)
-            x, y, height, width = bb.x, bb.y, bb.height, bb.width
+            # If co-ordinates are provided, use it
+            # offsets cannot be greater than or equal to the window size
+            # we want to capture at least one pixel
+            x = min(x, bb.width - 1)
+            y = min(y, bb.height - 1)
+
+            # adjust the width and height parameters
+            # so that the captured image is contained
+            # within the visible window area
+            # Take into account that window may be only
+            # partially on the screen then the reported
+            # width and height are not the same as the area of the window
+            # that can actually be captured.
+            
+            # if bb.x is negative then the actual width 
+            # is smaller than the bb.width
+            leftClippedWidth = min(bb.width, bb.width + bb.x)
+            
+            # if bb.y is negative then the actual height
+            # is smaller than the bb.height
+            topClippedHeight = min(bb.height, bb.height + bb.y)
+            
+            # Clipping from the right and bottom is done later
+            # when the desktop size is known            
+            if width == None:                
+                width = leftClippedWidth - x
+            else:
+                width = min(width, leftClippedWidth - x)
+            if height == None:
+                height = topClippedHeight - y
+            else:
+                height = min(height, topClippedHeight - y)
+
+            # take the window position into account
+            # use 0 as the window co-oridinate
+            # if it is negative
+            x = x + max(0, bb.x)
+            y = y + max(0, bb.y)
 
         tmpFile = tempfile.mktemp('.png', 'ldtpd_')
         if gtk3:
@@ -92,21 +141,53 @@ class Generic(Utils):
            size.append(tmp_size[2])
            # Height
            size.append(tmp_size[3])
-           pb = gdk.pixbuf_get_from_window(window, x, y, width or size[0],
-                                           height or size[1])
+           # offsets cannot be greater than or equal to the desktop size
+           # we want to capture at least one pixel
+           x = min(x, size[0] - 1)
+           y = min(y, size[1] - 1)
+	   
+           # adjust the width and height parameters
+           # so that the captured image is contained
+           # within the desktop area
+           if width == None:
+               width = size[0] - x
+           else:
+               width = min(width, size[0] - x)
+           if height == None:
+               height = size[1] - y
+           else:
+               height = min(height, size[1] - y)
+           pb = gdk.pixbuf_get_from_window(window, x, y, width,
+                                           height)
            pb.savev(tmpFile, 'png', [], [])
            del pb
            gc.collect()
         else:
            window = gtk.gdk.get_default_root_window()
            size = window.get_size()
+           # offsets cannot be greater than or equal to the desktop size
+           # we want to capture at least one pixel
+           x = min(x, size[0] - 1)
+           y = min(y, size[1] - 1)
+	   
+           # adjust the width and height parameters
+           # so that the captured image is contained
+           # within the desktop area
+           if width == None:
+               width = size[0] - x
+           else:
+               width = min(width, size[0] - x)
+           if height == None:
+               height = size[1] - y
+           else:
+               height = min(height, size[1] - y)
            pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 
-                               width or size [0], 
-                               height or size [1])
+                               width, 
+                               height)
            pb = pb.get_from_drawable(window, window.get_colormap(),
                                       x, y, 0, 0, 
-                                      width or size [0], 
-                                      height or size [1])
+                                      width, 
+                                      height)
 
            if pb:
               pb.save(tmpFile, 'png')

@@ -1,3 +1,4 @@
+package com.cobra.ldtp;
 /*
 LDTP v2 java client.
 
@@ -39,9 +40,9 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  */
 public class Ldtp {
     Process p = null;
-    String windowName;
-    String serverAddr;
-    String serverPort;
+    String windowName = null;
+    String serverAddr = null;
+    String serverPort = null;
     ProcessBuilder pb;
     Boolean windowsEnv = false;
     XmlRpcClient client = null;
@@ -50,44 +51,45 @@ public class Ldtp {
      * connectToServer (private), which connects to the running instance of LDTP server
      */
     private void connectToServer() {
-	serverAddr = System.getenv("LDTP_SERVER_ADDR");
-	if (serverAddr == null)
-	    serverAddr = "localhost";
-	serverPort = System.getenv("LDTP_SERVER_PORT");
-	if (serverPort == null)
-	    serverPort = "4118";
-	String tmpEnv = System.getenv("LDTP_WINDOWS");
-	if (tmpEnv != null)
-	    windowsEnv = true;
-	else {
-	    tmpEnv = System.getenv("LDTP_LINUX");
-	    if (tmpEnv != null)
-		windowsEnv = false;
-	    else {
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("win") >= 0)
-		    windowsEnv = true;
-	    }
-	}
-	config = new XmlRpcClientConfigImpl();
-	// FIXME: Use the custom URL
-	//String url = String.fromat("http://%s:%s/RPC2", serverAddr, serverPort);
-	String url = "http://localhost:4118/RPC2";
-	try {
-	    config.setServerURL(new URL(url));
-	} catch (java.net.MalformedURLException ex) {
-	    throw new LdtpExecutionError(ex.getMessage());
-	}
-	client = new XmlRpcClient();
-	client.setConfig(config);
-	Boolean alive = isAlive();
-	if (!alive) {
-	    launchLdtpProcess();
-	    // Verify we are able to connect after launching the server
-	    alive = isAlive();
-	    if (!alive)
-		throw new LdtpExecutionError("Unable to connect to server");
-	}
+    	if (serverAddr == null)
+    		serverAddr = System.getenv("LDTP_SERVER_ADDR");
+    	if (serverAddr == null)
+    		serverAddr = "localhost";
+    	if (serverPort == null)
+    		serverPort = System.getenv("LDTP_SERVER_PORT");
+    	if (serverPort == null)
+    		serverPort = "4118";
+    	String tmpEnv = System.getenv("LDTP_WINDOWS");
+    	if (tmpEnv != null)
+    		windowsEnv = true;
+    	else {
+    		tmpEnv = System.getenv("LDTP_LINUX");
+    		if (tmpEnv != null)
+    			windowsEnv = false;
+    		else {
+    			String os = System.getProperty("os.name").toLowerCase();
+    			if (os.indexOf("win") >= 0)
+    				windowsEnv = true;
+    		}
+    	}
+    	config = new XmlRpcClientConfigImpl();
+    	String url = String.format("http://%s:%s/RPC2", serverAddr, serverPort);
+    	try {
+    		config.setServerURL(new URL(url));
+    	} catch (java.net.MalformedURLException ex) {
+    		throw new LdtpExecutionError(ex.getMessage());
+    	}
+    	client = new XmlRpcClient();
+    	client.setConfig(config);
+    	Boolean alive = isAlive();
+    	if (!alive) {
+    		if (serverAddr.contains("localhost"))
+    			launchLdtpProcess();
+    		// Verify we are able to connect after launching the server
+    		alive = isAlive();
+    		if (!alive)
+    			throw new LdtpExecutionError("Unable to connect to server");
+    	}
     }
     /**
      * isAlive (private) Check the connection to LDTP server
@@ -144,15 +146,36 @@ public class Ldtp {
 	}
     }
     /**
-     * Ldtp (constructor)
+     * Ldtp
      *
      * @param windowName Window to be manipulated
      */
     public Ldtp(String windowName) {
-	if (windowName == null || windowName == "") {
-	    throw new LdtpExecutionError("Window name missing");
-	}
-	this.windowName = windowName;
+    	this(windowName, null);
+    }
+    /**
+     * Ldtp
+     *
+     * @param windowName Window to be manipulated
+     * @param serverAddr Server address to connect to
+     */
+    public Ldtp(String windowName, String serverAddr) {
+    	this(windowName, serverAddr, null);
+    }
+    /**
+     * Ldtp
+     *
+     * @param windowName Window to be manipulated
+     * @param serverAddr Server address to connect to
+     * @param serverPort Server port to connect to
+     */
+    public Ldtp(String windowName, String serverAddr, String serverPort) {
+    	if (windowName == null || windowName == "") {
+    		throw new LdtpExecutionError("Window name missing");
+    	}
+    	this.serverAddr = serverAddr;
+    	this.serverPort = serverPort;
+    	this.windowName = windowName;
 	connectToServer();
     }
     /**
@@ -1248,7 +1271,7 @@ public class Ldtp {
 	return doAction("keyrelease", params);
     }
     /**
-     * enterString Generates keyboard input
+     * enterString Generates keyboard input on the current focused window
      *
      * @param data Input string
      * @return Return 1 on success
@@ -2505,9 +2528,8 @@ public class Ldtp {
 	    filename = f.getAbsolutePath();
 	    f.delete();
 	    data = getString("imagecapture", params);
-	    Base64 base64 = new Base64();
 	    FileOutputStream fp = new FileOutputStream(filename);
-	    fp.write(base64.decodeBase64(data));
+	    fp.write(Base64.decodeBase64(data));
 	    fp.close();
 	} catch (java.io.FileNotFoundException ex) {
 	    throw new LdtpExecutionError(ex.getMessage());
@@ -2517,9 +2539,9 @@ public class Ldtp {
 	return filename;
     }
     public static void main(String[] args) {
-	int i;
 
 	/*
+	int i;
 	Ldtp ldtp = new Ldtp("*-gedit");
 	String[] windowList = ldtp.getWindowList();
 	for(i = 0; i < windowList.length; i++)
