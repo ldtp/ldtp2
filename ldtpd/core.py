@@ -769,6 +769,8 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @param object_name: Object name to look for, either full name,
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
+        @param state: State of the current object.
+        @type object_name: string
         @param guiTimeOut: Wait timeout in seconds
         @type guiTimeOut: integer
 
