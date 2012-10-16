@@ -365,9 +365,6 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
 
     return out_file
 
-### WINDOWS
-### XML-RPC.NET doesn't support optional arguments
-### We have to wrap those wrappers locally
 def wait(timeout=5):
     return _remote_wait(timeout)
 def waittillguiexist(window_name, object_name = '',
@@ -405,8 +402,7 @@ def deletetext(window_name, object_name, start, end = -1):
 def startprocessmonitor(process_name, interval = 2):
     return _remote_startprocessmonitor(process_name, interval)
 def gettextvalue(window_name, object_name, startPosition = 0, endPosition = 0):
-    return _remote_gettextvalue(window_name, object_name, startPosition, endPosition)
-### WINDOWS
+    return unicode(_remote_gettextvalue(window_name, object_name, startPosition, endPosition))
 
 def onwindowcreate(window_name, fn_name, *args):
     """
