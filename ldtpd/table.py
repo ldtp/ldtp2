@@ -47,7 +47,7 @@ class Table(Utils):
 
         return itable.nRows
 
-    def selectrow(self, window_name, object_name, row_text):
+    def selectrow(self, window_name, object_name, row_text, partial_match=False):
         """
         Select row
         
@@ -63,6 +63,8 @@ class Table(Utils):
         @return: 1 on success.
         @rtype: integer
         """
+        if partial_match:
+            return self.selectrowpartialmatch(window_name, object_name, row_text)
         obj = self._get_object(window_name, object_name)
 
         try:
