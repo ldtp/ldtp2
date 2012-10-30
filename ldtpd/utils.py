@@ -467,7 +467,12 @@ class Utils:
             if roleName != classType:
                 # If type doesn't match, don't proceed further
                 return 0
-            if acc.name and re.match(fnmatch.translate(name), acc.name, re.M | re.U):
+            if acc.name:
+                try:
+                    _acc_name=u"%s" % acc.name
+                except UnicodeDecodeError:
+                    _acc_name=acc.name.decode('utf-8')
+            if acc.name and re.match(fnmatch.translate(name), _acc_name, re.M | re.U):
                 # Since, type already matched and now the given name
                 # and accessibile name matched, mission accomplished
                 return 1
