@@ -93,7 +93,9 @@ class Text(Utils):
         @rtype: integer
         """
         if object_name:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name,
+                                 obj_type=['combo_box', 'text', 'entry',
+                                           'paragraph', 'password_text', 'editbar'])
             self._grab_focus(obj)
         if data:
             for gui in self._list_guis():
@@ -124,7 +126,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
             obj=self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
@@ -157,8 +161,9 @@ class Text(Utils):
         @return: text on success.
         @rtype: string
         """
-        obj=self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
             child_obj=self._get_combo_child_object_type(obj)
             if child_obj.getRole() == pyatspi.ROLE_LIST:
@@ -207,7 +212,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
             obj=self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
@@ -306,7 +313,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
             obj=self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
@@ -337,8 +346,9 @@ class Text(Utils):
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name, False)
-            self._grab_focus(obj)
+            obj=self._get_object(window_name, object_name, False,
+                                 obj_type=['combo_box', 'text', 'entry',
+                                           'paragraph', 'password_text', 'editbar'])
             return int(self._check_state(obj, pyatspi.STATE_EDITABLE))
         except:
             return 0
@@ -357,8 +367,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
 
         try:
             texti=obj.queryText()
@@ -381,8 +392,9 @@ class Text(Utils):
         @return: Cursor position on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
-        self._grab_focus(obj)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
 
         try:
             texti=obj.queryText()
@@ -407,7 +419,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
 
         try:
@@ -437,7 +451,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
 
         try:
@@ -474,7 +490,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
 
         try:
@@ -511,7 +529,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
 
         try:
@@ -545,7 +565,9 @@ class Text(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj=self._get_object(window_name, object_name)
+        obj=self._get_object(window_name, object_name,
+                             obj_type=['combo_box', 'text', 'entry',
+                                       'paragraph', 'password_text', 'editbar'])
         self._grab_focus(obj)
 
         try:
