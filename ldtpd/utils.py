@@ -527,8 +527,20 @@ class Utils:
         # If nothing matches, the search criteria fails, to find the object
         return 0
 
-    def _match_name_to_appmap(self, name, acc):
+    def _match_obj_type(self, class_type, obj_types):
+        if not obj_types:
+            # obj_types is []
+            return True
+        for obj_type in obj_types:
+            if obj_type == class_type:
+                return True
+        return False
+
+    def _match_name_to_appmap(self, name, acc, obj_type=[]):
         if not name:
+            return 0
+        is_obj_type=self._match_obj_type(acc['class'], obj_type)
+        if not is_obj_type:
             return 0
         if self._glob_match(name, acc['key']):
             return 1
@@ -775,7 +787,7 @@ class Utils:
                     return
             raise LdtpServerException('Object does not have a "%s" action' % action)
 
-    def _get_object_in_window(self, appmap, obj_name):
+    def _get_object_in_window(self, appmap, obj_name, obj_type=[]):
         """
         Get object in appmap dict format, eg: {'class' : 'menu', 'key': 'mnu0'}
 
@@ -789,7 +801,7 @@ class Utils:
         """
         for name in appmap.keys():
             obj = appmap[name]
-            if self._match_name_to_appmap(obj_name, obj):
+            if self._match_name_to_appmap(obj_name, obj, obj_type):
                 return obj
         return None
 
@@ -888,34 +900,37 @@ class Utils:
                 return gui, name
         return None, None
 
-    def _get_object(self, window_name, obj_name, wait=True):
-        if wait:
-            retry=self._obj_timeout
-        else:
-            retry=1
+    def _get_object(self, window_name, obj_name, wait=True,
+                    obj_type = []):
         _window_handle, _window_name = \
             self._get_window_handle(window_name, wait)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                               window_name)
+        if wait:
+            retry=self._obj_timeout
+        else:
+            retry=1
         for i in range(retry):
-            obj = self._internal_get_object(_window_handle, _window_name, obj_name)
+            obj = self._internal_get_object(_window_handle, _window_name,
+                                            obj_name, obj_type)
             if obj:
                 return obj
             if wait:
                 time.sleep(1)
-        return None
+        raise LdtpServerException(
+            'Unable to find object name "%s" in application map' % obj_name)
 
-    def _internal_get_object(self, window_handle, window_name, obj_name):
+    def _internal_get_object(self, window_handle, window_name,
+                             obj_name, obj_type):
         appmap = self._appmap_pairs(window_handle, window_name)
-        obj = self._get_object_in_window(appmap, obj_name)
+        obj = self._get_object_in_window(appmap, obj_name, obj_type)
         if not obj:
             appmap = self._appmap_pairs(window_handle, window_name,
                                         force_remap = True)
-            obj = self._get_object_in_window(appmap, obj_name)
+            obj = self._get_object_in_window(appmap, obj_name, obj_type)
         if not obj:
-            raise LdtpServerException(
-                'Unable to find object name "%s" in application map' % obj_name)
+            return None
         def _self_get_object(window, obj_name, obj):
             """
             window: Window handle in pyatspi format
@@ -942,7 +957,7 @@ class Utils:
                                             appmap[parent],
                                             parent_list)
 
-            if self._match_name_to_appmap(window_name, obj):
+            if self._match_name_to_appmap(window_name, obj, obj_type):
                 # If window name and object name are same
                 _parent_list = []
             else:
@@ -981,10 +996,9 @@ class Utils:
             # retry once, before giving up
             appmap = self._appmap_pairs(window_handle, window_name,
                                         force_remap = True)
-            obj = self._get_object_in_window(appmap, obj_name)
+            obj = self._get_object_in_window(appmap, obj_name, obj_type)
             if not obj:
-                raise LdtpServerException(
-                    'Unable to find object name "%s" in application map' % obj_name)
+                return None
             _current_obj = _self_get_object(window_name, obj_name, obj)
         return _current_obj
 
