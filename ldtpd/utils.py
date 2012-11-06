@@ -161,6 +161,8 @@ class Utils:
         self._states = {}
         self._appmap = {}
         self._callback = {}
+        self._obj_timeout=5
+        self._gui_timeout=30
         self._states_old = {}
         self._logger = logger
         self._state_names = {}
@@ -730,7 +732,7 @@ class Utils:
         return self.ldtpized_list
 
     def _get_menu_hierarchy(self, window_name, object_name,
-                            strict_hierarchy = False):
+                            strict_hierarchy = False, wait = True):
         _menu_hierarchy = re.split(';', object_name)
         if strict_hierarchy and len(_menu_hierarchy) <= 1:
             # If strict_hierarchy is set and _menu_hierarchy doesn't have
@@ -741,7 +743,7 @@ class Utils:
         if not re.search('^mnu', _menu_hierarchy[0], re.M | re.U):
             # Add mnu to the first object, if it doesn't exist
             _menu_hierarchy[0] = u'mnu%s' % _menu_hierarchy[0]
-        obj = self._get_object(window_name, _menu_hierarchy[0])
+        obj = self._get_object(window_name, _menu_hierarchy[0], wait)
         for _menu in _menu_hierarchy[1:]:
             _flag = False
             for _child in self._list_objects(obj):
@@ -791,9 +793,31 @@ class Utils:
                 return obj
         return None
 
-    def _get_window_handle(self, window_name):
+    def _get_window_handle(self, window_name, wait=False):
         """
         Get window handle of given window name
+
+        @param window_name: window name, as provided by the caller
+        @type window_name: string
+
+        @return: window handle, window name in appmap format
+        @rtype: object, string
+        """
+        if wait:
+            retry=self._gui_timeout
+        else:
+            retry=1
+        for i in range(retry):
+            gui, name = self._internal_get_window_handle(window_name)
+            if gui:
+                return gui, name
+            if wait:
+                time.sleep(1)
+        return None, None
+
+    def _internal_get_window_handle(self, window_name):
+        """
+        Get internal window handle of given window name
 
         @param window_name: window name, as provided by the caller
         @type window_name: string
@@ -825,14 +849,14 @@ class Utils:
                 # If window has title, use that
                 tmp_name = obj_name[1]
             # Append window type and window title
-            w_name = name = '%s%s' % (obj_name[0], tmp_name)
+            w_name = name = u'%s%s' % (obj_name[0], tmp_name)
             # If multiple window with same title, increment the index
             index = 1
             while name in window_list:
                 # If window name already exist in list, increase
                 # the index, so that we will have the window name
                 # always unique
-                name = '%s%d' % (w_name, index)
+                name = u'%s%d' % (w_name, index)
                 index += 1
             window_list.append(name)
 
@@ -841,7 +865,7 @@ class Utils:
 
             # Search with LDTP appmap format
             if window_name.find('#') != -1:
-                obj_index = '%s#%d' % (gui.getApplication().name,
+                obj_index = u'%s#%d' % (gui.getApplication().name,
                                        gui.getIndexInParent())
                 if self._ldtp_debug:
                     print 'Window name has #', window_name, obj_index
@@ -864,22 +888,35 @@ class Utils:
                 return gui, name
         return None, None
 
-    def _get_object(self, window_name, obj_name):
+    def _get_object(self, window_name, obj_name, wait=True):
+        if wait:
+            retry=self._obj_timeout
+        else:
+            retry=1
         _window_handle, _window_name = \
-            self._get_window_handle(window_name)
+            self._get_window_handle(window_name, wait)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
-                                          window_name)
-        appmap = self._appmap_pairs(_window_handle, _window_name)
+                                              window_name)
+        for i in range(retry):
+            obj = self._internal_get_object(_window_handle, _window_name, obj_name)
+            if obj:
+                return obj
+            if wait:
+                time.sleep(1)
+        return None
+
+    def _internal_get_object(self, window_handle, window_name, obj_name):
+        appmap = self._appmap_pairs(window_handle, window_name)
         obj = self._get_object_in_window(appmap, obj_name)
         if not obj:
-            appmap = self._appmap_pairs(_window_handle, _window_name,
+            appmap = self._appmap_pairs(window_handle, window_name,
                                         force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
         if not obj:
             raise LdtpServerException(
                 'Unable to find object name "%s" in application map' % obj_name)
-        def _internal_get_object(window, obj_name, obj):
+        def _self_get_object(window, obj_name, obj):
             """
             window: Window handle in pyatspi format
             obj_name: In appmap format
@@ -909,7 +946,7 @@ class Utils:
                 # If window name and object name are same
                 _parent_list = []
             else:
-                _parent_list = _traverse_parent(_window_handle, window_name, obj, [])
+                _parent_list = _traverse_parent(window_handle, window_name, obj, [])
                 if not _parent_list:
                     raise LdtpServerException(
                         'Unable to find object name "%s" in application map' % obj_name)
@@ -917,7 +954,7 @@ class Utils:
             key = obj['key']
             if key:
                 _parent_list.append(key)
-            obj = _window_handle
+            obj = window_handle
             for key in _parent_list[1:]:
                 _appmap_obj = appmap[key]
                 _appmap_role = re.sub('_', ' ', _appmap_obj['class'])
@@ -939,16 +976,16 @@ class Utils:
                                   "doesn't match", obj.getRoleName(), _appmap_role
                         return None
             return obj
-        _current_obj = _internal_get_object(window_name, obj_name, obj)
+        _current_obj = _self_get_object(window_name, obj_name, obj)
         if not _current_obj:
             # retry once, before giving up
-            appmap = self._appmap_pairs(_window_handle, _window_name,
+            appmap = self._appmap_pairs(window_handle, window_name,
                                         force_remap = True)
             obj = self._get_object_in_window(appmap, obj_name)
             if not obj:
                 raise LdtpServerException(
                     'Unable to find object name "%s" in application map' % obj_name)
-            _current_obj = _internal_get_object(window_name, obj_name, obj)
+            _current_obj = _self_get_object(window_name, obj_name, obj)
         return _current_obj
 
     def _grab_focus(self, obj):

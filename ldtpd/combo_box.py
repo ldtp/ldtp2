@@ -168,7 +168,7 @@ class LayeredPane(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj = self._get_object(window_name, object_name)
+        obj = self._get_object(window_name, object_name, False)
         self._grab_focus(obj)
 
         index = 0
@@ -205,7 +205,7 @@ class LayeredPane(Utils):
         @return: 1 on success.
         @rtype: integer
         """
-        obj = self._get_object(window_name, object_name)
+        obj = self._get_object(window_name, object_name, False)
         self._grab_focus(obj)
 
         selectioni = obj.querySelection()
@@ -524,7 +524,7 @@ class ComboBox(Utils, LayeredPane):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
             self._grab_focus(obj)
 
             child_obj = self._get_combo_child_object_type(obj)
@@ -572,7 +572,7 @@ class ComboBox(Utils, LayeredPane):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
             self._grab_focus(obj)
 
             child_obj = self._get_combo_child_object_type(obj)
@@ -607,7 +607,7 @@ class ComboBox(Utils, LayeredPane):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
             self._grab_focus(obj)
 
             child_obj = self._get_combo_child_object_type(obj)

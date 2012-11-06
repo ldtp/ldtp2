@@ -784,7 +784,7 @@ class Table(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
 
             def _searchString(acc):
                 try:

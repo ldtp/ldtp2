@@ -107,7 +107,7 @@ class Value(Utils):
         @rtype: 1
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
             valuei = obj.queryValue()
 
             if valuei.currentValue == float(data):
@@ -206,7 +206,7 @@ class Value(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_VERTICAL):
                 return 1
@@ -229,7 +229,7 @@ class Value(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
                 return 1
@@ -252,7 +252,7 @@ class Value(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_VERTICAL):
                 return 1
@@ -275,7 +275,7 @@ class Value(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_HORIZONTAL):
                 return 1

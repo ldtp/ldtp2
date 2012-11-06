@@ -659,6 +659,32 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
         return int(waiter.run())
 
+    def guitimeout(self, timeout):
+      """
+        GUI timeout period, default 30 seconds.
+
+        @param timeout: timeout in seconds
+        @type timeout: integer
+
+        @return: 1 if GUI was found, 0 if not.
+        @rtype: integer
+      """
+      self._gui_timeout=timeout
+      return 1
+
+    def objtimeout(self, timeout):
+      """
+        Object timeout period, default 5 seconds.
+
+        @param timeout: timeout in seconds
+        @type timeout: integer
+
+        @return: 1 if GUI was found, 0 if not.
+        @rtype: integer
+      """
+      self._obj_timeout=timeout
+      return 1
+
     def waittillguiexist(self, window_name, object_name='',
                          guiTimeOut=30, state=''):
         """
@@ -927,7 +953,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name, False)
 
             return int(obj.getRole() == pyatspi.ROLE_PUSH_BUTTON)
         except:
@@ -948,7 +974,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name, False)
 
             return int(self._check_state(obj, pyatspi.STATE_CHECKED))
         except:
@@ -1049,7 +1075,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name, False)
 
             return int(not self._check_state(obj, pyatspi.STATE_CHECKED))
         except:
@@ -1070,7 +1096,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name, False)
 
             return int(self._check_state(obj, pyatspi.STATE_ENABLED))
         except:
@@ -1088,7 +1114,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: list
         """
         obj_list=[]
-        gui, _window_name=self._get_window_handle(window_name)
+        gui, _window_name=self._get_window_handle(window_name, True)
         if not gui:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
@@ -1112,7 +1138,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: list
         """
         _window_handle, _window_name=\
-            self._get_window_handle(window_name)
+            self._get_window_handle(window_name, True)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
@@ -1143,7 +1169,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: string
         """
         _window_handle, _window_name=\
-            self._get_window_handle(window_name)
+            self._get_window_handle(window_name, True)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
@@ -1178,7 +1204,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             role=re.sub(' ', '_', role)
         if parent and (child_name or role):
             _window_handle, _window_name=\
-                self._get_window_handle(window_name)
+                self._get_window_handle(window_name, True)
             if not _window_handle:
                 raise LdtpServerException('Unable to find window "%s"' % \
                                               window_name)
@@ -1213,7 +1239,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             return matches
 
         _window_handle, _window_name=\
-            self._get_window_handle(window_name)
+            self._get_window_handle(window_name, True)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)
@@ -1261,7 +1287,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @rtype: integer
         """
         _window_handle, _window_name=\
-            self._get_window_handle(window_name)
+            self._get_window_handle(window_name, True)
         if not _window_handle:
             raise LdtpServerException('Unable to find window "%s"' % \
                                           window_name)

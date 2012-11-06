@@ -110,7 +110,7 @@ class PageTabList(Utils):
         @rtype: integer
         """
         try:
-            obj = self._get_object(window_name, object_name)
+            obj = self._get_object(window_name, object_name, False)
             self._grab_focus(obj)
 
             try:

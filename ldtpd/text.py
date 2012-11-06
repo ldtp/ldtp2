@@ -337,7 +337,7 @@ class Text(Utils):
         @rtype: integer
         """
         try:
-            obj=self._get_object(window_name, object_name)
+            obj=self._get_object(window_name, object_name, False)
             self._grab_focus(obj)
             return int(self._check_state(obj, pyatspi.STATE_EDITABLE))
         except:
