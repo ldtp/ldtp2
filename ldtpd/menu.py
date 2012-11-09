@@ -66,9 +66,10 @@ class Menu(Utils):
         """
         try:
             if strict_hierarchy or re.search(';', object_name):
-                obj = self._get_menu_hierarchy(window_name, object_name)
+                obj = self._get_menu_hierarchy(window_name, object_name,
+                                               wait=False)
             else:
-                obj = self._get_object(window_name, object_name)
+                obj = self._get_object(window_name, object_name, False)
             return 1
         except:
             return 0
@@ -165,9 +166,10 @@ class Menu(Utils):
         """
         try:
             if re.search(';', object_name):
-                obj = self._get_menu_hierarchy(window_name, object_name)
+                obj = self._get_menu_hierarchy(window_name, object_name,
+                                               wait=False)
             else:
-                obj = self._get_object(window_name, object_name)
+                obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_ENABLED):
                 return 1
@@ -191,9 +193,10 @@ class Menu(Utils):
         """
         try:
             if re.search(';', object_name):
-                obj = self._get_menu_hierarchy(window_name, object_name)
+                obj = self._get_menu_hierarchy(window_name, object_name,
+                                               wait=False)
             else:
-                obj = self._get_object(window_name, object_name)
+                obj = self._get_object(window_name, object_name, False)
 
             if self._check_state(obj, pyatspi.STATE_CHECKED):
                 return 1
@@ -217,9 +220,10 @@ class Menu(Utils):
         """
         try:
             if re.search(';', object_name):
-                obj = self._get_menu_hierarchy(window_name, object_name)
+                obj = self._get_menu_hierarchy(window_name, object_name,
+                                               wait=False)
             else:
-                obj = self._get_object(window_name, object_name)
+                obj = self._get_object(window_name, object_name, False)
 
             if not self._check_state(obj, pyatspi.STATE_CHECKED):
                 return 1
