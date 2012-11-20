@@ -405,7 +405,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
           if re.search(';', self._obj_name):
             obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
           else:
-            obj = self._get_object(self._frame_name, self._obj_name)
+            obj = self._get_object(self._frame_name, self._obj_name, False)
           if self._state:
             _state_inst = obj.getState()
             _obj_state = _state_inst.getStates()
@@ -436,7 +436,7 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
             if re.search(';', self._obj_name):
                 self._get_menu_hierarchy(self._frame_name, self._obj_name)
             else:
-                self._get_object(self._frame_name, self._obj_name)
+                self._get_object(self._frame_name, self._obj_name, False)
             self.success = False
         except:
             self.success = True
