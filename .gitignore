@@ -5,3 +5,7 @@ dist/
 build/
 doc/html/
 .DS_Store
+ldtp/Java/lib/
+ldtp/Java/doc/
+ldtp/Java/bin/com/
+ldtp/Java/Ldtp.jar
