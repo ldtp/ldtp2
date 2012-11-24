@@ -403,6 +403,10 @@ def startprocessmonitor(process_name, interval = 2):
     return _remote_startprocessmonitor(process_name, interval)
 def gettextvalue(window_name, object_name, startPosition = 0, endPosition = 0):
     return unicode(_remote_gettextvalue(window_name, object_name, startPosition, endPosition))
+def getcellvalue(window_name, object_name, row_index, column = 0):
+    return _remote_getcellvalue(window_name, object_name, row_index, column)
+def getcellsize(window_name, object_name, row_index, column = 0):
+    return _remote_getcellsize(window_name, object_name, row_index, column)
 
 def onwindowcreate(window_name, fn_name, *args):
     """
