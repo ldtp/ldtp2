@@ -1,5 +1,5 @@
 ﻿/*
- * WinLDTP 1.0
+ * CobraWinLDTP 1.0
  * 
  * Author: Nagappan Alagappan <nalagappan@vmware.com>
  * Author: John Yingjun Li <yjli@vmware.com>
