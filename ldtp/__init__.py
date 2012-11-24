@@ -407,6 +407,8 @@ def getcellvalue(window_name, object_name, row_index, column = 0):
     return _remote_getcellvalue(window_name, object_name, row_index, column)
 def getcellsize(window_name, object_name, row_index, column = 0):
     return _remote_getcellsize(window_name, object_name, row_index, column)
+def getobjectnameatcoords(waitTime = 0):
+    return _remote_getobjectnameatcoords(waitTime)
 
 def onwindowcreate(window_name, fn_name, *args):
     """
