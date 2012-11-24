@@ -348,6 +348,24 @@ public
       raise LdtpExecutionError.new(param.faultString)
     end
   end
+  def getcellvalue(object_name, row, column = 0)
+    ok, param = @client.call2("getcellvalue", @window_name, object_name,
+                              row, column)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
+  def getcellsize(object_name, row, column = 0)
+    ok, param = @client.call2("getcellsize", @window_name, object_name,
+                              row, column)
+    if ok then
+      return param
+    else
+      raise LdtpExecutionError.new(param.faultString)
+    end
+  end
   def closewindow(window_name = "")
     if window_name == nil || window_name == "" then
        window_name = @window_name
