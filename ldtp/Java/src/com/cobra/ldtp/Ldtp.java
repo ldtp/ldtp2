@@ -2019,6 +2019,30 @@ public class Ldtp {
 	return getString("getcellvalue", params);
     }
     /**
+     * getCellSize Gets cell size from row index and column 0
+     *
+     * @param objName Object name inside the current window
+     * @param rowIndex Row index in which data has to be get
+     * @return Return size of cell as Integer array on success
+     * @throws LdtpExecutionError on failure
+     */
+    public Integer[] getCellSize(String objName, int rowIndex) throws LdtpExecutionError {
+	return getCellSize(objName, rowIndex, 0);
+    }
+    /**
+     * getCellSize Gets cell value from row index and column
+     *
+     * @param objName Object name inside the current window
+     * @param rowIndex Row index in which data has to be get
+     * @param column Column in which data has to be get
+     * @return Return size of cell as Integer array on success
+     * @throws LdtpExecutionError on failure
+     */
+    public String getCellSize(String objName, int rowIndex, int column) throws LdtpExecutionError {
+	Object[] params = new Object[]{windowName, objName, rowIndex, column};
+	return getIntList("getcellsize", params);
+    }
+    /**
      * rightClick Right click on table cell with matching row text
      *
      * @param objName Object name inside the current window
