@@ -761,6 +761,9 @@
  * with matches the given name
  * \n
  * \n
+ * \subpage getcellsize - Get the table cell size
+ * \n
+ * \n
  * \subpage getcellvalue - Get the table cell value
  * \n
  * \n
@@ -990,6 +993,9 @@
  * \n
  * \n
  * \subpage expandtablecell - Expand or collapse tree table
+ * \n
+ * \n
+ * \subpage getcellsize - Get the table cell size
  * \n
  * \n
  * \subpage getcellvalue - Get the table cell value
@@ -4483,11 +4489,11 @@
 /** \page getcellvalue getcellvalue
  * \section Syntax
  *
- * getcellvalue('\<window name\>', '\<component name\>', '\<row\>', '\<column\>')
+ * getcellvalue('\<window name\>', '\<component name\>', '\<row\>'[, '\<column\>'])
  *
  * \section Description
  *
- * returns the text in a cell at given row and column of a tree table 
+ * returns the text in a cell at given row and column of a table / tree table
  *
  * \retval cell value of type string on success, else LdtpExecutionError exception
  *
@@ -4498,12 +4504,34 @@
  *
  * With respect to Evolution Messages tree table
  * 
- * gettextvalue('Evolution-Mail', 'treetblMails', 2, 4)
+ * getcellvalue('Evolution-Mail', 'treetblMails', 2, 4)
  * 
  * This will return the subject of 3rd message in the message list. 
  *
  * \author Khasim Shaheed <khasim.shaheed@gmail.com>
  * \author Premkumar J <prem.jothimani@gmail.com>
+ */
+
+/** \page getcellsize getcellsize
+ * \section Syntax
+ *
+ * getcellsize('\<window name\>', '\<component name\>', '\<row\>'[, '\<column\>'])
+ *
+ * \section Description
+ *
+ * returns the coordinates of the cell at given row and column of a table / tree table
+ *
+ * \retval cell size of list (x, y, width, height) on success, else LdtpExecutionError exception
+ *
+ * \section Example
+ *
+ * With respect to Evolution Messages tree table
+ * 
+ * getcellvalue('Evolution-Mail', 'treetblMails', 2, 4)
+ * 
+ * This will return the size of 3rd message in the message list. 
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page getallitem getallitem
