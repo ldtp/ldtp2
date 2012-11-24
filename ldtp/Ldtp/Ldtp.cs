@@ -225,6 +225,9 @@ namespace Ldtp
         [XmlRpcMethod("getcellvalue")]
         String GetCellValue(String windowName, String objName, int row,
             int column = 0);
+        [XmlRpcMethod("getcellsize")]
+        String GetCellSize(String windowName, String objName, int row,
+            int column = 0);
         [XmlRpcMethod("expandtablecell")]
         int ExpandTableCell(String windowName, String objName, int index);
         [XmlRpcMethod("gettablerowindex")]
@@ -1331,6 +1334,17 @@ namespace Ldtp
             try
             {
                 return proxy.GetCellValue(windowName, objName, row, column);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public String GetCellSize(String objName, int row, int column = 0)
+        {
+            try
+            {
+                return proxy.GetCellSize(windowName, objName, row, column);
             }
             catch (XmlRpcFaultException ex)
             {
