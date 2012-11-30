@@ -592,34 +592,36 @@ class Utils:
         This function will check for all levels and returns the first
         matching LIST / MENU type
         """
-        if obj:
-            for child in obj:
-                if not child:
-                    continue
-                if child.childCount > 0:
-                    child_obj = self._get_combo_child_object_type(child)
-                    if child_obj:
-                        return child_obj
-                if child.getRole() == pyatspi.ROLE_LIST:
-                    return child
-                elif child.getRole() == pyatspi.ROLE_MENU:
-                    return child
+        if not obj:
+            return
+        for child in obj:
+            if not child:
+                continue
+            if child.childCount > 0:
+                child_obj = self._get_combo_child_object_type(child)
+                if child_obj:
+                    return child_obj
+            if child.getRole() == pyatspi.ROLE_LIST:
+                return child
+            elif child.getRole() == pyatspi.ROLE_MENU:
+                return child
 
     def _get_child_object_type(self, obj, role_type):
         """
         This function will check for all levels and returns the first
         matching role_type
         """
-        if obj and role_type:
-            for child in obj:
-                if not child:
-                    continue
-                if child.childCount > 0:
-                    child_obj = self._get_child_object_type(child, role_type)
-                    if child_obj:
-                        return child_obj
-                if child.getRole() == role_type:
-                    return child
+        if not obj or not role_type:
+            return
+        for child in obj:
+            if not child:
+                continue
+            if child.childCount > 0:
+                child_obj = self._get_child_object_type(child, role_type)
+                if child_obj:
+                    return child_obj
+            if child.getRole() == role_type:
+                return child
 
     def _add_appmap_data(self, obj, parent, child_index):
         if not obj:
