@@ -339,6 +339,58 @@ class Table(Utils):
             raise LdtpServerException('Unable to get row text')
         return name
 
+    def getcellsize(self, window_name, object_name, row_index, column = 0):
+        """
+        Get cell size
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+        @param row_index: Row index to get
+        @type row_index: index
+        @param column: Column index to get, default value 0
+        @type column: index
+
+        @return: x, y, width, height on success.
+        @rtype: list
+        """
+        obj=self._get_object(window_name, object_name)
+
+        cell=self._get_accessible_at_row_column(obj, row_index, column)
+        current_cell=None
+        if cell.childCount > 0:
+            flag = False
+            try:
+                if self._handle_table_cell:
+                    # Was externally set, let us not
+                    # touch this value
+                    flag = True
+                else:
+                    self._handle_table_cell = True
+                children = self._list_objects(cell)
+                for child in children:
+                    try:
+                        texti = child.queryText()
+                    except NotImplementedError:
+                        continue
+                    current_cell=child
+                    self._grab_focus(cell)
+                    break
+            finally:
+                if not flag:
+                    self._handle_table_cell = False
+        else:
+            current_cell=cell
+            self._grab_focus(cell)
+        if not current_cell:
+            raise LdtpServerException('Unable to find row and/or column')
+        _coordinates=self._get_size(current_cell)
+        return [_coordinates.x, _coordinates.y, \
+                    _coordinates.width, _coordinates.height]
+
     def rightclick(self, window_name, object_name, row_text):
         """
         Right click on table cell

@@ -31,11 +31,11 @@ setup(name="ldtp",
       license="GNU Lesser General Public License (LGPL)",
       packages=["ldtp", "ldtpd", "ooldtp", "ldtputils"],
       long_description="Linux Desktop Testing Project is aimed at producing " \
-          "high quality test automation framework and cutting-edge tools that " \
-          "can be used to test GNU/Linux Desktop and improve it. It uses the " \
+          "high quality cross platform GUI test automation framework and cutting-edge tools that " \
+          "can be used to test GNU/Linux/Windows/Mac Desktop and improve it. It uses the " \
           "Accessibility libraries to poke through the applications user " \
           "interface. LDTP is a Linux / Unix GUI application testing tool. " \
-          "It runs on Linux / Solaris / FreeBSD / Embedded environment (Palm Source).",
+          "It runs on Linux / Windows / Mac OSX / Solaris / FreeBSD / Embedded environment (Palm Source).",
       scripts=["scripts/ldtp"],
       classifiers=[
         "Development Status :: 5 - Production",
@@ -46,7 +46,9 @@ setup(name="ldtp",
         "Operating System :: POSIX :: Linux",
         "Operating System :: POSIX :: Solaris",
         "Operating System :: POSIX :: FreeBSD",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: MacOS :: MacOS X",
         "Programming Language :: Python",
         "Topic :: Desktop Environment",
-        ]
+        ],
       )

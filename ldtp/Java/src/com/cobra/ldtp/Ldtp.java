@@ -31,6 +31,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.io.FileOutputStream;
 import java.lang.ProcessBuilder;
+import org.apache.commons.logging.Log; 
+import org.apache.commons.logging.LogFactory; 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -40,59 +42,60 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  */
 public class Ldtp {
     Process p = null;
-	boolean debug = false;
+    boolean debug = false;
     String windowName = null;
     String serverAddr = null;
     String serverPort = null;
     ProcessBuilder pb;
     Boolean windowsEnv = false;
     XmlRpcClient client = null;
-	PollEvents pollEvents = null;
+    PollEvents pollEvents = null;
     XmlRpcClientConfigImpl config = null;
+    public Log log = LogFactory.getLog();
     /**
      * connectToServer (private), which connects to the running instance of LDTP server
      */
     private void connectToServer() {
     	if (serverAddr == null)
-    		serverAddr = System.getenv("LDTP_SERVER_ADDR");
+	    serverAddr = System.getenv("LDTP_SERVER_ADDR");
     	if (serverAddr == null)
-    		serverAddr = "localhost";
+	    serverAddr = "localhost";
     	if (serverPort == null)
-    		serverPort = System.getenv("LDTP_SERVER_PORT");
+	    serverPort = System.getenv("LDTP_SERVER_PORT");
     	if (serverPort == null)
-    		serverPort = "4118";
+	    serverPort = "4118";
     	if (System.getenv("LDTP_DEBUG") != null)
-    		debug = true;
+	    debug = true;
     	String tmpEnv = System.getenv("LDTP_WINDOWS");
     	if (tmpEnv != null)
-    		windowsEnv = true;
+	    windowsEnv = true;
     	else {
-    		tmpEnv = System.getenv("LDTP_LINUX");
-    		if (tmpEnv != null)
-    			windowsEnv = false;
-    		else {
-    			String os = System.getProperty("os.name").toLowerCase();
-    			if (os.indexOf("win") >= 0)
-    				windowsEnv = true;
-    		}
+	    tmpEnv = System.getenv("LDTP_LINUX");
+	    if (tmpEnv != null)
+		windowsEnv = false;
+	    else {
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("win") >= 0)
+		    windowsEnv = true;
+	    }
     	}
     	config = new XmlRpcClientConfigImpl();
     	String url = String.format("http://%s:%s/RPC2", serverAddr, serverPort);
     	try {
-    		config.setServerURL(new URL(url));
+	    config.setServerURL(new URL(url));
     	} catch (java.net.MalformedURLException ex) {
-    		throw new LdtpExecutionError(ex.getMessage());
+	    throw new LdtpExecutionError(ex.getMessage());
     	}
     	client = new XmlRpcClient();
     	client.setConfig(config);
     	Boolean alive = isAlive();
     	if (!alive) {
-    		if (serverAddr.contains("localhost"))
-    			launchLdtpProcess();
-    		// Verify we are able to connect after launching the server
-    		alive = isAlive();
-    		if (!alive)
-    			throw new LdtpExecutionError("Unable to connect to server");
+	    if (serverAddr.contains("localhost"))
+		launchLdtpProcess();
+	    // Verify we are able to connect after launching the server
+	    alive = isAlive();
+	    if (!alive)
+		throw new LdtpExecutionError("Unable to connect to server");
     	}
     }
     /**
@@ -145,11 +148,11 @@ public class Ldtp {
      */
     private void terminateLdtpProcess() {
     	if (p != null) {
-    		// Kill LDTP executable
-    		p.destroy();
+	    // Kill LDTP executable
+	    p.destroy();
     	}
-		if (pollEvents != null)
-			pollEvents.pollServer = false;
+	if (pollEvents != null)
+	    pollEvents.pollServer = false;
     }
     /**
      * Ldtp
@@ -2017,6 +2020,30 @@ public class Ldtp {
     public String getCellValue(String objName, int rowIndex, int column) throws LdtpExecutionError {
 	Object[] params = new Object[]{windowName, objName, rowIndex, column};
 	return getString("getcellvalue", params);
+    }
+    /**
+     * getCellSize Gets cell size from row index and column 0
+     *
+     * @param objName Object name inside the current window
+     * @param rowIndex Row index in which data has to be get
+     * @return Return size of cell as Integer array on success
+     * @throws LdtpExecutionError on failure
+     */
+    public Integer[] getCellSize(String objName, int rowIndex) throws LdtpExecutionError {
+	return getCellSize(objName, rowIndex, 0);
+    }
+    /**
+     * getCellSize Gets cell value from row index and column
+     *
+     * @param objName Object name inside the current window
+     * @param rowIndex Row index in which data has to be get
+     * @param column Column in which data has to be get
+     * @return Return size of cell as Integer array on success
+     * @throws LdtpExecutionError on failure
+     */
+    public String getCellSize(String objName, int rowIndex, int column) throws LdtpExecutionError {
+	Object[] params = new Object[]{windowName, objName, rowIndex, column};
+	return getIntList("getcellsize", params);
     }
     /**
      * rightClick Right click on table cell with matching row text

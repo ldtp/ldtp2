@@ -198,6 +198,36 @@ sub gettextvalue {
     );
 }
 
+sub getcellvalue {
+    my $self = shift;
+    my ( $object_name, $row, $column ) = @_;
+
+    defined $column   or $column   = 0;
+
+    $self->_try(
+        'getcellvalue',
+        $self->window_name,
+        $object_name,
+        $row,
+        $column,
+    );
+}
+
+sub getcellsize {
+    my $self = shift;
+    my ( $object_name, $row, $column ) = @_;
+
+    defined $column   or $column   = 0;
+
+    $self->_try(
+        'getcellsize',
+        $self->window_name,
+        $object_name,
+        $row,
+        $column,
+    );
+}
+
 sub close {
     my $self = shift;
     $self->_try( 'closewindow', $self->name );
