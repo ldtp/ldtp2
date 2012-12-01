@@ -19,7 +19,7 @@ Headers in this file shall remain intact.
 
 from ldtp import *
 
-launchapp('notepad')
-waittillguiexist('*-Notepad')
-selectmenuitem('*-Notepad', 'mnuFile;mnuExit')
-waittillguinotexist('*-Notepad')
+# Based on Windows 7 SP1
+mouserightclick('Program Manager', 'lstRecycleBin')
+wait(1)
+selectmenuitem('mnuContext', 'Open')

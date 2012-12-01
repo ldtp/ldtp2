@@ -18,8 +18,12 @@ Headers in this file shall remain intact.
 """
 
 from ldtp import *
+# Executed this with Ubuntu 10.04 without Unity
 
-launchapp('notepad')
-waittillguiexist('*-Notepad')
-selectmenuitem('*-Notepad', 'mnuFile;mnuExit')
-waittillguinotexist('*-Notepad')
+# I created Test folder in desktop and made sure its visible
+# 'dlg0' may not be same in your case, in our test scenario, I have tried like this:
+# getwindowlist() before and after mouse right click, see whats the diff and use that
+# to be even more precise, you can use for dlg with index
+mouserightclick('frmx-nautilus-desktop', 'icoTest')
+wait(1)
+selectmenuitem('dlg0', 'mnuProperties')
