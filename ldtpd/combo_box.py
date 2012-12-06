@@ -671,7 +671,7 @@ class ComboBox(Utils, LayeredPane):
             except NotImplementedError:
                 text = child_obj.name
             return text
-        _ldtpize_accessible_name = self._ldtpize_accessible(child_obj)
+        _ldtpize_accessible_name = self._ldtpize_accessible(obj)
         if not _ldtpize_accessible_name[1] and not _ldtpize_accessible_name[2]:
             raise LdtpServerException("Unable to get currently selected item")
         # Return label by value, which is actually selected one
