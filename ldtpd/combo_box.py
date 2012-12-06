@@ -658,7 +658,7 @@ class ComboBox(Utils, LayeredPane):
         @rtype: string
         """
         obj = self._get_object(window_name, object_name,
-                               obj_type = [pyatspi.ROLE_COMBO_BOX])
+                               obj_type = ["combo_box"])
         self._grab_focus(obj)
 
         child_obj = self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
@@ -672,7 +672,7 @@ class ComboBox(Utils, LayeredPane):
                 text = child_obj.name
             return text
         _ldtpize_accessible_name = self._ldtpize_accessible(child_obj)
-        if not _ldtpize_accessible_name[2]:
+        if not _ldtpize_accessible_name[1] and not _ldtpize_accessible_name[2]:
             raise LdtpServerException("Unable to get currently selected item")
         # Return label by value, which is actually selected one
-        return _ldtpize_accessible_name[2]
+        return _ldtpize_accessible_name[2] or _ldtpize_accessible_name[1]
