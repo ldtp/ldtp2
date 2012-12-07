@@ -254,6 +254,9 @@
  * \subpage getallitem - Get all the items from combo box list
  * \n
  * \n
+ * \subpage getcombovalue - Get current combobox selected value
+ * \n
+ * \n
  * \subpage hidelist - Hide the combo box drop down list
  * \n
  * \n
@@ -2761,6 +2764,32 @@
  * verifyselect('SearchForFiles', 'cboAvailableoptions', 'Contains the text')
  *
  * \author Poornima <pnayak@novell.com>
+ */
+
+/** \page getcombovalue getcombovalue
+ * \section Syntax
+ *
+ * getcombovalue('\<window name\>', '\<cboName\>')
+ *
+ * \section Description
+ *
+ * Get currently selected combo box value
+ *
+ * \section ImplementationDetails
+ *
+ * getcombovalue function will try to get the combo box value and returns.
+ *
+ * \retval combo box value on success, LdtpExecutionError exception on failure
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ *
+ * \section Example
+ *
+ * In gnome-search-tool combo box 'Available options' to get the menu item 'Contains the text'
+ * 
+ * getcombovalue('SearchForFiles', 'cboAvailableoptions')
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page verifysettext verifysettext
