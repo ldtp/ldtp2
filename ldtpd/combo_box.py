@@ -675,4 +675,9 @@ class ComboBox(Utils, LayeredPane):
         if not _ldtpize_accessible_name[1] and not _ldtpize_accessible_name[2]:
             raise LdtpServerException("Unable to get currently selected item")
         # Return label by value, which is actually selected one
-        return _ldtpize_accessible_name[2] or _ldtpize_accessible_name[1]
+        # Preference to label_by rather than label
+        text=_ldtpize_accessible_name[2] or _ldtpize_accessible_name[1]
+        try:
+            return unicode(text)
+        except UnicodeDecodeError:
+            return text
