@@ -350,9 +350,9 @@ class Table(Utils):
         LDTP's name convention, or a Unix glob. 
         @type object_name: string
         @param row_index: Row index to get
-        @type row_index: index
+        @type row_index: integer
         @param column: Column index to get, default value 0
-        @type column: index
+        @type column: integer
 
         @return: x, y, width, height on success.
         @rtype: list
