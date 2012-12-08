@@ -661,26 +661,26 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def guitimeout(self, timeout):
       """
-        GUI timeout period, default 30 seconds.
+      Change GUI timeout period, default 30 seconds.
 
-        @param timeout: timeout in seconds
-        @type timeout: integer
+      @param timeout: timeout in seconds
+      @type timeout: integer
 
-        @return: 1 if GUI was found, 0 if not.
-        @rtype: integer
+      @return: 1 on success.
+      @rtype: integer
       """
       self._gui_timeout=timeout
       return 1
 
     def objtimeout(self, timeout):
       """
-        Object timeout period, default 5 seconds.
+      Change Object timeout period, default 5 seconds.
 
-        @param timeout: timeout in seconds
-        @type timeout: integer
+      @param timeout: timeout in seconds
+      @type timeout: integer
 
-        @return: 1 if GUI was found, 0 if not.
-        @rtype: integer
+      @return: 1 on success.
+      @rtype: integer
       """
       self._obj_timeout=timeout
       return 1
