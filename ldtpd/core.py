@@ -674,7 +674,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def objtimeout(self, timeout):
       """
-      Change Object timeout period, default 5 seconds.
+      Change object timeout period, default 5 seconds.
 
       @param timeout: timeout in seconds
       @type timeout: integer
