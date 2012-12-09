@@ -1526,3 +1526,19 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             # x, y coordinates is returned !
             return (self._get_window_handle(window_name)[1], possible_child)
         return (None, None)
+
+    def getaccesskey(self, window_name, object_name):
+        """
+        Get access key of given object
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: access key in string format on success, else LdtpExecutionError on failure.
+        @rtype: string
+        """
+        raise LdtpServerException("Not implemented")
