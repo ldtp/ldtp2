@@ -311,6 +311,9 @@
  * \subpage generatemouseevent - Generate mouse event based on x, y coordinates
  * \n
  * \n
+ * \subpage getaccesskey - Get access key of given control
+ * \n
+ * \n
  * \subpage getallstates - Get list of available states of an object
  * \n
  * \n
@@ -4789,6 +4792,29 @@
  * from ldtp import *
  *
  * getapplist() # Will return all the accessibility application window title that are currently opened
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
+ */
+
+/** \page getaccesskey getaccesskey
+ * \section Syntax
+ *
+ * getaccesskey('\<window name\>'[, '\<component name\>'])
+ *
+ * \section Description
+ *
+ * Will return access key, if available
+ *
+ * \retval String with access key on success, LdtpExecutionError exception on failure
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ *
+ * # Print access key of OK button in Preferences window
+ * print getaccesskey("Preferences", "btnOK")
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
