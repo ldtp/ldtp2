@@ -1541,4 +1541,16 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         @return: access key in string format on success, else LdtpExecutionError on failure.
         @rtype: string
         """
-        raise LdtpServerException("Not implemented")
+        obj=self._get_object(window_name, object_name)
+        key_binding = ''
+        try:
+            iaction = obj.queryAction()
+            for j in xrange(iaction.nActions):
+                if iaction.getKeyBinding(j) != '':
+                    key_binding = iaction.getKeyBinding(j)
+                    break
+        except NotImplementedError:
+            pass
+        if not key_binding:
+          raise LdtpServerException("No access key associated")
+        return key_binding
