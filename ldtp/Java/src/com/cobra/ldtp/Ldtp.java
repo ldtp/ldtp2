@@ -359,7 +359,7 @@ public class Ldtp {
 	return getStringList("getobjectlist", params);
     }
     /**
-     * getObjectList Get current object info
+     * getObjectInfo Get current object info
      *
      * @param objName Object name
      * @return Return the properties of the current object as String array
@@ -367,6 +367,16 @@ public class Ldtp {
     public String[] getObjectInfo(String objName) throws LdtpExecutionError {
 	Object[] params = new Object[]{windowName, objName};
 	return getStringList("getobjectinfo", params);
+    }
+    /**
+     * getAccessKey Get access key
+     *
+     * @param objName Object name
+     * @return Return the access key as String
+     */
+    public String getAccessKey(String objName) throws LdtpExecutionError {
+	Object[] params = new Object[]{windowName, objName};
+	return getString("getaccesskey", params);
     }
     /**
      * getObjectProperty Get current object property
@@ -968,6 +978,13 @@ public class Ldtp {
     public int activateWindow(String windowName) throws LdtpExecutionError {
 	Object[] params = new Object[]{windowName};
 	return doAction("activatewindow", params);
+    }
+    /**
+     * appUnderTest Application under test
+     */
+    public String appUnderTest(String appName) {
+    	Object[] params = new Object[]{appName};
+    	return doAction("appundertest", params);
     }
     /**
      * getAllStates Get all states of given object
@@ -1659,6 +1676,17 @@ public class Ldtp {
     public int selectedItemCount(String objName) {
 	Object[] params = new Object[]{windowName, objName};
 	return doAction("selecteditemcount", params);
+    }
+    /**
+     * getComboValue Get combobox value
+     *
+     * @param objName Object name inside the current window
+     * @return Return combobox value on success
+     * @throws LdtpExecutionError on failure
+     */
+    public String getComboValue(String objName) throws LdtpExecutionError {
+	Object[] params = new Object[]{windowName, objName};
+	return doAction("getcombovalue", params);
     }
     /**
      * showList Show combo box entries
