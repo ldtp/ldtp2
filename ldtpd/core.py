@@ -146,10 +146,21 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if self._ldtp_debug:
           print traceback.format_exc()
 
+    def appundertest(self, app_name):
+      """
+      Application under test
+
+      @return: return 1 on success
+      @rtype: int
+      """
+      # For Windows / Mac compatibility
+      # Currently this api is not in use under Linux
+      return 1
+
     def getapplist(self):
         """
         Get all accessibility application name that are currently running
-        
+
         @return: list of appliction name of string type on success.
         @rtype: list
         """
@@ -167,7 +178,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def getwindowlist(self):
         """
         Get all accessibility window that are currently open
-        
+
         @return: list of window names in LDTP format of string type on success.
         @rtype: list
         """
