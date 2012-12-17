@@ -642,3 +642,42 @@ class ComboBox(Utils, LayeredPane):
         except:
             pass
         return 0
+
+    def getcombovalue(self, window_name, object_name):
+        """
+        Get current selected combobox value
+        
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob. 
+        @type object_name: string
+
+        @return: selected item on success, else LdtpExecutionError on failure.
+        @rtype: string
+        """
+        obj = self._get_object(window_name, object_name,
+                               obj_type = ["combo_box"])
+        self._grab_focus(obj)
+
+        child_obj = self._get_child_object_type(obj, pyatspi.ROLE_TEXT)
+        if child_obj:
+            # Combo box object which has children type text
+            # If yes, then that's the one selected, just return it
+            try:
+                texti = child_obj.queryText()
+                text = texti.getText(0, texti.characterCount)
+            except NotImplementedError:
+                text = child_obj.name
+            return text
+        _ldtpize_accessible_name = self._ldtpize_accessible(obj)
+        if not _ldtpize_accessible_name[1] and not _ldtpize_accessible_name[2]:
+            raise LdtpServerException("Unable to get currently selected item")
+        # Return label by value, which is actually selected one
+        # Preference to label_by rather than label
+        text=_ldtpize_accessible_name[2] or _ldtpize_accessible_name[1]
+        try:
+            return unicode(text)
+        except UnicodeDecodeError:
+            return text

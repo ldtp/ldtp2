@@ -27,6 +27,7 @@
  * SOFTWARE.
 */
 using System;
+using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using CookComputing.XmlRpc;
@@ -41,6 +42,8 @@ namespace Ldtp
         [XmlRpcMethod("launchapp")]
         int LaunchApp(string cmd, string[] args, int delay = 5,
             int env = 1, string lang = "");
+        [XmlRpcMethod("appundertest")]
+        int AppUnderTest(String appUnderTest);
         [XmlRpcMethod("getapplist")]
         string[] GetAppList();
         [XmlRpcMethod("getwindowlist")]
@@ -52,6 +55,8 @@ namespace Ldtp
         [XmlRpcMethod("getobjectproperty")]
         String GetObjectProperty(String windowName, String objName,
             String property);
+        [XmlRpcMethod("getaccesskey")]
+        String GetAccessKey(String windowName, String objName);
         [XmlRpcMethod("getchild")]
         String[] GetChild(String windowName, String childName,
             String role = "", String property = "");
@@ -75,10 +80,10 @@ namespace Ldtp
         int ObjectExist(String windowName, String objName);
         [XmlRpcMethod("waittillguiexist")]
         int WaitTillGuiExist(String windowName, String objName = "",
-            int guiTimeOut = 30);
+            int guiTimeOut = 30, String state = "");
         [XmlRpcMethod("waittillguinotexist")]
         int WaitTillGuiNotExist(String windowName, String objName = "",
-            int guiTimeOut = 30);
+            int guiTimeOut = 30, String state = "");
         [XmlRpcMethod("poll_events")]
         string PollEvents();
         [XmlRpcMethod("getlastlog")]
@@ -181,6 +186,8 @@ namespace Ldtp
         int VerifyComboSelect(String windowName, String objName, String item);
         [XmlRpcMethod("selectindex")]
         int SelectIndex(String windowName, String objName, int index);
+        [XmlRpcMethod("getcombovalue")]
+        String GetComboValue(String windowName, String objName);
         [XmlRpcMethod("showlist")]
         int ShowList(String windowName, String objName);
         [XmlRpcMethod("hidelist")]
@@ -197,6 +204,14 @@ namespace Ldtp
         int GenerateMouseEvent(int x, int y, String type = "b1p");
         [XmlRpcMethod("mouseleftclick")]
         int MouseLeftClick(String windowName, String objName);
+        [XmlRpcMethod("mouserightclick")]
+        int MouseRightClick(String windowName, String objName);
+        [XmlRpcMethod("doubleclick")]
+        int DoubleClick(String windowName, String objName);
+        [XmlRpcMethod("doubleclickrow")]
+        int DoubleClickRow(String windowName, String objName, String text);
+        [XmlRpcMethod("rightclick")]
+        int RightClick(String windowName, String objName, String text);
         [XmlRpcMethod("simulatemousemove")]
         int SimulateMouseMove(int source_x, int source_y, int dest_x,
             int dest_y, double delay = 0.0);
@@ -321,6 +336,15 @@ namespace Ldtp
                 launchLdtpProcess();
             return isAlive;
         }
+        void InternalLaunchProcess(object data)
+        {
+            Process ps = data as Process;
+            // Wait for the application to quit
+            ps.WaitForExit();
+            // Close the handle, so that we won't leak memory
+            ps.Close();
+            ps = null;
+        }
         private void launchLdtpProcess()
         {
             String cmd;
@@ -339,6 +363,10 @@ namespace Ldtp
                 psi.WindowStyle = ProcessWindowStyle.Hidden;
                 ps.StartInfo = psi;
                 ps.Start();
+                Thread thread = new Thread(new ParameterizedThreadStart(
+                    InternalLaunchProcess));
+                // Clean up in different thread
+                //thread.Start(ps);
                 // Wait 5 seconds after launching
                 Thread.Sleep(5000);
             }
@@ -381,6 +409,17 @@ namespace Ldtp
             try
             {
                 return proxy.LaunchApp(cmd, args, delay, env, lang);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int AppUnderTest(String appUnderTest)
+        {
+            try
+            {
+                return proxy.AppUnderTest(appUnderTest);
             }
             catch (XmlRpcFaultException ex)
             {
@@ -447,6 +486,17 @@ namespace Ldtp
             try
             {
                 return proxy.GetObjectInfo(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public String GetAccessKey(String objName)
+        {
+            try
+            {
+                return proxy.GetAccessKey(windowName, objName);
             }
             catch (XmlRpcFaultException ex)
             {
@@ -552,22 +602,22 @@ namespace Ldtp
                 throw new LdtpExecutionError(ex.FaultString);
             }
         }
-        public int WaitTillGuiExist(String objName = "", int guiTimeOut = 30)
+        public int WaitTillGuiExist(String objName = "", int guiTimeOut = 30, String state = "")
         {
             try
             {
-                return proxy.WaitTillGuiExist(windowName, objName, guiTimeOut);
+                return proxy.WaitTillGuiExist(windowName, objName, guiTimeOut, state);
             }
             catch (XmlRpcFaultException ex)
             {
                 throw new LdtpExecutionError(ex.FaultString);
             }
         }
-        public int WaitTillGuiNotExist(String objName = "", int guiTimeOut = 30)
+        public int WaitTillGuiNotExist(String objName = "", int guiTimeOut = 30, String state = "")
         {
             try
             {
-                return proxy.WaitTillGuiNotExist(windowName, objName, guiTimeOut);
+                return proxy.WaitTillGuiNotExist(windowName, objName, guiTimeOut, state);
             }
             catch (XmlRpcFaultException ex)
             {
@@ -1119,6 +1169,17 @@ namespace Ldtp
                 throw new LdtpExecutionError(ex.FaultString);
             }
         }
+        public String GetComboValue(String objName)
+        {
+            try
+            {
+                return proxy.GetComboValue(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
         public int ShowList(String objName)
         {
             try
@@ -1201,6 +1262,50 @@ namespace Ldtp
             try
             {
                 return proxy.MouseLeftClick(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int MouseRightClick(String objName)
+        {
+            try
+            {
+                return proxy.MouseRightClick(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int DoubleClick(String objName)
+        {
+            try
+            {
+                return proxy.DoubleClick(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int DoubleClickRow(String objName, String text)
+        {
+            try
+            {
+                return proxy.DoubleClickRow(windowName, objName, text);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int RightClick(String objName, String text)
+        {
+            try
+            {
+                return proxy.RightClick(windowName, objName, text);
             }
             catch (XmlRpcFaultException ex)
             {
@@ -1549,11 +1654,25 @@ namespace Ldtp
                 throw new LdtpExecutionError(ex.FaultString);
             }
         }
-        public string ImageCapture(int x = 0, int y = 0, int width = -1, int height = -1)
+        public string ImageCapture(String windowName = null, String outFile = null,
+            int x = 0, int y = 0, int width = -1, int height = -1)
         {
             try
             {
-                return proxy.ImageCapture(windowName, x, y, width, height);
+                string path;
+                if (outFile == null)
+                    path = Path.GetTempPath() + Path.GetRandomFileName() + ".png";
+                else
+                    path = outFile;
+                string data = proxy.ImageCapture(windowName, x, y, width, height);
+                using (FileStream fs = File.Open(path, FileMode.Open,
+                    FileAccess.Write))
+                {
+                    Byte[] decodedText = Convert.FromBase64String(data);
+                    fs.Write(decodedText, 0, decodedText.Length);
+                    fs.Close();
+                }
+                return path;
             }
             catch (XmlRpcFaultException ex)
             {

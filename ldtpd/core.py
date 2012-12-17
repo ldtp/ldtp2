@@ -146,10 +146,21 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if self._ldtp_debug:
           print traceback.format_exc()
 
+    def appundertest(self, app_name):
+      """
+      Application under test
+
+      @return: return 1 on success
+      @rtype: int
+      """
+      # For Windows / Mac compatibility
+      # Currently this api is not in use under Linux
+      return 1
+
     def getapplist(self):
         """
         Get all accessibility application name that are currently running
-        
+
         @return: list of appliction name of string type on success.
         @rtype: list
         """
@@ -167,7 +178,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
     def getwindowlist(self):
         """
         Get all accessibility window that are currently open
-        
+
         @return: list of window names in LDTP format of string type on success.
         @rtype: list
         """
@@ -661,26 +672,26 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
 
     def guitimeout(self, timeout):
       """
-        GUI timeout period, default 30 seconds.
+      Change GUI timeout period, default 30 seconds.
 
-        @param timeout: timeout in seconds
-        @type timeout: integer
+      @param timeout: timeout in seconds
+      @type timeout: integer
 
-        @return: 1 if GUI was found, 0 if not.
-        @rtype: integer
+      @return: 1 on success.
+      @rtype: integer
       """
       self._gui_timeout=timeout
       return 1
 
     def objtimeout(self, timeout):
       """
-        Object timeout period, default 5 seconds.
+      Change object timeout period, default 5 seconds.
 
-        @param timeout: timeout in seconds
-        @type timeout: integer
+      @param timeout: timeout in seconds
+      @type timeout: integer
 
-        @return: 1 if GUI was found, 0 if not.
-        @rtype: integer
+      @return: 1 on success.
+      @rtype: integer
       """
       self._obj_timeout=timeout
       return 1
@@ -1526,3 +1537,31 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             # x, y coordinates is returned !
             return (self._get_window_handle(window_name)[1], possible_child)
         return (None, None)
+
+    def getaccesskey(self, window_name, object_name):
+        """
+        Get access key of given object
+
+        @param window_name: Window name to look for, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to look for, either full name,
+        LDTP's name convention, or a Unix glob. Or menu heirarchy
+        @type object_name: string
+
+        @return: access key in string format on success, else LdtpExecutionError on failure.
+        @rtype: string
+        """
+        obj=self._get_object(window_name, object_name)
+        key_binding = ''
+        try:
+            iaction = obj.queryAction()
+            for j in xrange(iaction.nActions):
+                if iaction.getKeyBinding(j) != '':
+                    key_binding = iaction.getKeyBinding(j)
+                    break
+        except NotImplementedError:
+            pass
+        if not key_binding:
+          raise LdtpServerException("No access key associated")
+        return key_binding
