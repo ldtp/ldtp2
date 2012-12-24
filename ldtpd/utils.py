@@ -270,7 +270,10 @@ class Utils:
                 abbrev_role, abbrev_name, label_by = self._ldtpize_accessible( \
                     event.source)
                 # LDTPized name
-                win_name = u'%s%s' % (abbrev_role, abbrev_name)
+                try:
+                    win_name = u'%s%s' % (abbrev_role, abbrev_name)
+                except UnicodeDecodeError:
+                    win_name = u'%s%s' % (abbrev_role, abbrev_name.decode('utf-8'))
                 # Window title is empty
                 if abbrev_name == '':
                     for win_name in self._appmap.keys():
@@ -863,7 +866,10 @@ class Utils:
                 # If window has title, use that
                 tmp_name = obj_name[1]
             # Append window type and window title
-            w_name = name = u'%s%s' % (obj_name[0], tmp_name)
+            try:
+                w_name = name = u'%s%s' % (obj_name[0], tmp_name)
+            except UnicodeDecodeError:
+                w_name = name = u'%s%s' % (obj_name[0], tmp_name.decode('utf-8'))
             # If multiple window with same title, increment the index
             index = 1
             while name in window_list:
