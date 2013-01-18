@@ -3263,11 +3263,11 @@
 /** \page selectrow selectrow
  * \section Syntax
  *
- * selectrow('\<window name\>', '\<table name\>', '\<value of row in first column\>')
+ * selectrow('\<window name\>', '\<table name\>', '\<value of row in first column\>'[, <partial match=false>])
  *
  * \section Description
  *
- * Selects the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call.
+ * Selects the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call, check for partial match if set to true, default is false.
  *
  * \section ImplementationDetails
  *
@@ -3283,6 +3283,8 @@
  * With respect to gedit open dialog
  * 
  * selectrow('dlgOpen', 'dlgFiles', 'readme') 
+ *
+ * selectrow('dlgOpen', 'dlgFiles', 'read', partial_match=true) 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
