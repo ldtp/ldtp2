@@ -1447,51 +1447,17 @@
  * \page log log
  * \section Syntax
  * 
- * log('\<Message to be logged\>', '\<tag\>')
+ * log('\<Message to be logged\>', logging.<TYPE>)
  * 
- * where tag can be any of these
- * 
- * \subsection debug
- * 
- * messages can be logged while executing in debug mode
- * 
- * \subsection warning
- * 
- * warning message  can be logged
- * 
- * \subsection teststart
- * 
- * tag used to indicate the beginning of the test suite
- * 
- * \subsection testend
- * 
- * tag used to indicate the end of the test suite
- * 
- * \subsection begin
- * 
- * tag used to indicate the beginning of test case
- * 
- * \subsection end
- * 
- * tag used at the end of the test case
+ * where TYPE can be any of these
  * 
  * \subsection error
  * 
- * error messages can be logged with this message
+ * message will be logged on error
  * 
- * \subsection pass
+ * \subsection critical
  * 
- * message will be logged on successful execution of the testcases
- *  
- * \subsection fail
- * 
- * message will be logged on if execution of testcases fail
- * 
- * \note Messges for the Tags teststart and testend should not contain spaces in between
- * 
- * begin and end: These keywords are to be used with the same logging message and at beginning and end of testscripts
- * 
- * teststart and testend: These keywords are to be used with the same logging message and at the beginning and end of testcases
+ * message will be logged on critical
  * 
  * \section Description
  * 
@@ -1505,45 +1471,9 @@
  * 
  * \section Example
  * 
- * With Respect to Evolution:
+ * log('Logging some error string', logging.ERROR)
  * 
- * 1) log('EvolutionSuite', 'begin')
- * 
- * execfile('evolution.py')
- * 
- * log('EvolutionSuite', 'end')
- * 
- * 2) With respect to Appointment-to check the checkbox, 
- * 
- * In Try Block:
- * 
- * selecttab('dlgAppointment-NoSummary', 'ptlAppointment-Nosummary', '1')
- *       
- * log('Selecttab-In-Appointment', 'pass')
- * 
- * In except block:
- * 
- * print "Error"
- * 
- * log('Selecttab','fail')
- * 
- * 3) With respect to creation of vFolders
- * 
- * log('Creation-of-vFolders', 'teststart')
- * 
- * Create_folder()
- * 
- * log('Creation-of-vFolders', 'testend')
- * 
- * 4) Log message showing success of some test case 
- * 
- * from ldtp import *
- * 
- * You can log the message to start the test case before writing the test case as
- * 
- * log('Open a file', 'teststart')
- * 
- * log('opening a file', 'pass')
+ * log('Logging some critical string', logging.CRITICAL)
  * 
  * \author Nagashree <mnagashree@novell.com>
  */
@@ -5377,7 +5307,7 @@
 /** \page startlog startlog
  * \section Syntax
  * 
- * startlog('\<log file name\>', [[0 or 1], ['\<screenshot directory\>']])
+ * startlog('\<log file name\>', [[0 or 1]])
  * 
  * second argument is optional and 1 is default value
  * 
@@ -5386,11 +5316,9 @@
  * 1 - Write log to a new file. If file already exist, then erase
  * existing file content and start log
  * 
- * Screenshot files has to be placed in screenshot directory
- * 
  * \section Description
  * 
- * Start logging on the specified file. Default log level set is logging.WARNING. Though this can be changed with setloglevel LDTP API.
+ * Start logging on the specified file. Default log level set is logging.ERROR. Though this can be changed with setloglevel LDTP API.
  * 
  * \section ImplementationDetails
  * Log file will be created if log file is not present in any case. If second argument is 1, then existing file content will be erased. If second argument is 0, then new logs will be append to existing log.
@@ -5410,13 +5338,6 @@
  * or 
  * 
  * startlog('evolution.xml')
- * 
- * or 
- * 
- * startlog('~/evolution.xml', screenshotdir = '~/screenshot')
- * evolution.xml log file will ge generated in home directory of
- * current user and the screenshot files will be placed screenshot
- * folder of current user's home directory.
  * 
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
