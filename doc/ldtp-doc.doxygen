@@ -3263,7 +3263,7 @@
 /** \page selectrow selectrow
  * \section Syntax
  *
- * selectrow('\<window name\>', '\<table name\>', '\<value of row in first column\>'[, <partial match=false>])
+ * selectrow('\<window name\>', '\<table name\>', '\<value of row in first column\>')
  *
  * \section Description
  *
@@ -3283,8 +3283,6 @@
  * With respect to gedit open dialog
  * 
  * selectrow('dlgOpen', 'dlgFiles', 'readme') 
- *
- * selectrow('dlgOpen', 'dlgFiles', 'read', partial_match=true) 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
