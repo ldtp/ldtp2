@@ -1961,7 +1961,7 @@ public class Ldtp {
      * @throws LdtpExecutionError on failure
      */
     public int selectRow(String objName, String rowText) throws LdtpExecutionError {
-	Object[] params = new Object[]{windowName, objName, rowText};
+	Object[] params = new Object[]{windowName, objName, rowText, false};
 	return doAction("selectrow", params);
     }
     /**
