@@ -263,6 +263,10 @@
  * \subpage selectindex - Select combo box item based on index
  * \n
  * \n
+ * \subpage selectitem - Select an item from the combo box list or
+ * menu item based on name
+ * \n
+ * \n
  * \subpage settextvalue - Set a text in the combo box list
  * \n
  * \n
