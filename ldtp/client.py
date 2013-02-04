@@ -153,6 +153,7 @@ class Transport(xmlrpclib.Transport):
             except SocketError, e:
                 if ((_ldtp_windows_env and e[0] == 10061) or \
                         (not _ldtp_windows_env and (e.errno == 111 or \
+                                                        e.errno == 101 or \
                                                         e.errno == 61 or \
                                                         e.errno == 146))) \
                         and 'localhost' in host:
