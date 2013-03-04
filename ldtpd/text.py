@@ -162,7 +162,7 @@ class Text(Utils):
         @rtype: string
         """
         obj=self._get_object(window_name, object_name,
-                             obj_type=['combo_box', 'text', 'entry',
+                             obj_type=['combo_box', 'text', 'entry', 'label',
                                        'paragraph', 'password_text', 'editbar'])
         if obj.getRole() == pyatspi.ROLE_COMBO_BOX:
             child_obj=self._get_combo_child_object_type(obj)
