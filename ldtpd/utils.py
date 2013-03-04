@@ -588,7 +588,9 @@ class Utils:
                     # resource
                     break
                 for c in self._list_objects(child):
-                    yield c
+                    # Don't include separators in the list
+                    if c.getRole() != pyatspi.ROLE_SEPARATOR:
+                        yield c
 
     def _get_combo_child_object_type(self, obj):
         """
