@@ -1,3 +1,33 @@
+LDTP 3.5.0 released - Tuesday Apr 30 2013
+New API:
+* inserttext, objtimeout, guitimeout, getcellsize, getcellvalue, getobjectnameatcoords, getcombovalue, getaccesskey in Python client
+* doubleClick, doubleClickRow, onWindowCreate, getCellSize, getComboValue, appUnderTest, getAccessKey in Java client
+* getcellsize, getcellvalue in Ruby client
+* GetCellSize, GetComboValue, AppUnderTest, GetAccessKey, MouseRightClick, DoubleClick, DoubleClickRow, RightClick in C# client
+
+New control type:
+* POPUP MENU for Ubuntu environment
+
+Bugs fixed:
+
+Ruby client:
+* Fixed optional arguments to imagecapture
+* Check window_name parameter, if empty then use @window_name passed in constructor
+
+Python client:
+* Fixed optional argument APIs to work on both Windows and Linux
+* imagecapture x, y offset, height and width parameters are disregarded if window parameter is provided - Bug#685548
+* Return unicode string all the time on gettextvalue
+* Fix partial match argument in selectrow, compatible with Windows
+* Patch by ebass to support Python 2.6
+* Added Errno 101 as we see in ebass Ubuntu 10.04 environment
+
+Core LDTP2
+* Include label type on gettextvalue
+* Don't include separators in the list
+
+Perl client:
+* Added perl client
 LDTP 3.0.0 released - Friday Aug 3 2012
   Simplified the implementation verifyselect for combobox menuitem
   Fix QT related accessibility issue
