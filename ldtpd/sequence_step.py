@@ -118,7 +118,7 @@ class DebugAction(AtomicAction):
     '''
     Print the debug message.
     '''
-    print self._debug_msg
+    print(self._debug_msg)
 
   def __str__(self):
     '''

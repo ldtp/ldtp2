@@ -99,7 +99,7 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                             time.sleep(0.5)
             else:
                 kwargs = {}
-        except Exception, e:
+        except Exception as e:
             f = xmlrpc.Fault(
                 self.FAILURE, "Can't deserialize input: %s" % (e,))
             self._cbRender(f, request)
@@ -110,16 +110,16 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                    function = self.lookupProcedure(functionPath)
                 else:
                    function = self._getFunction(functionPath)
-            except xmlrpc.Fault, f:
+            except xmlrpc.Fault as f:
                 self._cbRender(f, request)
             else:
                 if _ldtp_debug:
-                    debug_st = u'%s(%s)' % \
+                    debug_st = '%s(%s)' % \
                         (functionPath,
                          ', '.join(map(repr, args) + \
                                        ['%s=%s' % (k, repr(v)) \
                                             for k, v in kwargs.items()]))
-                    print debug_st
+                    print(debug_st)
                     logger.debug(debug_st)
                 xmlrpc.defer.maybeDeferred(function, *args,
                                            **kwargs).\

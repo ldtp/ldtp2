@@ -227,9 +227,7 @@ class Table(Utils):
         @rtype: integer
         """
         obj = self._get_object(window_name, object_name)
-
         cell = self._get_accessible_at_row_column(obj, row_index, column)
-        print cell
         name = None
         if cell.childCount > 0:
             flag = False

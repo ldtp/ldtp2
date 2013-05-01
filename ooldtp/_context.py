@@ -152,5 +152,5 @@ class _ComponentFuncWrapper:
 
 if __name__ == "__main__":
     c = Component('Calculator', 'btnNumeric1')
-    print dir(c)
+    print(dir(c))
     c.click()

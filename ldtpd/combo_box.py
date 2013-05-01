@@ -354,8 +354,8 @@ class ComboBox(Utils, LayeredPane):
                 # Concat object type and object name
                 # ex: 'frmUnsavedDocument1-gedit' for Gedit application
                 # frm - Frame, Window title - 'Unsaved Document 1 - gedit'
-                _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
-                                          _ldtpize_accessible_name[1])
+                _object_name = '%s%s' % (_ldtpize_accessible_name[0],
+                                         _ldtpize_accessible_name[1])
                 if self._glob_match(item_name, _object_name):
                     self._click_object(child)
                     return 1
@@ -635,8 +635,8 @@ class ComboBox(Utils, LayeredPane):
                 # Concat object type and object name
                 # ex: 'frmUnsavedDocument1-gedit' for Gedit application
                 # frm - Frame, Window title - 'Unsaved Document 1 - gedit'
-                _object_name = u'%s%s' % (_ldtpize_accessible_name[0],
-                                          _ldtpize_accessible_name[1])
+                _object_name = '%s%s' % (_ldtpize_accessible_name[0],
+                                         _ldtpize_accessible_name[1])
                 if self._glob_match(item_name, _object_name):
                     return 1
         except:

@@ -26,7 +26,7 @@ def imagecompare(imgfile1, imgfile2):
     try:
         import ImageChops, Image
     except ImportError:
-        raise Exception, 'Python-Imaging package not installed'
+        raise Exception('Python-Imaging package not installed')
     try:
         diffcount = 0.0
         im1 = Image.open(imgfile1)
@@ -50,4 +50,4 @@ def imagecompare(imgfile1, imgfile2):
         diffpercent = (diffcount * 100) / diffImgLen
         return diffpercent
     except IOError:
-        raise Exception, 'Input file does not exist'
+        raise Exception('Input file does not exist')

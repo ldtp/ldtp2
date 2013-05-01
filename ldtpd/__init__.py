@@ -79,7 +79,7 @@ def main(port=4118, parentpid=None):
         reactor.run()
     except twisted.internet.error.CannotListenError:
         if _ldtp_debug:
-            print traceback.format_exc()
+            print(traceback.format_exc())
     except socket.error:
         if _ldtp_debug:
-            print traceback.format_exc()
+            print(traceback.format_exc())

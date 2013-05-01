@@ -102,11 +102,11 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if event and event.source and event.type:
             abbrev_role, abbrev_name, label_by=self._ldtpize_accessible( \
                 event.source)
-            window_name=u'%s%s' % (abbrev_role, abbrev_name)
-            self._callback_event.append(u"%s-%s" % (event.type, window_name))
+            window_name='%s%s' % (abbrev_role, abbrev_name)
+            self._callback_event.append("%s-%s" % (event.type, window_name))
       except:
         if self._ldtp_debug:
-          print traceback.format_exc()
+          print(traceback.format_exc())
 
     def _registered_kb_event_cb(self, event):
         if not event:
@@ -121,7 +121,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         self._kb_timestamp=event.timestamp
         if event.modifiers in self._kb_modifiers and \
                event.hw_code in self._kb_entries:
-            self._callback_event.append(u"kbevent-%s-%d" % (event.event_string,
+            self._callback_event.append("kbevent-%s-%d" % (event.event_string,
                                                             event.modifiers))
 
     def _event_cb(self, event):
@@ -129,22 +129,22 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if event and event.type == "window:create" and event.source:
             for window in self._callback:
                 if window and self._match_name_to_acc(window, event.source):
-                    self._callback_event.append(u"onwindowcreate-%s" % window)
+                    self._callback_event.append("onwindowcreate-%s" % window)
             abbrev_role, abbrev_name, label_by=self._ldtpize_accessible( \
                 event.source)
-            win_name=u'%s%s' % (abbrev_role, abbrev_name)
+            win_name='%s%s' % (abbrev_role, abbrev_name)
             self._window_uptime[win_name]=[event.source_name,
                                              time.strftime("%Y %m %d %H %M %S")]
         elif event and event.type == "window:destroy" and event.source:
             abbrev_role, abbrev_name, label_by=self._ldtpize_accessible( \
                 event.source)
-            win_name=u'%s%s' % (abbrev_role, abbrev_name)
+            win_name='%s%s' % (abbrev_role, abbrev_name)
             if win_name in self._window_uptime:
                 self._window_uptime[win_name].append( \
                     time.strftime("%Y %m %d %H %M %S"))
       except:
         if self._ldtp_debug:
-          print traceback.format_exc()
+          print(traceback.format_exc())
 
     def appundertest(self, app_name):
       """
@@ -268,7 +268,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 time.sleep(int(delay))
             except ValueError:
                 time.sleep(5)
-        except Exception, e:
+        except Exception as e:
             raise LdtpServerException(str(e))
         os.environ['NO_GAIL']='1'
         os.environ['NO_AT_BRIDGE']='1'
@@ -820,7 +820,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             return int(waiter.run())
         except:
           if self._ldtp_debug:
-            print traceback.format_exc()
+            print(traceback.format_exc())
         return 0
 
     def grabfocus(self, window_name, object_name):
@@ -1368,7 +1368,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 size=self._get_size(gui)
                 return [size.x, size.y, size.width, size.height]
 
-        raise LdtpServerException(u'Window "%s" does not exist' % window_name)
+        raise LdtpServerException('Window "%s" does not exist' % window_name)
 
     def _getComponentAtCoords(self, parent, x, y):
         """

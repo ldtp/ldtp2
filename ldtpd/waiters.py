@@ -89,7 +89,7 @@ class Waiter(Utils):
               self._event_cb, *self.events)
         except:
           if self._ldtp_debug:
-            print traceback.format_exc()
+            print(traceback.format_exc())
         return self.success
 
     def _timeout_thread_cb(self, params):
@@ -105,7 +105,7 @@ class Waiter(Utils):
           self.poll()
         except:
           if self._ldtp_debug:
-            print traceback.format_exc()
+            print(traceback.format_exc())
         if self._timeout_count * self.timeout_seconds > self.timeout or \
                self.success:
             try:
@@ -130,7 +130,7 @@ class Waiter(Utils):
         self.event_cb(event)
       except:
         if self._ldtp_debug:
-          print traceback.format_exc()
+          print(traceback.format_exc())
       if self.success:
         try:
           # Required for wnck functions
@@ -372,7 +372,7 @@ class GuiExistsWaiter(Waiter):
             self.success = True
       except:
         if self._ldtp_debug:
-          print traceback.format_exc()
+          print(traceback.format_exc())
 
 class GuiNotExistsWaiter(Waiter):
     events = ["window:destroy"]
@@ -391,7 +391,7 @@ class GuiNotExistsWaiter(Waiter):
             self.success = True
       except:
         if self._ldtp_debug:
-          print traceback.format_exc()
+          print(traceback.format_exc())
 
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
@@ -419,7 +419,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
             self.success = True
         except:
             if self._ldtp_debug:
-              print traceback.format_exc()
+              print(traceback.format_exc())
 
     def event_cb(self, event):
       GuiExistsWaiter.event_cb(self, event)
@@ -443,4 +443,4 @@ class ObjectNotExistsWaiter(GuiNotExistsWaiter):
 
 if __name__ == "__main__":
     waiter = ObjectExistsWaiter('frmCalculator', 'mnuEitanIsaacsonFoo', 0)
-    print waiter.run()
+    print(waiter.run())
