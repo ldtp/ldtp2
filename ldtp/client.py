@@ -152,10 +152,10 @@ class Transport(xmlrpclib.Transport):
                 return unmarshaller.close()
             except SocketError as e:
                 if ((_ldtp_windows_env and e[0] == 10061) or \
-                        (asattr(e, 'errno') and (e.errno == 111 or \
-                                                     e.errno == 101 or \
-                                                     e.errno == 61 or \
-                                                     e.errno == 146))) \
+                        (hasattr(e, 'errno') and (e.errno == 111 or \
+                                                      e.errno == 101 or \
+                                                      e.errno == 61 or \
+                                                      e.errno == 146))) \
                         and 'localhost' in host:
                     if hasattr(self, 'close'):
                         # On Windows XP SP3 / Python 2.5, close doesn't exist
