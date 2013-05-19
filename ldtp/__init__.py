@@ -348,7 +348,7 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
         out_file = tempfile.mktemp('.png', 'ldtp_')
     else:
         out_file = os.path.expanduser(out_file)
-        
+
     ### Windows compatibility
     if _ldtp_windows_env:
         if width == None:
