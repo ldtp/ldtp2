@@ -1,9 +1,9 @@
 ﻿/*
- * CobraWinLDTP 1.0
+ * Cobra WinLDTP 3.5
  * 
  * Author: Nagappan Alagappan <nalagappan@vmware.com>
  * Author: John Yingjun Li <yjli@vmware.com>
- * Copyright: Copyright (c) 2011-12 VMware, Inc. All Rights Reserved.
+ * Copyright: Copyright (c) 2011-13 VMware, Inc. All Rights Reserved.
  * License: MIT license
  * 
  * http://ldtp.freedesktop.org
@@ -127,6 +127,8 @@ namespace Ldtp
         int StateEnabled(String windowName, String objName);
         [XmlRpcMethod("objtimeout ")]
         int ObjectTimeOut(int objectTimeOut);
+        [XmlRpcMethod("guitimeout ")]
+        int GuiTimeOut(int guiTimeOut);
         [XmlRpcMethod("selectmenuitem")]
         int SelectMenuItem(String windowName, String objName);
         [XmlRpcMethod("doesmenuitemexist")]
@@ -240,6 +242,9 @@ namespace Ldtp
         [XmlRpcMethod("getcellvalue")]
         String GetCellValue(String windowName, String objName, int row,
             int column = 0);
+        [XmlRpcMethod("setcellvalue")]
+        String SetCellValue(String windowName, String objName, int row,
+            int column = 0, String data = null);
         [XmlRpcMethod("getcellsize")]
         String GetCellSize(String windowName, String objName, int row,
             int column = 0);
@@ -283,6 +288,28 @@ namespace Ldtp
         [XmlRpcMethod("imagecapture")]
         string ImageCapture(string windowName = "", int x = 0, int y = 0,
             int width = -1, int height = -1);
+        [XmlRpcMethod("onedown")]
+        int OneDown(String windowName, String objName, int iterations);
+        [XmlRpcMethod("one")]
+        int OneUp(String windowName, String objName, int iterations);
+        [XmlRpcMethod("oneright")]
+        int OneRight(String windowName, String objName, int iterations);
+        [XmlRpcMethod("oneleft")]
+        int OneLeft(String windowName, String objName, int iterations);
+        [XmlRpcMethod("scrolldown")]
+        int ScrollDown(String windowName, String objName);
+        [XmlRpcMethod("scrollup")]
+        int ScrollUp(String windowName, String objName);
+        [XmlRpcMethod("scrollleft")]
+        int ScrollLeft(String windowName, String objName);
+        [XmlRpcMethod("scrollright")]
+        int ScrollRight(String windowName, String objName);
+        [XmlRpcMethod("verifyscrollbar")]
+        int VerifyScrollBar(String windowName, String objName);
+        [XmlRpcMethod("verifyscrollbarhorizontal")]
+        int VerifyScrollBarHorizontal(String windowName, String objName);
+        [XmlRpcMethod("verifyscrollbarvertical")]
+        int VerifyScrollBarVertical(String windowName, String objName);
     }
     public class Ldtp
     {
@@ -851,6 +878,17 @@ namespace Ldtp
             try
             {
                 return proxy.ObjectTimeOut(objectTimeOut);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int GuiTimeOut(int guiTimeOut)
+        {
+            try
+            {
+                return proxy.GuiTimeOut(guiTimeOut);
             }
             catch (XmlRpcFaultException ex)
             {
@@ -1445,6 +1483,17 @@ namespace Ldtp
                 throw new LdtpExecutionError(ex.FaultString);
             }
         }
+        public String SetCellValue(String objName, int row, int column = 0, String data = null)
+        {
+            try
+            {
+                return proxy.SetCellValue(windowName, objName, row, column, data);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
         public String GetCellSize(String objName, int row, int column = 0)
         {
             try
@@ -1673,6 +1722,127 @@ namespace Ldtp
                     fs.Close();
                 }
                 return path;
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int OneDown(String objName, int iterations)
+        {
+            try
+            {
+                return proxy.OneDown(windowName, objName, iterations);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int OneUp(String objName, int iterations)
+        {
+            try
+            {
+                return proxy.OneUp(windowName, objName, iterations);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int OneRight(String objName, int iterations)
+        {
+            try
+            {
+                return proxy.OneRight(windowName, objName, iterations);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int OneLeft(String objName, int iterations)
+        {
+            try
+            {
+                return proxy.OneLeft(windowName, objName, iterations);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int ScrollDown(String objName)
+        {
+            try
+            {
+                return proxy.ScrollDown(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int ScrollLeft(String objName)
+        {
+            try
+            {
+                return proxy.ScrollLeft(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int ScrollUp(String objName)
+        {
+            try
+            {
+                return proxy.ScrollUp(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int ScrollRight(String objName)
+        {
+            try
+            {
+                return proxy.ScrollRight(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int VerifyScrollBar(String objName)
+        {
+            try
+            {
+                return proxy.VerifyScrollBar(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int VerifyScrollBarVertical(String objName)
+        {
+            try
+            {
+                return proxy.VerifyScrollBarVertical(windowName, objName);
+            }
+            catch (XmlRpcFaultException ex)
+            {
+                throw new LdtpExecutionError(ex.FaultString);
+            }
+        }
+        public int VerifyScrollBarHorizontal(String objName)
+        {
+            try
+            {
+                return proxy.VerifyScrollBarHorizontal(windowName, objName);
             }
             catch (XmlRpcFaultException ex)
             {
