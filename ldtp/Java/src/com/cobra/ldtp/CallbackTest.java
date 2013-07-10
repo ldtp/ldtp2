@@ -3,7 +3,7 @@ package com.cobra.ldtp;
 LDTP v2 java client.
 
 @author: Nagappan Alagappan <nagappan@gmail.com>
-@copyright: Copyright (c) 2009-12 Nagappan Alagappan
+@copyright: Copyright (c) 2009-13 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -16,7 +16,7 @@ merchantability or fitness for a particular purpose.
 See 'COPYING' in the source distribution for more information.
 
 Headers in this file shall remain intact.
-*/
+ */
 
 public class CallbackTest {
 	public void callbackMethodNoArgs(Object... dummyArgs) {
@@ -33,30 +33,29 @@ public class CallbackTest {
 	}
 	public void callbackMethodWithArgs(Object... args) {
 		System.out.println("callbackMethodWithArgs");
-        for (int i=0; i<args.length; i++)
-        {
-        	System.out.println(args[i]);
-        }
+		for (int i=0; i<args.length; i++) {
+			System.out.println(args[i]);
+		}
 	}
-    public static void main(String[] args) {
-    	Ldtp ldtp = new Ldtp("Open");
-    	CallbackTest cbTest = new CallbackTest();
-    	System.out.println(ldtp.onWindowCreate(cbTest, false, "callbackMethodNoArgs"));
-    	ldtp.setWindowName("*Notepad");
-    	ldtp.selectMenuItem("File;Open");
-    	ldtp.setWindowName("Open");
-    	ldtp.waitTillGuiExist();
-    	ldtp.click("Cancel");
-    	ldtp.waitTillGuiNotExist();
-    	ldtp.removeCallback();
-    	ldtp.waitTime(1);
-    	System.out.println(ldtp.onWindowCreate(cbTest, false, "callbackMethodWithArgs", "Hello", "World", 1, 2, 3));
-    	ldtp.setWindowName("*Notepad");
-    	ldtp.selectMenuItem("File;Open");
-    	ldtp.setWindowName("Open");
-    	ldtp.waitTillGuiExist();
-    	ldtp.click("Cancel");
-    	ldtp.waitTillGuiNotExist();
-    	ldtp.removeCallback();
-    }
+	public static void main(String[] args) {
+		Ldtp ldtp = new Ldtp("Open");
+		CallbackTest cbTest = new CallbackTest();
+		System.out.println(ldtp.onWindowCreate(cbTest, false, "callbackMethodNoArgs"));
+		ldtp.setWindowName("*Notepad");
+		ldtp.selectMenuItem("File;Open");
+		ldtp.setWindowName("Open");
+		ldtp.waitTillGuiExist();
+		ldtp.click("Cancel");
+		ldtp.waitTillGuiNotExist();
+		ldtp.removeCallback();
+		ldtp.waitTime(1);
+		System.out.println(ldtp.onWindowCreate(cbTest, false, "callbackMethodWithArgs", "Hello", "World", 1, 2, 3));
+		ldtp.setWindowName("*Notepad");
+		ldtp.selectMenuItem("File;Open");
+		ldtp.setWindowName("Open");
+		ldtp.waitTillGuiExist();
+		ldtp.click("Cancel");
+		ldtp.waitTillGuiNotExist();
+		ldtp.removeCallback();
+	}
 }
