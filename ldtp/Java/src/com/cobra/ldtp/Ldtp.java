@@ -517,8 +517,7 @@ public class Ldtp {
 	 * @return Return 1 on success, 0 on failure
 	 */
 	public int guiExist() {
-		Object[] params = new Object[]{windowName};
-		return verifyAction("guiexist", params);
+		return guiExist("");
 	}
 	/**
 	 * guiExist Verifies whether the current window and given object exist or not
