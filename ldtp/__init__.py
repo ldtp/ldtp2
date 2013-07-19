@@ -411,6 +411,12 @@ def getcellsize(window_name, object_name, row_index, column = 0):
     return _remote_getcellsize(window_name, object_name, row_index, column)
 def getobjectnameatcoords(waitTime = 0):
     return _remote_getobjectnameatcoords(waitTime)
+def maximizewindow(window_name = ''):
+    return _remote_maximizewindow(window_name)
+def minimizewindow(window_name = ''):
+    return _remote_minimizewindow(window_name)
+def closewindow(window_name = ''):
+    return _remote_closewindow(window_name)
 
 def onwindowcreate(window_name, fn_name, *args):
     """
