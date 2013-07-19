@@ -5854,14 +5854,13 @@
 /** \page activatewindow activatewindow
  * \section Syntax
  *
- * activatewindow(['\<window name\>'])
+ * activatewindow([\<window name\>')
  *
  * \section Description
  *
- * Activate window based on the given name, default None. If None,
- * will activate all window one by one
+ * Activate window based on the given name
  *
- * \retval None
+ * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
@@ -5888,7 +5887,7 @@
  * Maximize window based on the given name, default None. If None,
  * will maximize all window one by one
  *
- * \retval None
+ * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
@@ -5915,7 +5914,7 @@
  * Minimize window based on the given name, default None. If None,
  * will minimize all window one by one
  *
- * \retval None
+ * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
@@ -5942,7 +5941,7 @@
  * Unmaximize window based on the given name, default None. If None,
  * will unmaximize all window one by one
  *
- * \retval None
+ * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
@@ -5996,7 +5995,7 @@
  * Close window based on the given name, default None. If None,
  * will close all window one by one
  *
- * \retval None
+ * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
  * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
  *
