@@ -21,21 +21,29 @@ Headers in this file shall remain intact.
 
 import os
 import re
+import sys
 import time
-import state
-import client
 import atexit
 import socket
-import thread
 import logging
 import datetime
 import tempfile
 import warnings
+import threading
 import traceback
 from base64 import b64decode
 from fnmatch import translate as glob_trans
+
+path=path = os.path.dirname(__file__)
+if path == "":
+   path = "."
+sys.path.append(path)
+
+import state
+import client
 from client_exception import LdtpExecutionError
 
+_t = None
 _pollEvents = None
 _file_logger = None
 _ldtp_debug = client._ldtp_debug
@@ -309,11 +317,12 @@ class PollEvents:
                     if len(args) and args[0]:
                         # Spawn a new thread, for each event
                         # If one or more arguments to the callback function
-                        thread.start_new_thread(callback, args)
+                        _t = threading.Thread(target=callback, args=args)
                     else:
                         # Spawn a new thread, for each event
                         # No arguments to the callback function
-                        thread.start_new_thread(callback, ())
+                        _t = threading.Thread(target=callback, args=())
+                    _t.start()
                 except:
                     # Log trace incase of exception
                     log(traceback.format_exc())
@@ -383,6 +392,10 @@ def hasstate(window_name, object_name, state, guiTimeOut = 0):
     return _remote_hasstate(window_name, object_name, state, guiTimeOut)
 def selectrow(window_name, object_name, row_text):
     return _remote_selectrow(window_name, object_name, row_text, False)
+def multiselect(window_name, object_name, row_text):
+    return _remote_multiselect(window_name, object_name, row_text, False)
+def multiremove(window_name, object_name, row_text):
+    return _remote_multiremove(window_name, object_name, row_text, False)
 def doesrowexist(window_name, object_name, row_text, partial_match = False):
     return _remote_doesrowexist(window_name, object_name, row_text, partial_match)
 def getchild(window_name, child_name = '', role = '', parent = ''):
@@ -551,8 +564,21 @@ def windowuptime(window_name):
 
 _populateNamespace(globals())
 _pollEvents = PollEvents()
-thread.start_new_thread(_pollEvents.run, ())
+_t1 = threading.Thread(target=_pollEvents.run, args=())
+_t1.daemon = True
+_t1.start()
 _pollLogs = PollLogs()
-thread.start_new_thread(_pollLogs.run, ())
+_t2 = threading.Thread(target=_pollLogs.run, args=())
+_t2.daemon = True
+_t2.start()
+
+@atexit.register
+def _stop_thread():
+   if _t and _t.isAlive():
+      _t._Thread__stop()
+   if _t1.isAlive():
+      _t1._Thread__stop()
+   if _t2.isAlive():
+      _t2._Thread__stop()
 
 atexit.register(client._client.kill_daemon)
