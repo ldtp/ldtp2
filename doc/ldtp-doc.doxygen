@@ -787,6 +787,12 @@
  * \subpage handletablecell - Handle table cells in table, by default its turned off
  * \n
  * \n
+ * \subpage multiselect - Select multiple rows with the given names
+ * \n
+ * \n
+ * \subpage multiRemove - Unselect multiple rows with the given names
+ * \n
+ * \n
  * \subpage selectlastrow - Select last row in the table
  * \n
  * \n
@@ -1016,6 +1022,12 @@
  * \n
  * \subpage gettreetablerowindex - Get the index of the row, where the
  * given name matches
+ * \n
+ * \n
+ * \subpage multiselect - Select multiple rows with the given names
+ * \n
+ * \n
+ * \subpage multiRemove - Unselect multiple rows with the given names
  * \n
  * \n
  * \subpage rightclick - Generate right click event
@@ -3262,6 +3274,60 @@
  * verifysetvalue('dlgAppointment-Nosummary','sbtnOccurence','2') 
  *
  * \author Sheetal <svnayak18@yahoo.com>
+ */
+
+/** \page multiselect multiselect
+ * \section Syntax
+ *
+ * multiselect('\<window name\>', '\<table name\>', ['\<value of row in first column\>',])
+ *
+ * \section Description
+ *
+ * Selects the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call, check for partial match if set to true, default is false.
+ *
+ * \section ImplementationDetails
+ *
+ * \retval 1 on success and 0 on error.
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ * 
+ * With respect to gedit open dialog
+ * 
+ * multiselect('Open Files', 'tblFiles', ['monox.sh', 'rsync.sh'])
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
+ */
+
+/** \page multiremove multiremove
+ * \section Syntax
+ *
+ * multiremove('\<window name\>', '\<table name\>', ['\<value of row in first column\>',])
+ *
+ * \section Description
+ *
+ * Unselects the row in table whose first column's(0th column) value is same as the contents of the third argument in the function call, check for partial match if set to true, default is false.
+ *
+ * \section ImplementationDetails
+ *
+ * \retval 1 on success and 0 on error.
+ *
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ *
+ * \section Example
+ *
+ * from ldtp import *
+ * 
+ * With respect to gedit open dialog
+ * 
+ * multiremove('Open Files', 'tblFiles', ['monox.sh', 'rsync.sh'])
+ *
+ * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page selectrow selectrow
