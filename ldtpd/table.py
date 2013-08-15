@@ -946,6 +946,42 @@ class Table(Utils):
                     return i
         raise LdtpServerException('Unable to get row index: %s' % row_text)
 
+    def doubleclickrowindex(self, window_name, object_name, row_index, col_index=0):
+        """
+        Double click row matching given text
+
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type object_name: string
+        @param row_index: Row index to click
+        @type row_index: integer
+        @param col_index: Column index to click
+        @type col_index: integer
+
+        @return: row index matching the text on success.
+        @rtype: integer
+        """
+	obj = self._get_object(window_name, object_name)
+
+        try:
+            tablei = obj.queryTable()
+        except NotImplementedError:
+            raise LdtpServerException('Object not table type.')
+
+        try:
+            cell = tablei.getAccessibleAt(row_index, col_index)
+            self._grab_focus(cell)
+            size = self._get_size(cell)
+            self._mouse_event(size.x + size.width / 2,
+                              size.y + size.height / 2,
+                              'b1d')
+            return row_index
+        finally:
+            raise LdtpServerException('Unable to access row index: %d column: %d' % row_index, col_index) 
+
     def verifytablecell(self, window_name, object_name, row_index,
                         column_index, row_text):
         """
