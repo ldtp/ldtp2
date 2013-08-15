@@ -964,7 +964,7 @@ class Table(Utils):
         @return: row index matching the text on success.
         @rtype: integer
         """
-	obj = self._get_object(window_name, object_name)
+        obj = self._get_object(window_name, object_name)
 
         try:
             tablei = obj.queryTable()
