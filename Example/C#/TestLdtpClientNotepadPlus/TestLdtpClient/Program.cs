@@ -40,24 +40,8 @@ namespace TestLdtpClient
         static void Main(string[] args)
         {
 
-            Ldtp.Ldtp ldtp = new Ldtp.Ldtp("*gedit");
-            /*
-            int i;
-            string[] cmdArgs = { };
-            int ret = ldtp.LaunchApp("notepad", cmdArgs);
-            Console.WriteLine("state #45 is {0}", ret);
-            String[] windowList = ldtp.GetWindowList();
-            for (i = 0; i < windowList.Length; i++)
-                Console.WriteLine(windowList[i]);
-            String[] appList = ldtp.GetAppList();
-            for (i = 0; i < appList.Length; i++)
-                Console.WriteLine(appList[i]);
-            String[] objList = ldtp.GetObjectList();
-            for (i = 0; i < objList.Length; i++)
-                Console.WriteLine(objList[i] + " ");
-            /**/
-            Console.WriteLine("gedit: " + ldtp.GuiExist());
-            Console.WriteLine("gedit: " + ldtp.GuiExist("Cancel"));
+            Example1.Test();
+           
         }
     }
 }
