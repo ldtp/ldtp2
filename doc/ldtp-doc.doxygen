@@ -485,6 +485,9 @@
  * \subpage listsubmenus - Get list of menu items under a menu
  * \n
  * \n
+ * \subpage menuitemenabled - Verify whether the menu item is enabled
+ * \n
+ * \n
  * \subpage selectmenuitem - Select the given menu item
  *
  */
