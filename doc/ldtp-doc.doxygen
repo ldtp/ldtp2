@@ -6,7 +6,7 @@
  *    Premkumar J <prem.jothimani@gmail.com>
  *
  * Copyright 2004 - 2007 Novell, Inc.
- * Copyright 2008 - 2012 Nagappan Alagappan
+ * Copyright 2008 - 2013 Nagappan Alagappan
  *
  * Permission is granted to copy, distribute and/or modify this document
  * under the terms of the GNU Lesser General Public License, Version 2
@@ -852,12 +852,6 @@
  * \n
  * \n
  * \subpage rightclick - Generate right click event
- * \n
- * \n
- * \subpage selecttextbyindexandregion - Select text by index and region
- * \n
- * \n
- * \subpage selecttextbyname - Select text by the given name
  * \n
  * \n
  * \subpage setcursorposition - Move the cursor position to the
@@ -1960,48 +1954,6 @@
  * from ldtp import *
  *
  * verifystatusbarvisible('*-gedit', 'stat0')
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page selecttextbyindexandregion selecttextbyindexandregion
- * \section Syntax
- * 
- * selecttextbyindexandregion('\<window name\>', '\<text object name\>'[, <start position\>[, <end position\>[, <selection number\>]]])
- *
- * \section Description
- * 
- * Select text by index(text selection change based on index) and the region(start and end position)
- *
- * Reference: http://developer.gnome.org/doc/API/2.0/at-spi/at-spi-cspi-AccessibleText-Interface.html#AccessibleText-setSelection
- * 
- * \retval 1 on success, LdtpExecutionError exception on failure
- * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
- * 
- * \section Example
- * 
- * \todo
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page selecttextbyname selecttextbyname
- * \section Syntax
- * 
- * selecttextbyname('\<window name\>', '\<text object name\>')
- *
- * \section Description
- * 
- * Select text by name
- *
- * \retval 1 on success, LdtpExecutionError exception on failure
- * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
- * 
- * \section Example
- * 
- * \todo
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
