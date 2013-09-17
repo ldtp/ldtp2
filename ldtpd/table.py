@@ -971,6 +971,8 @@ class Table(Utils):
         except NotImplementedError:
             raise LdtpServerException('Object not table type.')
 
+        if row_index < 0 or row_index > tablei.nRows:
+            raise LdtpServerException('Row index out of range: %d' % row_index)
         try:
             cell = tablei.getAccessibleAt(row_index, col_index)
             self._grab_focus(cell)
@@ -979,8 +981,9 @@ class Table(Utils):
                               size.y + size.height / 2,
                               'b1d')
             return row_index
-        finally:
-            raise LdtpServerException('Unable to access row index: %d column: %d' % row_index, col_index) 
+        except:
+            raise LdtpServerException('Unable to access row index: %d column: %d' % \
+                                          row_index, col_index) 
 
     def verifytablecell(self, window_name, object_name, row_index,
                         column_index, row_text):
