@@ -173,7 +173,10 @@ class PollLogs:
         """
         Stop polling when destroying this class
         """
-        self._stop = True
+        try:
+           self._stop = True
+        except:
+           pass
 
     def run(self):
         while not self._stop:
@@ -253,7 +256,10 @@ class PollEvents:
         """
         Stop callback when destroying this class
         """
-        self._stop = True
+        try:
+           self._stop = True
+        except:
+           pass
 
     def run(self):
         while not self._stop:
