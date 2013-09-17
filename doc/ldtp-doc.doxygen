@@ -38,12 +38,6 @@
  * <TABLE align=left border=0 cellpadding=10 cellspacing=0>
  * <TR>
  * <TD>
- * \subpage calendar
- * </TD>
- * <TD>
- * \subpage calendarview
- * </TD>
- * <TD>
  * \subpage checkbox
  * </TD>
  * <TD>
@@ -144,37 +138,6 @@
  * </TABLE>
  *
  * <a><img HEIGHT="30" src="../ldtp-logo-small.png" style="float:center;center:0px;top:0px;position:absolute;" alt="Linux Desktop Testing Project"/></a>
- *
- */
-
-/** \page calendar calendar
- * \section CalendarSection About Calendar functions
- *
- * To operate on a calendar object and based on your requirement, you can use any of these functions
- *
- * \section CalendarAPI Calendar python API's
- * \subpage selectcalendardate - Select the given date in a calendar object
- *
- */
-
-/** \page calendarview calendarview
- * \section CalendarViewSection About Calendar view functions
- *
- * To operate on a calendar view object and based on your requirement, you can use any of these functions
- *
- * \section CalendarViewAPI Calendar View python API's
- * \subpage enterstring - Generate keyboard events as if the user
- * types manually
- * \n
- * \n
- * \subpage selectevent - Select the calendar event based on event name
- * \n
- * \n
- * \subpage selecteventindex - Select the calendar event based on event index
- * \n
- * \n
- * \subpage verifyeventexist - Verify whether the calendar event exist
- * or not
  *
  */
 
@@ -363,17 +326,6 @@
  *
  */
 
-/** \page label label
- * \section LabelSection About Label functions
- *
- * To operate on a label object and based on your requirement, you can use any of these functions
- *
- * \section LabelAPI Label python API's
- *
- * \subpage selectlabelspanelbyname - Select the labels based on panel name
- *
- */
-
 /** \page layeredpane layeredpane
  * \section LayeredpaneSection About Layeredpane functions
  *
@@ -499,9 +451,6 @@
  *
  * \section PanelAPI Panel python API's
  *
- * \subpage getpanelchildcount - Get the number of children under a panel
- * \n
- * \n
  * \subpage selectpanel - Select panel based on index
  * \n
  * \n
@@ -1227,7 +1176,7 @@
  * 
  * If the given window name exist, this function returns 1. If window doesnot exist, then this function returns 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \section ImplementationDetails
  * 
@@ -1327,7 +1276,7 @@
  *
  *        gedit', will be represented as 'UnsavedDocument1gedit'
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \retval 1 on success, 0 otherwise
  * 
@@ -1428,7 +1377,7 @@
  *
  *        gedit', will be represented as 'UnsavedDocument1gedit'
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \retval 1 on success, 0 otherwise
  * 
@@ -1616,7 +1565,7 @@
  * 
  * \retval 1 if state is checked, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \section Example
  * 
@@ -1651,7 +1600,7 @@
  * 
  * \retval 1 if state is unchecked, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \section Example
  * 
@@ -1689,7 +1638,7 @@
  * 
  * If radio button is already in unchecked state, then this function will check(set) it.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/radio-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \subsection Check Check Box
  * 
@@ -1697,25 +1646,25 @@
  * 
  * If check box is already in unchecked state, then this function will check(set) it.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \subsection Push Push Button
  * 
  * If push button state is enabled, then click on the object.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/push-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \subsection Toggle Toggle Button
  * 
  * Click on the toggle button.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/toggle-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \subsection Combo Combo Box
  * 
  * Clicks on combo box, drop down list of combo box will be visible if not already else drop down list of combo box closes.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  * 
  * \section Examples
  * 
@@ -1741,7 +1690,7 @@
  * 
  * \retval On check box state is checked returns 1, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \section Examples
  * 
@@ -1771,7 +1720,7 @@
  * 
  * \retval On check box state is un-checked returns 1, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
  * \section Examples
  * 
@@ -1800,7 +1749,7 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  * 
  * \section Example
  *
@@ -1822,7 +1771,7 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
  * 
  * \section Example
  *
@@ -1844,7 +1793,7 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
  * 
  * \section Example
  *
@@ -1866,7 +1815,7 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
  * 
  * \section Example
  * 
@@ -1888,7 +1837,7 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
  * 
  * \section Example
  * 
@@ -1910,7 +1859,7 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -1938,7 +1887,7 @@
  * 
  * \retval 1 on success, 0 on failure.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -1958,7 +1907,7 @@
  * 
  * \retval text content displayed in the status bar on success, LdtpExecutionError exception on failure.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/status-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -1978,7 +1927,7 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/status-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -2002,7 +1951,7 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/status-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -2028,7 +1977,7 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -2048,7 +1997,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  * 
@@ -2068,7 +2017,7 @@
  * 
  * \retval cursor position which is of type long on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  * 
  * \section Example
  *
@@ -2100,7 +2049,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  * 
  * \section Example
  * 
@@ -2122,7 +2071,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2157,7 +2106,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2180,7 +2129,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2203,7 +2152,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2225,7 +2174,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2245,7 +2194,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2265,7 +2214,7 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2286,7 +2235,7 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2307,7 +2256,7 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2328,7 +2277,7 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2349,7 +2298,7 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2369,15 +2318,15 @@
  *
  * \section ImplementationDetails
  *
- * In text.c
+ * In text.py
  *
  * \retval 1 on success and 0 otherwise
  *
- * In combo-box.c
+ * In combo_box.py
  *
  * Combo box will be associated with child of type 'Text' when one of its child is 'List'. This action gets object handle of 'Text' object associated with combo box and then sets value given in argument in that text box 
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2407,7 +2356,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2433,7 +2382,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2459,7 +2408,7 @@
  *
  * \retval number of characters
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2485,7 +2434,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2511,7 +2460,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2537,7 +2486,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2563,7 +2512,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2589,7 +2538,7 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -2617,7 +2566,7 @@
  *
  * \retval 1 on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2635,7 +2584,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2659,7 +2608,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2683,7 +2632,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2707,7 +2656,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2733,7 +2682,7 @@
  *
  * \retval combo box value on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2757,7 +2706,7 @@
  *
  * \retval 1 if the text is inserted into the specified component else returns 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2789,8 +2738,8 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2813,8 +2762,8 @@
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2834,7 +2783,7 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/layered-pane.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2854,8 +2803,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -2881,11 +2829,7 @@
  *
  * Selects the menu item specified.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/check-menu-item.c
- *
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu-item.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/radio-menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  *
  * \section Example
  *
@@ -2910,7 +2854,7 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
  *
  * \section Example
  *
@@ -2936,7 +2880,7 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
  *
  * \section Example
  *
@@ -2962,7 +2906,7 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
  *
  * \section Example
  *
@@ -2988,7 +2932,7 @@
  *
  * \retval tab count of type long is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
  *
  * \section Example
  *
@@ -3014,7 +2958,7 @@
  *
  * \retval tab name is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/page-tab-list.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
  *
  * \section Example
  *
@@ -3042,7 +2986,7 @@
  *
  * \retval 1 if object is push button, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/push-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -3066,8 +3010,7 @@
  *
  * \retval 1 if state is enabled, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/push-button.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/radio-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -3099,7 +3042,7 @@
  *
  * \retval 1 on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3123,7 +3066,7 @@
  *
  * \retval value in the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3147,7 +3090,7 @@
  *
  * \retval max value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3171,7 +3114,7 @@
  *
  * \retval max value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3195,7 +3138,7 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3219,7 +3162,7 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3243,8 +3186,7 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3268,7 +3210,7 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/spin-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3292,8 +3234,7 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3319,8 +3260,8 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3346,8 +3287,8 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3373,8 +3314,8 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3400,8 +3341,8 @@
  *
  * \retval 1 on success and throws an exception on error
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3425,7 +3366,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/toggle-button.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -3460,7 +3401,7 @@
  *
  * Scrolls down if value does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3486,7 +3427,7 @@
  *
  * Scrolls left if value does not drop below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3512,7 +3453,7 @@
  *
  * Scrolls right if value does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3538,7 +3479,7 @@
  *
  * Scrolls up if value does not drop below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3564,7 +3505,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3590,7 +3531,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3616,7 +3557,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3642,7 +3583,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3668,7 +3609,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3694,7 +3635,7 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3718,7 +3659,7 @@
  *
  * \retval slider value of type float is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3740,7 +3681,7 @@
  *
  * Increases the value if it does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3766,7 +3707,7 @@
  *
  * Decreases the value if it does not fall below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -3792,7 +3733,7 @@
  *
  * \retval 1 on success and 0 on error
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/panel.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -3803,24 +3744,6 @@
  * selectpanel('frmEvolution-Contacts', 'pnlAddbook', 1) 
  *
  * \author Poornima Nayak <pnayak@novell.com>
- */
-
-/** \page selectlabelspanelbyname selectlabelspanelbyname
- * \section Syntax
- *
- * selectlabelspanelbyname('<window name\>', '<label name\>')
- *
- * \section Description
- *
- * \retval 1 on success, LdtpExecutionError on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/label.c
- *
- * \section Example
- *
- * \todo
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
 /** \page verifytablecell verifytablecell
@@ -3836,7 +3759,7 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3862,7 +3785,7 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3890,7 +3813,7 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3918,7 +3841,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3952,7 +3875,7 @@
  *
  * \retval 1 on success, 0 otherwise.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -3963,58 +3886,6 @@
  * selectlastrow('dlgContactListMembers', 'tblContacts') 
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page selectevent selectevent
- * \section Syntax
- *
- * selectevent('\<window name\>', '\<Calendar_view name\>', '\<calendar event summary\>')
- *
- * \section Description
- *
- * Selects the row from the table of calendar events based on the calendar event name specified
- *
- * \section ImplementationDetails
- *
- * \retval 1 on success, else 0.
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/calendar-view.c
- *
- * \section Example
- *
- * In Evolution Calendars,for selecting an appointment-(calendar event) present in the table
- * 
- * from ldtp import *
- * 
- * selectevent('Evolution-Calendars', 'calview', 'abc') 
- *
- * \author Poornima <pnayak@novell.com>
- */
-
-/** \page selecteventindex selecteventindex
- * \section Syntax
- *
- * selecteventindex('\<window name\>', '\<component name\>', \<event number\>)
- *
- * \section Description
- *
- * Select an event from a calendar table using its index. Index for a calendar event starts from 1.
- *
- * \section ImplementationDetails
- *
- * \retval 1 on success, else 0
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/calendar-view.c
- *
- * \section Example
- *
- * from ldtp import *
- * 
- * With respect to Evolution-Calendars
- * 
- * selecteventindex('Evolution-Calendars', 'calview', 1) 
- *
- * \author Poornima <pnayak@novell.com>
  */
 
 /** \page doesrowexist doesrowexist
@@ -4033,7 +3904,7 @@
  *
  * \retval 1 if there are rows with the given string in any of its cell, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4061,7 +3932,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4087,7 +3958,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4113,7 +3984,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4139,7 +4010,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4163,8 +4034,8 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4184,8 +4055,8 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4207,7 +4078,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -4231,9 +4102,9 @@
  *
  * \retval number of rows present in the table on success, else -1
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  * \n
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4259,7 +4130,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4308,7 +4179,7 @@
  *
  * \retval 1 on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/panel.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4319,32 +4190,6 @@
  * selectpanelname('Evolution-Contacts', 'pnlAddbook', 'ldtp') 
  *
  * \author Khasim Shaheed <khasim.shaheed@gmail.com>
- */
-
-/** \page verifyeventexist verifyeventexist
- * \section Syntax
- *
- * verifyeventexist('\<window name\>', '\<component name\>')
- *
- * \section Description
- *
- * verifies whether any events are present in a calendar table 
- *
- * \section ImplementationDetails
- *
- * \retval 1 on success, else 0
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/calendar-view.c
- *
- * \section Example
- *
- * from ldtp import *
- * 
- * With respect to Evolution-Calendars
- * 
- * verifyeventexist('Evolution-Calendars', 'calview') 
- *
- * \author Manu <manunature@rediffmail.com>
  */
 
 /** \page expandtablecell expandtablecell
@@ -4358,7 +4203,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4384,7 +4229,7 @@
  *
  * \retval index of table cell, else -1.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4412,7 +4257,7 @@
  *
  * \retval Return id of the row containing the given cell value, if it is found else return -1
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4434,7 +4279,7 @@
  *
  * In combo box, select the list value based on index.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -4498,7 +4343,7 @@
  *
  * \retval text data of string type on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -4532,8 +4377,8 @@
  *
  * \retval cell value of type string on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4580,7 +4425,7 @@
  *
  * \retval list of type string on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/combo-box.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
  * \section Example
  *
@@ -4606,7 +4451,7 @@
  *
  * \retval text attributes of type string on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -4628,7 +4473,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -4650,27 +4495,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/text.c
- *
- * \section Example
- *
- * \todo
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
- */
-
-/** \page selectcalendardate selectcalendardate
- * \section Syntax
- *
- * selectcalendardate('\<window name\>', '\<calendar object name\>', \<day\>, \<month\>, \<year\>)
- *
- * \section Description
- *
- * 
- *
- * \retval 1 on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/calendar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
  *
  * \section Example
  *
@@ -4696,7 +4521,7 @@
  *
  * It uses the same logic that appmap module uses to generate appmap. Please refer to the following link for the source code of the remap functionality
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/remap.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  * 
@@ -4722,7 +4547,7 @@
  *
  * \retval list of window names will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4744,7 +4569,7 @@
  *
  * \retval x, y, width, height as a list and as int type will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/ldtp-gui.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4766,7 +4591,7 @@
  *
  * \retval x, y, width, height as a list and as int type will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/ldtp-gui.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4788,7 +4613,7 @@
  *
  * \retval list of window names will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4810,7 +4635,7 @@
  *
  * \retval String with access key on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4833,7 +4658,7 @@
  *
  * \retval list of states will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4863,7 +4688,7 @@
  *
  * \retval List of objects on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4891,7 +4716,7 @@
  *
  * \retval List of objects on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4915,7 +4740,7 @@
  *
  * \retval list of object properies(example, class, parent, label, label_by, child_index) on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4939,7 +4764,7 @@
  *
  * \retval object property string on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -4963,8 +4788,8 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -4984,8 +4809,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -5005,8 +4829,7 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -5026,7 +4849,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/tree-table.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  *
  * \section Example
  *
@@ -5046,7 +4869,7 @@
  *
  * \retval list of menuitems as string on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  *
  * \section Example
  *
@@ -5070,7 +4893,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/embedded-component.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  *
  * \section Example
  *
@@ -5079,6 +4902,8 @@
  * from ldtp import *
  *
  * invokemenu('frmBottomExpandedEdgePanel', 'Volume Control')
+ *
+ * \note Linux only feature
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5094,7 +4919,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5118,7 +4943,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5142,7 +4967,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/scroll-bar.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5166,7 +4991,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5186,7 +5011,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5206,7 +5031,7 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/slider.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
  * \section Example
  *
@@ -5228,8 +5053,7 @@
  * \retval 1 on success, else LdtpExecutionError exception
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/ldtp-gui.c
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -5294,8 +5118,7 @@
  * \retval 1 on success, else LdtpExecutionError exception
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/ldtp-gui.c
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -5364,7 +5187,7 @@
  *
  * \retval 1 if the menuitem is present, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/menu-item.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  *
  * \section Example
  *
@@ -5446,7 +5269,7 @@
  *
  * \section ImplementationDetails
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5478,7 +5301,7 @@
  *
  * Note: Script designer can decide the pass / fail criteria based on the diff percentage.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5509,7 +5332,7 @@
  *
  * \section ImplementationDetails
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5531,7 +5354,7 @@
  *
  * Start monitoring the Memory usage and CPU utilization of all the processes of the given application at specific time interval and log them to the python logger.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5654,7 +5477,7 @@
  *
  * Stop the Memory usage and CPU utilization monitoring of all the processes of the given application.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5776,7 +5599,7 @@
  *
  * Get the current CPU utilization of the given application
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \retval Returns list of float values in percentage(CPU utilization), of all the instance of given application
  *
@@ -5799,7 +5622,7 @@
  *
  * Get the current memory utilization of the given application
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \retval Returns list of int values in MB(Memory utilization), of all the instance of given application
  *
@@ -5824,7 +5647,7 @@
  *
  * \note Time in seconds.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5850,7 +5673,7 @@
  *
  * \note Time in seconds.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5880,7 +5703,7 @@
  *
  * Application name specified as an argument will be launched.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -5910,7 +5733,7 @@
  *
  * \retval startime, endtime(python datetime object)
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5931,7 +5754,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5958,7 +5781,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5985,7 +5808,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -6012,7 +5835,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -6039,7 +5862,7 @@
  *
  * \retval None
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -6066,7 +5889,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtputils.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -6078,79 +5901,6 @@
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Arvind Patil <apatil@vmware.com>
- *
- */
-
-/** \page getpanelchildcount getpanelchildcount
- * \section Syntax
- *
- * getpanelchildcount('\<window name\>', '\<component name\>')
- *
- * \section Description
- *
- * Gets the number of childs available under the given panel
- *
- * \retval Returns the child count if present, else -1, if unable to find child count
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/panel.c
- *
- * \section Example
- *
- * With respect to gedit application
- *
- * from ldtp import *
- *
- * getpanelchildcount('*-gedit', 'pnl0')
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
- *
- */
-
-/** \page bindtext bindtext
- * \section Syntax
- *
- * bindtext('\<package name\>', '\<locale directory\>'[, '\<mode\>'])
- *
- * \section Description
- *
- * 
- *
- * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
- *
- * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/localization.c
- *
- * \section Example
- *
- * For mo file with name: "/opt/gnome/share/locale/ta/LC_MESSAGES/gedit.mo"
- *
- * bindtext('gedit', '/opt/gnome/share/locale')
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
- *
- */
-
-/** \page setlocale setlocale
- * \section Syntax
- *
- * setlocale(['\<LANG\>'])
- *
- * \section Description
- *
- * 
- *
- * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
- *
- * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/localization.c
- *
- * \section Example
- *
- * \todo
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
  *
  */
 
@@ -6173,7 +5923,7 @@
  *
  * \retval Returns 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6198,7 +5948,7 @@
  *
  * \retval Returns 1 on success
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6223,7 +5973,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
  *
  * \section Example
  *
@@ -6244,7 +5994,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
  *
  * \section Example
  *
@@ -6265,7 +6015,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
  *
  * \section Example
  *
@@ -6286,7 +6036,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
  *
  * \section Example
  *
@@ -6307,7 +6057,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
  *
  * \section Example
  *
@@ -6377,7 +6127,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
  *
  * \section Example
  *
@@ -6449,7 +6199,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
  *
  * \section Example
  *
@@ -6519,7 +6269,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/device.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
  *
  * \section Example
  *
@@ -6622,7 +6372,7 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
  * \section Example
  *
@@ -6647,8 +6397,8 @@
  * \retval 1 on success, 0 on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/client-handler.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6678,8 +6428,8 @@
  * \retval 1 on success, 0 on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/src/toggle-button.c
- * http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6700,7 +6450,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6721,7 +6471,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6745,7 +6495,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6766,7 +6516,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6787,7 +6537,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6861,7 +6611,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6935,7 +6685,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -6983,7 +6733,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
@@ -7031,7 +6781,7 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp/tree/python/ldtp.py
+ * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
  * \section Example
  *
