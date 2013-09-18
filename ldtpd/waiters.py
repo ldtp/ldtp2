@@ -402,7 +402,7 @@ class ObjectExistsWaiter(GuiExistsWaiter):
 
     def poll(self):
         try:
-          if re.search(';', self._obj_name):
+          if self._obj_name and re.search(';', self._obj_name):
             obj = self._get_menu_hierarchy(self._frame_name, self._obj_name)
           else:
             obj = self._get_object(self._frame_name, self._obj_name, False)
