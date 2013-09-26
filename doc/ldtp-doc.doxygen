@@ -5044,7 +5044,7 @@
  *
  * invokemenu('frmBottomExpandedEdgePanel', 'Volume Control')
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5487,7 +5487,7 @@
  *
  * Python Imaging Library - Linux: http://www.pythonware.com/products/pil/
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \author Shankar Ganesh <shagan.glare@gmail.com>
  * \author Veerapuram Varadhan <v.varadhan@gmail.com>
@@ -5518,7 +5518,7 @@
  *
  * Python Imaging Library - Linux: http://www.pythonware.com/products/pil/
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \author Shankar Ganesh <shagan.glare@gmail.com>
  */
@@ -6676,7 +6676,7 @@
  * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -6724,7 +6724,7 @@
  *
  * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  * 
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -6800,7 +6800,7 @@
  *
  * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -6876,7 +6876,7 @@
  *
  * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -6952,7 +6952,7 @@
  *
  * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
- * \note Linux only feature
+ * \note Supported only on Linux
  * 
  * \section Example
  *
@@ -7002,7 +7002,7 @@
  *
  * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  * 
- * \note Linux only feature
+ * \note Supported only on Linux
  *
  * \section Example
  *
