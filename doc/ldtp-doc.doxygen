@@ -262,9 +262,6 @@
  * \subpage appundertest - Application under test
  * \n
  * \n
- * \subpage bindtext - Bind text to the current application and current locale
- * \n
- * \n
  * \subpage generatekeyevent - Generate keyboard event on currently
  * focused window
  * \n
@@ -291,9 +288,6 @@
  * \n
  * \n
  * \subpage remap - Force remap the window information
- * \n
- * \n
- * \subpage setlocale - Set locale to given locale
  * \n
  * \n
  * \subpage simulatemousemove - Simulate mouse move
@@ -329,14 +323,6 @@
  *
  * \subpage ischildindexselected - Is child selected in the complete
  * list based on index
- * \n
- * \n
- * \subpage ischilditemselected - Is child item selected in the
- * selected list based on name from the previously selected list
- * \n
- * \n
- * \subpage ischilditemindexselected - Is child item selected in the
- * selected list based on index from the previously selected list
  * \n
  * \n
  * \subpage ischildselected - Is child selected in the complete list
@@ -379,9 +365,6 @@
  *
  * \section ListAPI List python API's
  *
- * \subpage selecttextitem - Select the item in the list based on name
- * \n
- * \n
  * \subpage selectindex - Select the item in the list based on index
  *
  */
@@ -736,7 +719,7 @@
  * \subpage multiselect - Select multiple rows with the given names
  * \n
  * \n
- * \subpage multiRemove - Unselect multiple rows with the given names
+ * \subpage multiremove - Unselect multiple rows with the given names
  * \n
  * \n
  * \subpage selectlastrow - Select last row in the table
@@ -757,12 +740,6 @@
  * \n
  * \subpage singleclickrow - Generate single click event on the row
  * with matches the given name
- * \n
- * \n
- * \subpage sortcolumn - Sort the column based on the given field name
- * \n
- * \n
- * \subpage sortcolumnindex - Sort the column based on the given field index
  * \n
  * \n
  * \subpage uncheckrow - Un check the table cell of type toggle button
@@ -793,12 +770,6 @@
  * \subpage appendtext - Append the given text to the existing text
  * \n
  * \n
- * \subpage comparetextproperty - Checks the availability of all the given text property
- * \n
- * \n
- * \subpage containstextproperty - Checks the availability of one given text property
- * \n
- * \n
  * \subpage copytext - Copy text to clipboard
  * \n
  * \n
@@ -816,9 +787,6 @@
  * \n
  * \n
  * \subpage getcursorposition - Get the current cursor position
- * \n
- * \n
- * \subpage gettextproperty - Get the properties of text
  * \n
  * \n
  * \subpage gettextvalue - Get the text content
@@ -960,14 +928,10 @@
  * \subpage getrowcount - Get the rows count
  * \n
  * \n
- * \subpage gettreetablerowindex - Get the index of the row, where the
- * given name matches
- * \n
- * \n
  * \subpage multiselect - Select multiple rows with the given names
  * \n
  * \n
- * \subpage multiRemove - Unselect multiple rows with the given names
+ * \subpage multiremove - Unselect multiple rows with the given names
  * \n
  * \n
  * \subpage rightclick - Generate right click event
@@ -991,12 +955,6 @@
  * \n
  * \subpage singleclickrow - Generate single click event on the row
  * with matches the given name
- * \n
- * \n
- * \subpage sortcolumn - Sort the column based on the given field name
- * \n
- * \n
- * \subpage sortcolumnindex - Sort the column based on the given field index
  * \n
  * \n
  * \subpage uncheckrow - Un check the table cell of type toggle button
@@ -1421,7 +1379,7 @@
  * \page log log
  * \section Syntax
  * 
- * log('\<Message to be logged\>', logging.<TYPE>)
+ * log('\<Message to be logged\>', logging.\<TYPE\>)
  * 
  * where TYPE can be any of these
  * 
