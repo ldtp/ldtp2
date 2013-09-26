@@ -265,9 +265,6 @@
  * \subpage bindtext - Bind text to the current application and current locale
  * \n
  * \n
- * \subpage delaycmdexec - Delay command execution by number of seconds
- * \n
- * \n
  * \subpage generatekeyevent - Generate keyboard event on currently
  * focused window
  * \n
@@ -1167,7 +1164,13 @@
  * 
  * If the given window name exist, this function returns 1. If window doesnot exist, then this function returns 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
+ * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * 
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ * 
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
  * 
  * \section ImplementationDetails
  * 
@@ -1267,8 +1270,14 @@
  *
  *        gedit', will be represented as 'UnsavedDocument1gedit'
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ * 
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
+ *
  * \retval 1 on success, 0 otherwise
  * 
  * \section Example
@@ -1368,8 +1377,14 @@
  *
  *        gedit', will be represented as 'UnsavedDocument1gedit'
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/.cs
+ *
  * \retval 1 on success, 0 otherwise
  * 
  * \section Example
@@ -1556,8 +1571,14 @@
  * 
  * \retval 1 if state is checked, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * 
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
+ *
  * \section Example
  * 
  * from ldtp import *
@@ -1591,8 +1612,14 @@
  * 
  * \retval 1 if state is unchecked, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
+ *
  * \section Example
  * 
  * from ldtp import *
@@ -1629,34 +1656,56 @@
  * 
  * If radio button is already in unchecked state, then this function will check(set) it.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
- * 
+ * Refer:
+ *
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
+ *
  * \subsection Check Check Box
  * 
  * If check box is already in checked state, then this function will uncheck(unset) it.
  * 
  * If check box is already in unchecked state, then this function will check(set) it.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
  * \subsection Push Push Button
  * 
  * If push button state is enabled, then click on the object.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
  * \subsection Toggle Toggle Button
  * 
  * Click on the toggle button.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
  * \subsection Combo Combo Box
  * 
  * Clicks on combo box, drop down list of combo box will be visible if not already else drop down list of combo box closes.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer:
  * 
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
  * \section Examples
  * 
  * Example for push button(With respect to gedit open dialog)
@@ -1681,8 +1730,12 @@
  * 
  * \retval On check box state is checked returns 1, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
- * 
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac:	https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
+ *
  * \section Examples
  * 
  * from ldtp import *
@@ -1711,7 +1764,11 @@
  * 
  * \retval On check box state is un-checked returns 1, else 0.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
  * 
  * \section Examples
  * 
@@ -1740,7 +1797,11 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  * 
  * \section Example
  *
@@ -1762,7 +1823,11 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  * 
  * \section Example
  *
@@ -1784,7 +1849,11 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  * 
  * \section Example
  *
@@ -1806,7 +1875,11 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  * 
  * \section Example
  * 
@@ -1828,7 +1901,11 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/check-menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  * 
  * \section Example
  * 
@@ -1850,7 +1927,9 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Only supported on Linux
  * 
  * \section Example
  * 
@@ -1878,7 +1957,11 @@
  * 
  * \retval 1 on success, 0 on failure.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  * 
  * \section Example
  * 
@@ -1898,7 +1981,9 @@
  * 
  * \retval text content displayed in the status bar on success, LdtpExecutionError exception on failure.
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Supported only on Linux platform
  * 
  * \section Example
  * 
@@ -1918,7 +2003,9 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Supported only on Linux platform
  * 
  * \section Example
  * 
@@ -1942,7 +2029,9 @@
  * 
  * \retval 1 on success, 0 on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Supported only on Linux platform
  * 
  * \section Example
  * 
@@ -1966,7 +2055,9 @@
  * 
  * \retval cursor position which is of type long on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Supported only on Linux platform
  * 
  * \section Example
  *
@@ -1998,7 +2089,11 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  * 
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  * 
  * \section Example
  * 
@@ -2020,8 +2115,12 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
+ * 
  * \section Example
  *
  * In gnome-search-tool combo box 'Available options' to select the menu item 'Contains the text'
@@ -2055,8 +2154,12 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
  *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
+ * 
  * \section Example
  *
  * # Selects the first folder / file in desktop
@@ -2078,7 +2181,9 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2101,7 +2206,9 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2123,7 +2230,9 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2143,7 +2252,9 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2163,7 +2274,9 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2184,32 +2297,13 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
  * ischildselected('x-nautilus-desktop', 'Icon View', 'file-name.txt')
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page ischilditemselected ischilditemselected
- * \section Syntax
- *
- * ischilditemselected('\<dlgName\>', '\<object name\>', '\<item\>')
- *
- * \section Description
- *
- * In layered pane, this function call checks whether the given file /
- * folder is selected in the previously selected list.
- *
- * \retval Selected item count on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
- *
- * \section Example
- *
- * ischilditemselected('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2226,32 +2320,13 @@
  *
  * \retval Selected item count on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
  * ischildindexselected('x-nautilus-desktop', 'Icon View', 0)
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page ischilditemindexselected ischilditemindexselected
- * \section Syntax
- *
- * ischilditemindexselected('\<dlgName\>', '\<object name\>', \<index\>)
- *
- * \section Description
- *
- * In layered pane, this function call checks whether the given index
- * is selected in the previously selected item.
- *
- * \retval Selected item count on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
- *
- * \section Example
- *
- * ischilditemindexselected('x-nautilus-desktop', 'Icon View', 0)
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -2275,7 +2350,11 @@
  *
  * Combo box will be associated with child of type 'Text' when one of its child is 'List'. This action gets object handle of 'Text' object associated with combo box and then sets value given in argument in that text box 
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2305,7 +2384,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2331,7 +2414,9 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2357,7 +2442,11 @@
  *
  * \retval number of characters
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2383,7 +2472,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2409,7 +2502,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2435,7 +2532,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2461,7 +2562,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2487,7 +2592,11 @@
  *
  * \retval 1 on success and 0 otherwise
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2515,7 +2624,11 @@
  *
  * \retval 1 on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2533,7 +2646,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2557,7 +2674,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2581,7 +2702,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2605,7 +2730,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2631,7 +2760,11 @@
  *
  * \retval combo box value on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2655,7 +2788,11 @@
  *
  * \retval 1 if the text is inserted into the specified component else returns 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -2687,8 +2824,12 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
  * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -2711,8 +2852,11 @@
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -2732,41 +2876,15 @@
  * 
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
  * unselectitem('x-nautilus-desktop', 'Icon View', 'file-name.txt')
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
- */
-
-/** \page selecttextitem selecttextitem
- * \section Syntax
- *
- * selecttextitem('\<window name\>', '\<combo box name\>', '\<item\>')
- *
- * \section Description
- *
- * Selects a text item in a combox box and the combo box may contain either list or menu item.
- *
- * \retval 1 on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
- *
- * \section Example
- *
- * With respect to gedit, find dialog
- *
- * from ldtp import *
- *
- * click('*-gedit', 'btnFind')
- *
- * # assuming that LDTP string is available in the list of searched strings
- *
- * selecttextitem('dlgFind', 'cboSearchFor', 'LDTP')
- *
- * \author Poornima Nayak <pnayak@novell.com>
  */
 
 /** \page selectmenuitem selectmenuitem
@@ -2778,7 +2896,11 @@
  *
  * Selects the menu item specified.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  *
  * \section Example
  *
@@ -2803,7 +2925,11 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/page_tab_list.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tab.cs
  *
  * \section Example
  *
@@ -2829,7 +2955,11 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/page_tab_list.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tab.cs
  *
  * \section Example
  *
@@ -2855,7 +2985,11 @@
  *
  * \retval 1 if the tab is selected, \exception otherwise LdtpExecutionError will be thrown
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/page_tab_list.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tab.cs
  *
  * \section Example
  *
@@ -2881,7 +3015,11 @@
  *
  * \retval tab count of type long is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/page_tab_list.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tab.cs
  *
  * \section Example
  *
@@ -2907,7 +3045,11 @@
  *
  * \retval tab name is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/page_tab_list.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/page_tab_list.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tab.cs
  *
  * \section Example
  *
@@ -2935,7 +3077,9 @@
  *
  * \retval 1 if object is push button, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -2959,7 +3103,11 @@
  *
  * \retval 1 if state is enabled, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -2991,7 +3139,11 @@
  *
  * \retval 1 on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3015,7 +3167,11 @@
  *
  * \retval value in the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3039,7 +3195,11 @@
  *
  * \retval max value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3063,7 +3223,11 @@
  *
  * \retval max value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3087,7 +3251,11 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3111,7 +3279,11 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3135,7 +3307,11 @@
  *
  * \retval min value of the spin button on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3159,7 +3335,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
+ *
+ * \note Supported only on Linux and Windows platform
  *
  * \section Example
  *
@@ -3183,7 +3363,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3209,8 +3393,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3236,8 +3423,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3263,8 +3453,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3290,8 +3483,11 @@
  *
  * \retval 1 on success and throws an exception on error
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3315,7 +3511,9 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note supported only on Linux platform
  *
  * \section Example
  *
@@ -3350,7 +3548,11 @@
  *
  * Scrolls down if value does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3376,7 +3578,11 @@
  *
  * Scrolls left if value does not drop below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3402,7 +3608,11 @@
  *
  * Scrolls right if value does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3428,7 +3638,11 @@
  *
  * Scrolls up if value does not drop below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3454,7 +3668,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Scrollbar.cs
  *
  * \section Example
  *
@@ -3480,7 +3698,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Scrollbar.cs
  *
  * \section Example
  *
@@ -3506,7 +3728,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Scrollbar.cs
  *
  * \section Example
  *
@@ -3532,7 +3758,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Scrollbar.cs
  *
  * \section Example
  *
@@ -3558,7 +3788,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3584,7 +3818,11 @@
  *
  * \retval 1 if action is performed, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3608,8 +3846,12 @@
  *
  * \retval slider value of type float is returned on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
+ *
+ * \note Supported only on Linux and Windows platform
+ * 
  * \section Example
  *
  * \todo
@@ -3630,7 +3872,11 @@
  *
  * Increases the value if it does not exceed the maximum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3656,7 +3902,11 @@
  *
  * Decreases the value if it does not fall below the minimum limit, else fails.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
  *
  * \section Example
  *
@@ -3682,7 +3932,9 @@
  *
  * \retval 1 on success and 0 on error
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -3708,7 +3960,11 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * \note Supported only on Linux and Mac platform
  *
  * \section Example
  *
@@ -3734,7 +3990,9 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux and Mac platform
  *
  * \section Example
  *
@@ -3762,7 +4020,9 @@
  *
  * \retval 1 on success and 0 on error.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux and Mac platform
  *
  * \section Example
  *
@@ -3790,7 +4050,11 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3824,7 +4088,11 @@
  *
  * \retval 1 on success, 0 otherwise.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3853,7 +4121,11 @@
  *
  * \retval 1 if there are rows with the given string in any of its cell, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -3881,7 +4153,9 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -3901,13 +4175,13 @@
  *
  * \section Description
  *
- * 
- *
  * \section ImplementationDetails
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -3933,7 +4207,9 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -3953,13 +4229,13 @@
  *
  * \section Description
  *
- *
- *
  * \section ImplementationDetails
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * \note Supported only on Linux platform
  *
  * \section Example
  *
@@ -3970,48 +4246,6 @@
  * verifyuncheckrow('dlgCategories', 'tblcategories', 3) 
  *
  * \author Bhargavi <kbhargavi_83@yahoo.co.in>
- */
-
-/** \page sortcolumn sortcolumn
- * \section Syntax
- *
- * sortcolumn('<window name\>', '<table name\>', '<column name\>')
- *
- * \section Description
- *
- * Sort table based on column name.
- *
- * \retval 1 on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- *
- * \section Example
- *
- * \todo
- *
- * \author 
- */
-
-/** \page sortcolumnindex sortcolumnindex
- * \section Syntax
- *
- * sortcolumnindex('<window name\>', '<table name\>', <column index\>)
- *
- * \section Description
- *
- * Sort table based on column index.
- *
- * \retval 1 on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- *
- * \section Example
- *
- * \todo
- *
- * \author 
  */
 
 /** \page verifypartialmatch verifypartialmatch
@@ -4027,7 +4261,11 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -4051,9 +4289,11 @@
  *
  * \retval number of rows present in the table on success, else -1
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * \n
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4079,7 +4319,11 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * \note Supported only on Mac and Linux platform
  *
  * \section Example
  *
@@ -4128,7 +4372,11 @@
  *
  * \retval 1 on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4152,7 +4400,11 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
+ * 
+ * \note Supported only on Linux and Windows platform
  *
  * \section Example
  *
@@ -4163,34 +4415,6 @@
  * expandtablecell('frm*-Evolution', 'ttblMailFolderTree', 0) # In mail folder view
  *
  * \author 
- */
-
-/** \page gettreetablerowindex gettreetablerowindex
- * \section Syntax
- *
- * gettreetablerowindex('\<window name\>', '\<tree table name\>', '\<name of a table cell\>')
- *
- * \section Description
- *
- * Used to obtain the index of any table cell whose whose name is give in the last field.
- *
- * \section ImplementationDetails
- *
- * \retval index of table cell, else -1.
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- *
- * \section Example
- *
- * from ldtp import *
- * 
- * With respect to the tree table in Mail in Evolution
- * 
- * i = gettreetablerowindex('Evolution', 'treetblMail', 'Cabinet')
- * 
- * here 'i' will be having the index of the Cabinet which is a table cell under tree table mail. 
- *
- * \author Aginesh <sraginesh@novell.com>
  */
 
 /** \page gettablerowindex gettablerowindex
@@ -4206,7 +4430,11 @@
  *
  * \retval Return id of the row containing the given cell value, if it is found else return -1
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4228,7 +4456,11 @@
  *
  * In combo box, select the list value based on index.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -4292,7 +4524,11 @@
  *
  * \retval text data of string type on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/text.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -4326,8 +4562,11 @@
  *
  * \retval cell value of type string on success, else LdtpExecutionError exception
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4374,7 +4613,11 @@
  *
  * \retval list of type string on success, LdtpExecutionError on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/combo_box.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/combox_box.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Combobox.cs
  *
  * \section Example
  *
@@ -4389,77 +4632,11 @@
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
 
-/** \page gettextproperty gettextproperty
- * \section Syntax
- *
- * gettextproperty('<window name\>', '<text object name\>'[, <start position\>[, <end position\>]])
- *
- * \section Description
- *
- * Get the text attributes
- *
- * \retval text attributes of type string on success, LdtpExecutionError exception on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
- *
- * \section Example
- *
- * \todo
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
- */
-
-/** \page comparetextproperty comparetextproperty
- * \section Syntax
- *
- * comparetextproperty('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
- *
- * \section Description
- *
- * Compares the text attribute properties
- *
- * Default value of start and end positions are 0 and length of the string.
- *
- * \retval 1 on success, 0 on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
- *
- * \section Example
- *
- * \todo
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
- */
-
-/** \page containstextproperty containstextproperty
- * \section Syntax
- *
- * containstextproperty('<window name\>', '<text object name\>', '<text property\>'[, <start position\>[, <end position\>]])
- *
- * \section Description
- *
- * Checks for one or more text attribute properties
- *
- * Default value of start and end positions are 0 and length of the string.
- *
- * \retval 1 on success, 0 on failure
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/text.py
- *
- * \section Example
- *
- * \todo
- *
- * \author Premkumar J <prem.jothimani@gmail.com>
- */
-
 /** \page remap remap
  * \section Syntax
  *
- * remap('\<window name\>'[, '\<component name\>'])
+ * remap('\<window name\>')
  * 
- * undoremap('\<application-name\>', '\<dialog name\>') 
- *
  * \section Description
  *
  * We can handle dynamically created widgets(meaning widgets created at run time) using this remap function. Calling remap will generate appmap for the given dialog at run time and update the hash table. Then we can access the new widgets. But please make sure to call undoremap() once the required functions are performed so that the hash table will be reverted back to its original state. The reason for having undoremap() is that subsequent calls to remap() might corrupt the hash table containg the appmap entries.
@@ -4470,18 +4647,16 @@
  *
  * It uses the same logic that appmap module uses to generate appmap. Please refer to the following link for the source code of the remap functionality
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  * 
  * remap('dlggeditPreferences') # Remaps the complete gedit preferences dialog
  * 
- * remap('dlggeditPreferences', 'ptabView') # Remaps all the controls under page tab with the name View of gedit Preferences dialog.
- * 
- * . .
- * 
- * undoremap('evolution', 'dlgAppointment-Nosummary') 
- *
  * \author Premkumar J <prem.jothimani@gmail.com>
  */
 
@@ -4496,7 +4671,11 @@
  *
  * \retval list of window names will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4518,7 +4697,11 @@
  *
  * \retval x, y, width, height as a list and as int type will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4540,7 +4723,11 @@
  *
  * \retval x, y, width, height as a list and as int type will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4562,7 +4749,11 @@
  *
  * \retval list of window names will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4584,7 +4775,11 @@
  *
  * \retval String with access key on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4607,7 +4802,11 @@
  *
  * \retval list of states will be returned on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4637,7 +4836,11 @@
  *
  * \retval List of objects on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4665,7 +4868,11 @@
  *
  * \retval List of objects on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4689,7 +4896,11 @@
  *
  * \retval list of object properies(example, class, parent, label, label_by, child_index) on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4713,7 +4924,11 @@
  *
  * \retval object property string on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -4737,8 +4952,11 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4758,7 +4976,11 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4778,7 +5000,11 @@
  *
  * \retval 1 on success, else 0.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/table.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Tree.cs
  *
  * \section Example
  *
@@ -4798,7 +5024,11 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/table.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -4818,7 +5048,11 @@
  *
  * \retval list of menuitems as string on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  *
  * \section Example
  *
@@ -4842,7 +5076,7 @@
  *
  * \retval 1 on success, LdtpExecutionError exception on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
  *
  * \section Example
  *
@@ -4868,7 +5102,11 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Scrollbar.cs
  *
  * \section Example
  *
@@ -4892,8 +5130,12 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
  *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * \note Supported only on Linux and Mac
+ * 
  * \section Example
  *
  * With respect to gedit application
@@ -4916,7 +5158,11 @@
  *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/value.py
+ *
+ * \note Supported only on Linux and Mac
  *
  * \section Example
  *
@@ -4936,11 +5182,13 @@
  *
  * \section Description
  *
- * 
- *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
+ *
+ * \note Support only on Linux and Mac
  *
  * \section Example
  *
@@ -4956,11 +5204,13 @@
  *
  * \section Description
  *
- * 
- *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Value.cs
+ *
+ * \note Support only on Linux and Mac
  *
  * \section Example
  *
@@ -4976,11 +5226,11 @@
  *
  * \section Description
  *
- * 
- *
  * \retval 1 on success, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/value.py
+ *
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -5002,7 +5252,12 @@
  * \retval 1 on success, else LdtpExecutionError exception
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/WindowList.cs
+ *
+ * \note Supported only on Linux and Windows
  *
  * \section Example
  *
@@ -5067,7 +5322,11 @@
  * \retval 1 on success, else LdtpExecutionError exception
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/WindowList.cs
+ *
+ * \note Supported only on Linux and Windows
  *
  * \section Example
  *
@@ -5136,7 +5395,11 @@
  *
  * \retval 1 if the menuitem is present, else 0
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/menu.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/menu.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  *
  * \section Example
  *
@@ -5218,7 +5481,11 @@
  *
  * \section ImplementationDetails
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/generic.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/generic.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Screenshot.cs
  *
  * \section Example
  *
@@ -5232,7 +5499,7 @@
  *
  * \section Dependency
  *
- * Import utility of ImageMagick - http://www.imagemagick.org/script/import.php # Mandatory dependency, if you want to use this function.
+ * Import utility of ImageMagick - Linux: http://www.imagemagick.org/script/import.php # Mandatory dependency, if you want to use this function.
  *
  * \author Nagashree <mnagashree@novell.com>
  */
@@ -5250,7 +5517,7 @@
  *
  * Note: Script designer can decide the pass / fail criteria based on the diff percentage.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5260,7 +5527,9 @@
  *
  * \section Dependency
  *
- * Python Imaging Library - http://www.pythonware.com/products/pil/
+ * Python Imaging Library - Linux: http://www.pythonware.com/products/pil/
+ *
+ * \note Linux only feature
  *
  * \author Shankar Ganesh <shagan.glare@gmail.com>
  * \author Veerapuram Varadhan <v.varadhan@gmail.com>
@@ -5281,7 +5550,7 @@
  *
  * \section ImplementationDetails
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
  *
  * \section Example
  *
@@ -5289,7 +5558,9 @@
  *
  * \section Dependency
  *
- * Python Imaging Library - http://www.pythonware.com/products/pil/
+ * Python Imaging Library - Linux: http://www.pythonware.com/products/pil/
+ *
+ * \note Linux only feature
  *
  * \author Shankar Ganesh <shagan.glare@gmail.com>
  */
@@ -5303,7 +5574,11 @@
  *
  * Start monitoring the Memory usage and CPU utilization of all the processes of the given application at specific time interval and log them to the python logger.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/utils.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/utils.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/ProcessStats.cs
  *
  * \section Example
  *
@@ -5412,7 +5687,7 @@
  *
  * \section Dependency
  *
- * This functionality depends on the pystatgrab(http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
+ * This functionality depends on the pystatgrab(Linux: http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts. On Mac, we depend psutil module for this API.
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5426,7 +5701,11 @@
  *
  * Stop the Memory usage and CPU utilization monitoring of all the processes of the given application.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/utils.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/utils.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/ProcessStats.cs
  *
  * \section Example
  *
@@ -5534,7 +5813,7 @@
  *
  * \section Dependency
  *
- * This functionality depends on the pystatgrab(http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts.
+ * This functionality depends on the pystatgrab(Linux: http://www.i-scream.org/pystatgrab/) package. Make sure you have it installed before using this memory and CPU utilization gathering function in your ldtp test scripts. On Mac, we depend psutil module for this API.
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  */
@@ -5548,7 +5827,11 @@
  *
  * Get the current CPU utilization of the given application
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/utils.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/utils.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/ProcessStats.cs
  *
  * \retval Returns list of float values in percentage(CPU utilization), of all the instance of given application
  *
@@ -5571,7 +5854,11 @@
  *
  * Get the current memory utilization of the given application
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/utils.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/utils.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/ProcessStats.cs
  *
  * \retval Returns list of int values in MB(Memory utilization), of all the instance of given application
  *
@@ -5596,7 +5883,11 @@
  *
  * \note Time in seconds.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Utils.cs
  *
  * \section Example
  *
@@ -5608,31 +5899,6 @@
  *
  * \author Nagappan Alagappan <nagappan@gmail.com>
  * \author Shankar Ganesh <shagan.glare@gmail.com>
- *
- */
-
-/** \page delaycmdexec delaycmdexec
- * \section Syntax
- *
- * delaycmdexec([\<number of seconds to delay commands execution\>])
- *
- * \section Description
- *
- * Delay commands execution for the specified time period. Default wait time is None.
- *
- * \note Time in seconds.
- *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
- *
- * \section Example
- *
- * To delay the current sequence of execution for 5 seconds
- * 
- * from ldtputils import * 
- *
- * delaycmdexec(5)
- *
- * \author Nagappan Alagappan <nagappan@gmail.com>
  *
  */
 
@@ -5652,7 +5918,11 @@
  *
  * Application name specified as an argument will be launched.
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  *
@@ -5682,7 +5952,9 @@
  *
  * \retval startime, endtime(python datetime object)
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -5703,7 +5975,9 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -5730,7 +6004,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  *
@@ -5757,7 +6035,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  *
@@ -5784,7 +6066,9 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -5811,7 +6095,9 @@
  *
  * \retval None
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Supported only on Linux
  *
  * \section Example
  *
@@ -5838,7 +6124,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtputils/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Menu.cs
  *
  * \section Example
  *
@@ -5872,8 +6162,12 @@
  *
  * \retval Returns 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
  *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtp/__init__.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/CobraWinLDTP/ldtp/__init__.py
+ * 
  * \section Example
  *
  * setloglevel(logging.WARNING)
@@ -5897,7 +6191,11 @@
  *
  * \retval Returns 1 on success
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtp/__init__.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/CobraWinLDTP/ldtp/__init__.py
  *
  * \section Example
  *
@@ -5922,7 +6220,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -5943,7 +6245,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -5964,7 +6270,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -5985,7 +6295,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -6006,7 +6320,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/keypress_actions.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -6076,7 +6394,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/keypress_actions.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -6148,7 +6470,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/keypress_actions.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -6218,7 +6544,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/keypress_actions.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/keypress_actions.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Text.cs
  *
  * \section Example
  *
@@ -6321,7 +6651,11 @@
  *
  * \retval Returns 1 on success, LdtpExecutionError exception will be thrown on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/mouse.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/mouse.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Mouse.cs
  *
  * \section Example
  *
@@ -6346,8 +6680,12 @@
  * \retval 1 on success, 0 on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -6377,8 +6715,10 @@
  * \retval 1 on success, 0 on failure
  *
  * Refer:
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
- * http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ *
+ * \note Linux only feature
  *
  * \section Example
  *
@@ -6399,7 +6739,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Generic.cs
  *
  * \section Example
  *
@@ -6420,7 +6764,9 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * 
+ * \note Linux only feature
  *
  * \section Example
  *
@@ -6444,7 +6790,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  *
@@ -6465,7 +6815,11 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * Mac: https://github.com/ldtp/pyatom/blob/master/atomac/ldtpd/core.py
+ *
+ * Windows: https://github.com/ldtp/cobra/blob/master/Ldtpd/Core.cs
  *
  * \section Example
  *
@@ -6486,7 +6840,9 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * 
+ * \note Linux only feature
  *
  * \section Example
  *
@@ -6560,7 +6916,9 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Linux only feature
  *
  * \section Example
  *
@@ -6634,8 +6992,10 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
  *
+ * \note Linux only feature
+ * 
  * \section Example
  *
  * @code
@@ -6682,7 +7042,9 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ * 
+ * \note Linux only feature
  *
  * \section Example
  *
@@ -6730,7 +7092,9 @@
  *
  * \retval 1 on success, 0 on failure
  *
- * Refer: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtp/__init__.py
+ * Refer: Linux: http://cgit.freedesktop.org/ldtp/ldtp2/tree/ldtpd/core.py
+ *
+ * \note Works only on Linux and Windows
  *
  * \section Example
  *
