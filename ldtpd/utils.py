@@ -175,6 +175,7 @@ class Utils:
         self._custom_logger = _custom_logger
         self._desktop = pyatspi.Registry.getDesktop(0)
         self._ldtp_debug = os.environ.get('LDTP_DEBUG', None)
+        self._ldtp_debug_file = os.environ.get('LDTP_DEBUG_FILE', None)
         # Initialize atspi2 version to False
         self._atspi2_ver = False
         if Utils.cached_apps is None:
@@ -315,6 +316,9 @@ class Utils:
         except:
             if self._ldtp_debug:
                 print(traceback.format_exc())
+            if self._ldtp_debug_file:
+                with open(self._ldtp_debug_file, "a") as fp:
+                    fp.write(traceback.format_exc())
 
     def _atspi2_workaround(self):
         if not hasattr(pyatspi, 'Accessible'):
@@ -403,6 +407,9 @@ class Utils:
                         # Let us not throw exception, instead continue
                         if self._ldtp_debug:
                             print(traceback.format_exc())
+                        if self._ldtp_debug_file:
+                            with open(self._ldtp_debug_file, "a") as fp:
+                                fp.write(traceback.format_exc())
                         continue
         try:
             role = acc.getRole()
@@ -895,6 +902,9 @@ class Utils:
                                        gui.getIndexInParent())
                 if self._ldtp_debug:
                     print('Window name has #', window_name, obj_index)
+                if self._ldtp_debug_file:
+                    with open(self._ldtp_debug_file, "a") as fp:
+                        fp.write('Window name has # %s %d', window_name, obj_index)
                 if window_name == obj_index:
                     if self._ldtp_debug:
                         print('Window found', gui, name)
@@ -994,7 +1004,7 @@ class Utils:
                             # Traversing object role and appmap role doesn't match
                             if self._ldtp_debug:
                                 print("Traversing object role and appmap role " \
-                                      "doesn't match", obj.getRoleName(), _appmap_role)
+                                          "doesn't match", obj.getRoleName(), _appmap_role)
                             return None
                         break
                     obj = tmp_obj
