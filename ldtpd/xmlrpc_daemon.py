@@ -33,10 +33,8 @@ if 'LDTP_COMMAND_DELAY' in os.environ:
 else:
     delay = None
 
-if 'LDTP_DEBUG' in os.environ:
-    _ldtp_debug = os.environ['LDTP_DEBUG']
-else:
-    _ldtp_debug = None
+_ldtp_debug = os.environ.get('LDTP_DEBUG', None)
+_ldtp_debug_file = os.environ.get('LDTP_DEBUG_FILE', None)
 
 class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
     def __new__(cls, *args, **kwargs):
@@ -121,6 +119,9 @@ class XMLRPCLdtpd(Ldtpd, xmlrpc.XMLRPC, object):
                                             for k, v in kwargs.items()]))
                     print(debug_st)
                     logger.debug(debug_st)
+                if _ldtp_debug_file:
+                    with open(_ldtp_debug_file, "a") as fp:
+                        fp.write(debug_st)
                 xmlrpc.defer.maybeDeferred(function, *args,
                                            **kwargs).\
                                            addErrback(self._ebRender).\
