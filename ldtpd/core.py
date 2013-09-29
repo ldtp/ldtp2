@@ -107,6 +107,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
       except:
         if self._ldtp_debug:
           print(traceback.format_exc())
+        if self._ldtp_debug_file:
+          with open(self._ldtp_debug_file, "a") as fp:
+            fp.write(traceback.format_exc())
 
     def _registered_kb_event_cb(self, event):
         if not event:
@@ -145,6 +148,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
       except:
         if self._ldtp_debug:
           print(traceback.format_exc())
+        if self._ldtp_debug_file:
+          with open(self._ldtp_debug_file, "a") as fp:
+            fp.write(traceback.format_exc())
 
     def appundertest(self, app_name):
       """
@@ -819,6 +825,9 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 ObjectExistsWaiter(window_name, object_name, guiTimeOut, state)
             return int(waiter.run())
         except:
+          if self._ldtp_debug_file:
+            with open(self._ldtp_debug_file, "a") as fp:
+              fp.write(traceback.format_exc())
           if self._ldtp_debug:
             print(traceback.format_exc())
         return 0
