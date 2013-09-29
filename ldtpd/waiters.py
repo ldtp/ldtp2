@@ -90,6 +90,9 @@ class Waiter(Utils):
         except:
           if self._ldtp_debug:
             print(traceback.format_exc())
+          if self._ldtp_debug_file:
+            with open(self._ldtp_debug_file, "a") as fp:
+              fp.write(traceback.format_exc())
         return self.success
 
     def _timeout_thread_cb(self, params):
@@ -106,6 +109,9 @@ class Waiter(Utils):
         except:
           if self._ldtp_debug:
             print(traceback.format_exc())
+          if self._ldtp_debug_file:
+            with open(self._ldtp_debug_file, "a") as fp:
+              fp.write(traceback.format_exc())
         if self._timeout_count * self.timeout_seconds > self.timeout or \
                self.success:
             try:
@@ -131,6 +137,9 @@ class Waiter(Utils):
       except:
         if self._ldtp_debug:
           print(traceback.format_exc())
+        if self._ldtp_debug_file:
+          with open(self._ldtp_debug_file, "a") as fp:
+            fp.write(traceback.format_exc())
       if self.success:
         try:
           # Required for wnck functions
@@ -373,6 +382,9 @@ class GuiExistsWaiter(Waiter):
       except:
         if self._ldtp_debug:
           print(traceback.format_exc())
+        if self._ldtp_debug_file:
+          with open(self._ldtp_debug_file, "a") as fp:
+            fp.write(traceback.format_exc())
 
 class GuiNotExistsWaiter(Waiter):
     events = ["window:destroy"]
@@ -392,6 +404,9 @@ class GuiNotExistsWaiter(Waiter):
       except:
         if self._ldtp_debug:
           print(traceback.format_exc())
+        if self._ldtp_debug_file:
+          with open(self._ldtp_debug_file, "a") as fp:
+            fp.write(traceback.format_exc())
 
 class ObjectExistsWaiter(GuiExistsWaiter):
     def __init__(self, frame_name, obj_name, timeout, state = ''):
@@ -418,6 +433,9 @@ class ObjectExistsWaiter(GuiExistsWaiter):
           else:
             self.success = True
         except:
+            if self._ldtp_debug_file:
+                with open(self._ldtp_debug_file, "a") as fp:
+                    fp.write(traceback.format_exc())
             if self._ldtp_debug:
               print(traceback.format_exc())
 
