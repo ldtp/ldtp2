@@ -26,15 +26,21 @@ import time
 import signal
 import platform
 import traceback
-import xmlrpclib
 import subprocess
 from socket import error as SocketError
-from client_exception import LdtpExecutionError, ERROR_CODE
-from log import logger
+from ldtp.log import logger
+from ldtp.client_exception import LdtpExecutionError, ERROR_CODE
 
+try:
+    import xmlrpclib
+except ImportError:
+    import xmlrpc.client as xmlrpclib
+_python3 = False
 _python26 = False
 if sys.version_info[:2] <= (2, 6):
     _python26 = True
+if sys.version_info[:2] >= (3, 0):
+    _python3 = True
 _ldtp_windows_env = False
 if 'LDTP_DEBUG' in os.environ:
     _ldtp_debug = os.environ['LDTP_DEBUG']
@@ -102,7 +108,7 @@ class Transport(xmlrpclib.Transport):
     # @param host Target host.
     # @return A connection handle.
 
-    if not _python26:
+    if not _python26 and _python3:
         # Add to the class, only if > python 2.5
         def make_connection(self, host):
             # create a HTTP connection object from a host descriptor
@@ -128,15 +134,18 @@ class Transport(xmlrpclib.Transport):
                     # Activestate python 2.5, use the old method
                     return xmlrpclib.Transport.request(
                         self, host, handler, request_body, verbose=verbose)
-                # Follwing implementation not supported in Python <= 2.6
-                h = self.make_connection(host)
-                if verbose:
-                    h.set_debuglevel(1)
+                if not _python3:
+  		    # Follwing implementation not supported in Python <= 2.6
+                    h = self.make_connection(host)
+                    if verbose:
+                        h.set_debuglevel(1)
 
-                self.send_request(h, handler, request_body)
-                self.send_host(h, host)
-                self.send_user_agent(h)
-                self.send_content(h, request_body)
+                    self.send_request(h, handler, request_body)
+                    self.send_host(h, host)
+                    self.send_user_agent(h)
+                    self.send_content(h, request_body)
+                else:
+                    h=self.send_request(host, handler, request_body, bool(verbose))
 
                 response = h.getresponse()
 

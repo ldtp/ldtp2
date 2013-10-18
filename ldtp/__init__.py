@@ -39,9 +39,9 @@ if path == "":
    path = "."
 sys.path.append(path)
 
-import state
-import client
-from client_exception import LdtpExecutionError
+from ldtp import state
+from ldtp import client
+from ldtp.client_exception import LdtpExecutionError
 
 _t = None
 _pollEvents = None
@@ -161,32 +161,43 @@ def stoplog():
         _file_logger = None
     return 1
 
-class PollLogs:
+class PollLogs(threading.Thread):
     """
     Class to poll logs, NOTE: *NOT* for external use
     """
     global _file_logger
     def __init__(self):
-        self._stop = False
+        super(PollLogs, self).__init__()
+        self.alive = True
 
     def __del__(self):
         """
         Stop polling when destroying this class
         """
         try:
-           self._stop = True
+           self.alive = False
         except:
            pass
 
+    def stop(self):
+       """
+       Stop the thread
+       """
+       try:
+          self.alive = False
+          self.join()
+       except:
+          pass
+
     def run(self):
-        while not self._stop:
+        while self.alive:
             try:
                 if not self.poll_server():
                     # Socket error
                     break
             except:
                 log(traceback.format_exc())
-                self._stop = False
+                self.alive = False
                 break
 
     def poll_server(self):
@@ -243,33 +254,44 @@ def _populateNamespace(d):
         d[local_name] = getattr(client._client, method)
         d[local_name].__doc__ = client._client.system.methodHelp(method)
 
-class PollEvents:
+class PollEvents(threading.Thread):
     """
     Class to poll callback events, NOTE: *NOT* for external use
     """
     def __init__(self):
-        self._stop = False
-        # Initialize callback dictionary
-        self._callback = {}
+       super(PollEvents, self).__init__()
+       self.alive = True
+       # Initialize callback dictionary
+       self._callback = {}
 
     def __del__(self):
         """
-        Stop callback when destroying this class
+        Stop polling when destroying this class
         """
         try:
-           self._stop = True
+           self.alive = False
         except:
            pass
 
+    def stop(self):
+       """
+       Stop the thread
+       """
+       try:
+          self.alive = False
+          self.join()
+       except:
+          pass
+
     def run(self):
-        while not self._stop:
+        while self.alive:
             try:
                 if not self.poll_server():
                     # Socket error
                     break
             except:
                 log(traceback.format_exc())
-                self._stop = False
+                self.alive = False
                 break
 
     def poll_server(self):
@@ -570,21 +592,18 @@ def windowuptime(window_name):
 
 _populateNamespace(globals())
 _pollEvents = PollEvents()
-_t1 = threading.Thread(target=_pollEvents.run, args=())
-_t1.daemon = True
-_t1.start()
+_pollEvents.daemon = True
+_pollEvents.start()
 _pollLogs = PollLogs()
-_t2 = threading.Thread(target=_pollLogs.run, args=())
-_t2.daemon = True
-_t2.start()
+_pollLogs.daemon = True
+_pollLogs.start()
 
 @atexit.register
 def _stop_thread():
-   if _t and _t.isAlive():
-      _t._Thread__stop()
-   if _t1.isAlive():
-      _t1._Thread__stop()
-   if _t2.isAlive():
-      _t2._Thread__stop()
+   try:
+      _pollLogs.stop()
+      _pollEvents.stop()
+   except:
+      pass
 
 atexit.register(client._client.kill_daemon)
