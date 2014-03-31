@@ -24,7 +24,7 @@ Copyright 2004 - 2007 Novell, Inc.
 
 Copyright 2008 - 12 Nagappan Alagappan
 
-Copyright 2013 - 14 Christopher Bayliss
+Copyright 2014 Christopher Bayliss
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Lesser General Public License, Version 2
@@ -586,663 +586,769 @@ Importing LDTP modules
 ======================
 
 Ensure that you are referencing Ldtp.dll from C:\Program Files (x86)\VMware\CobraWinLDTP\Ldtp.dll.  If you are on windows 8 make sure the project targets .NET 4 or newer.
-C#
-using Ldtp;
-VB.NET
-Imports Ldtp;
 
-Example 1: 
 C#
-	using Ldtp;
-Ldtp.Ldtp l = new Ldtp.Ldtp(“*-Notepad*”)
-l.SelectMenuItem(“mnuFile;mnuNew”);
+
+.. code-block:: C#
+
+  using Ldtp;
+
+
+VB.NET
+
+.. code-block:: VB.NET
+
+  Imports Ldtp;
+
+Example 1:
+
+C#
+
+.. code-block:: C#
+
+  using Ldtp;
+  Ldtp.Ldtp l = new Ldtp.Ldtp(“*-Notepad*”)
+  l.SelectMenuItem(“mnuFile;mnuNew”);
 	
 VB.NET
-Imports Ldtp;
-	Dim l As New Ldtp.Ldtp(*-Notepad*)
-l.SelectMenuItem(“mnuFile;mnuNew”)
+
+.. code-block:: VB.NET
+
+  Imports Ldtp;
+  	Dim l As New Ldtp.Ldtp(*-Notepad*)
+  l.SelectMenuItem(“mnuFile;mnuNew”)
 
 Call a function to perform an operation
+---------------------------------------
+
 LDTP generally operates on the given object in a particular window. 
-To select a menu item, you need to call SelectMenuItem function. For example, to select open menu item in gedit application, call the below function 
-Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”)
-l.SelectMenuItem (' 'mnuFile;mnuOpen'); 
-When you call the above a new dialog box will be poped up, you can verify whether the window is opened or not either by GuiExist or by WaitTillGuiExist 
-GuiExist function immediately returns either 1 (window exist) or 0 (window does not exist) WaitTillGuiExist waits for the window to appear. Wait time out is by default 30 seconds. This default time out can be either increased on decreased using GUI_TIMEOUT 
-If you want to operate on a push button in a window, you need to call the Click function: 
-To press 'Cancel' button in a windows Open File Selector dialog 
-Ldtp.Ldtp l = new Ldtp.Ldtp(“dlgOpenFile”, “btnCancel”);
-l.Click ('dlgOpen', 'btnCancel') 
-When you do the above operation the  File selector dialog disappears. To verify whether the window actually quits or not use WaitTillGuiNotExist function 
-If you modify any opened file in gedit, the window title will be modified. To continue operating on the window you need to change your context of operation. Reason: As you are aware that LDTP works based on individual window, the context of window will be changed, when the title changes. To over come this use SetContext function and when you don't require them use ReleaseContext 
+
+To select a menu item, you need to call SelectMenuItem function. For example, to select open menu item in Notepad, call the function bellow:
+
+.. code-block:: C#
+
+  Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”)
+  l.SelectMenuItem (' 'mnuFile;mnuOpen');
+
+When you call the above a new dialog box will be poped up, you can verify whether the window is opened or not either by GuiExist or by WaitTillGuiExist.
+
+* GuiExist function immediately returns either 1 (window exist) or 0 (window does not exist) WaitTillGuiExist waits for the window to appear. Wait time out is by default 30 seconds. This default time out can be either increased on decreased using GUI_TIMEOUT.
+
+If you want to operate on a push button in a window, you need to call the Click function:
+
+To press 'Cancel' button in a windows Open File Selector dialog
+
+.. code-block:: C#
+
+  Ldtp.Ldtp l = new Ldtp.Ldtp(“dlgOpenFile”, “btnCancel”);
+  l.Click ('dlgOpen', 'btnCancel') 
+
+When you do the above operation the  File selector dialog disappears. To verify whether the window actually quits or not use WaitTillGuiNotExist function:
+
+If you modify any opened file in gedit, the window title will be modified. To continue operating on the window you need to change your context of operation. Reason: As you are aware that LDTP works based on individual window, the context of window will be changed, when the title changes. To over come this use SetContext function and when you don't require them use ReleaseContext.
+
 Edit your current opened file using: 
-Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”);
-l.SetTextValue ('txt0', 'Testing editing') 
-This will change the window title. Note, before doing the above operation, title will be 'new 1 - Notepad++' and after editing the title will look like '*new 1 - Notepad++'. To further operate on the same window, use 
-setcontext ('Unsaved Document 1 - gedit', '*Unsaved Document 1 - gedit') 
-So that you can continue using the same window name, for example: 
-selectmenuitem ('frmUnsavedDocument1-gedit', 'mnuFile;mnuSaveAs') 
-The above function will invoke the GTK save dialog box 
+
+.. code-block:: C#
+
+  Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”);
+  l.SetTextValue ('txt0', 'Testing editing') 
+
+This will change the window title. Note, before doing the above operation, title will be 'new 1 - Notepad++' and after editing the title will look like '*new 1 - Notepad++'. To further operate on the same window, use setcontext ('Unsaved Document 1 - gedit', '*Unsaved Document 1 - gedit') so that you can continue using the same window name, for example:
+
+.. code-block:: C#
+
+  selectmenuitem ('frmUnsavedDocument1-gedit', 'mnuFile;mnuSaveAs') 
+
+The above function will invoke the GTK save dialog box.
+
 If any of the action releated functions (example: selectmenuitem, click, settextvalue) fail, an exception is raised. It has to be handled by the program to either continue operating on execution or just halt.
+
 LDTP API
+--------
+
 Refer LDTP API page for list of implemented LDTP API's 
-Using / Hacking LDTP
+
+Using/Hacking LDTP
+==================
+
 Identifying controls
+--------------------
+
 To operate on a window, first thing we need to know is the window title.
 
 In the following picture you could notice red colored eclipse mark is the window title.
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> guiexist ('*-gedit')
+  1
+  >>> guiexist ('frmUnsavedDocument1-gedit')
+  1
+  >>> guiexist ('frmUnsavedDocument1-*')
+  1
+  >>> guiexist ('frm*-gedit')
+  1
+  >>> guiexist ('Unsaved Document 1 - gedit')
+  1
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> guiexist ('*-gedit')
-1
->>> guiexist ('frmUnsavedDocument1-gedit')
-1
->>> guiexist ('frmUnsavedDocument1-*')
-1
->>> guiexist ('frm*-gedit')
-1
->>> guiexist ('Unsaved Document 1 - gedit')
-1
 Push button
+-----------
+
 To operate on an object inside gedit window, we need to know the object information.
 
 To click on open push button in gedit tool bar control, we need to use click API with window name as first argument and object name as second argument. The above command does the click operation. Informations to be gathered are Window name (Unsaved Document 1 – gedit) and push button control (Open).
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> click ('*-gedit', 'btnOpen')
+  1
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> click ('*-gedit', 'btnOpen')
-1
 Menu item
+---------
+
 To select a menu item under a menu in a window we need to use selectmenuitem API.
 
 Informations to be gathered: Window name (Unsaved Document 1 – gedit), menu control (File), menu item control (New).
 
 Incase of menu, we handle them in hierarchy. So, to access 'New' menu item, we need 'File' menu control too.
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> selectmenuitem ('*-gedit', 'mnuFile;mnuNew')
+  1
 
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> selectmenuitem ('*-gedit', 'mnuFile;mnuNew')
-1
 Toggle button
+-------------
+
 To operate on a toggle button with a click action, information required are window name (Open Files...) toggle button control (Type a file name).
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> click ('dlgOpenFiles...', 'tbtnTypeafilename')
+  1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> click ('dlgOpenFiles...', 'tbtnTypeafilename')
-1
 Text control
+------------
+
 To set a text value in a text box, information like window name (Open Files...), text controls associated label (Location:) and the actual text to be placed (Class1.cs).
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> settextvalue ('dlgOpenFiles...', 'txtLocation', 'Class1.cs')
+  1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> settextvalue ('dlgOpenFiles...', 'txtLocation', 'Class1.cs')
-1
 Table control
+-------------
+
 To select a row from the table of GTK open file selector, we need to collect information like, Window name (Open Files...), table name (Files – circled with blue color), row to be selected (Class1.cs).
 
+.. code-block:: python
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> selectrow('dlgOpenFiles...', 'tblFiles', 'Class1.cs')
-1
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> selectrow('dlgOpenFiles...', 'tblFiles', 'Class1.cs')
+  1
+
 Push button
+-----------
+
 After selecting the file name, to open the file contents, we need to click on Open push button control. For doing this operation we need to gather informations like Window name (Open Files...), push button label name (Open).
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> click ('dlgOpenFiles...', 'btnOpen')
-1
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> click ('dlgOpenFiles...', 'btnOpen')
+  1
+
 Check box
+---------
+
 To click on a check box control, we need to collect informations like window name (gedit Preferences), check box associated label name (Display line numbers).
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> click ('dlggeditPreferences', 'chkDisplaylinenumbers')
+  1
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> check ('dlggeditPreferences', 'chkEnabletextwrapping')
+  1
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> uncheck ('dlggeditPreferences', 'chkDisplaylinenumbers')
+  1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> click ('dlggeditPreferences', 'chkDisplaylinenumbers')
-1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> check ('dlggeditPreferences', 'chkEnabletextwrapping')
-1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> uncheck ('dlggeditPreferences', 'chkDisplaylinenumbers')
-1
 Spin button
+-----------
+
 To operate on a spin button, we need to collect information like Window name (gedit Preferences), spin button control name (Right margin at column).
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> getvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn')
+  80.0
+  >>> setvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn', '81')
+  1
+  >>> setvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn', '80')
+  1
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> getvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn')
-80.0
->>> setvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn', '81')
-1
->>> setvalue('dlggeditPreferences', 'sbtnRightmarginatcolumn', '80')
-1
 Page tab
+--------
+
 To operate on a page tab list, we need to collect information like window name (gedit Preferences), page tab list name (ptl0 in this case, as there are no label or associated label with this page tab list control), page tab name or index starting from 0.
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> gettabcount ('dlggeditPreferences', 'ptl0')
+  5
+  >>> selecttabindex ('dlggeditPreferences', 'ptl0', 2)
+  1
+  >>> selecttab ('dlggeditPreferences', 'ptl0', 'Editor')
+  1
 
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> gettabcount ('dlggeditPreferences', 'ptl0')
-5
->>> selecttabindex ('dlggeditPreferences', 'ptl0', 2)
-1
->>> selecttab ('dlggeditPreferences', 'ptl0', 'Editor')
-1
 Check menu item
+---------------
+
 To operate on check menu item, we need to gather information like window name (Unsaved Document 1 – gedit), menu name (View), check menu item name (Side Pane).
 
+.. code-block:: python
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> selectmenuitem ('*-gedit', 'mnuView;mnuSidePane')
-1
->>> menuuncheck('*-gedit', 'mnuView;mnuSidePane')
-1
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> selectmenuitem ('*-gedit', 'mnuView;mnuSidePane')
+  1
+  >>> menuuncheck('*-gedit', 'mnuView;mnuSidePane')
+  1
 
+.. code-block:: python
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> menucheck('*-gedit', 'mnuView;mnuStatusbar')
-1
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> menucheck('*-gedit', 'mnuView;mnuStatusbar')
+  1
+
 Radio menu item
+---------------
+
 To operate on a radio menu item control, we need to gather informations like window name (Unsaved Document 1 – gedit), menu name (Documents), menu item name (Class1.cs – assuming that Class1.cs is currently opened).
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> selectmenuitem ('*-gedit', 'mnuDocuments;mnuClass1.cs')
-1
->>> menucheck ('*-gedit', 'mnuDocuments;mnuClass1.cs')
-1
+
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> selectmenuitem ('*-gedit', 'mnuDocuments;mnuClass1.cs')
+  1
+  >>> menucheck ('*-gedit', 'mnuDocuments;mnuClass1.cs')
+  1
+
 Combo box – Menu item
+---------------------
+
 To select a menu item under a combo box, we need to gather informations like window name (Open Files...), combo box name (Character Coding), menu item name (Current Locale).
 
+.. code-block:: python
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> comboselect ('dlgOpenFiles...', 'cboCharacterCoding', 'Current Locale (UTF-8)')
-1
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> comboselect ('dlgOpenFiles...', 'cboCharacterCoding', 'Current Locale (UTF-8)')
+  1
+
 Combo box – List item
+---------------------
+
 To operate on list item under a combo box control, we need to gather informations like window name (Find), Combo box control name (Search for), list item existing content or list item index or new item name (OdbcMetaDataCollectionName.cs)
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> settextvalue('dlgFind', 'cboSearchfor', 'OdbcMetaDataCollectionNames.cs'')
+  1
 
+.. code-block:: python
 
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> comboselect('dlgFind', 'cboSearchfor', 'OdbcMetaDataCollectionNames.cs')
+  1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> settextvalue('dlgFind', 'cboSearchfor', 'OdbcMetaDataCollectionNames.cs'')
-1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> comboselect('dlgFind', 'cboSearchfor', 'OdbcMetaDataCollectionNames.cs')
-1
 Launch application
+------------------
+
 Application to be tested can be launched using LDTP API launchapp.
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> launchapp ('gedit')
-1
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> launchapp ('gedit')
+  1
+
 GUI exist
+---------
+
 To check a GUI (window) exist, you can use this guiexist API. Also it has different flavors like waittillguiexist, waittillguinotexist.
 
 guiexist function checks whether the given window exists or not. If exist returns 1, else returns 0.
+
 waittillguiexist function will wait for the given window to appear. If appeared returns 1, else returns 0. Difference between guiexist and waittillguiexist is, guiexist returns immediately, but waittillguiexist will wait for a max of 30 seconds for a window to appear. Note: On doing some operation, if the expected result is, a window will be pop-ed up, then it is recommended to use waittillguiexist, instead of wait or sleep. Reason: wait or sleep will wait till the time period, but waittillguiexist, will return immediately once the window appears.
+
 waittillguinotexist function will wait for the given window to close. If closed returns 1, else returns 0. waittillguinotexist will wait for a max of 30 seconds for a window to close. Note: On doing some operation, if the expected result is, an existing window will be closed, then it is recommended to use waittillguinotexist, instead of wait or sleep. Reason: wait or sleep will wait till the time period, but waittillguinotexist, will return immediately once the window closed.
+
 Timeout
+-------
+
 GUI timeout
+~~~~~~~~~~~
 
 GUI timeout, is the default timeout settings used, by waittillguiexist and waittillguinotexist functions. This function will wait for the specified number of seconds, for the window to either appear or disappear. Default timeout period is 30 seconds.
 
 This default timeout period that can be modified:
 
-By setting the environment variable GUI_TIMEOUT to whatever seconds.
-By passing a value to guiTimeOut argument of  waittillguiexist or waittillguinotexist functions.
-By calling guitimeout function.
-When invoking LDTP engine, use -g option.
+* By setting the environment variable GUI_TIMEOUT to whatever seconds.
+* By passing a value to guiTimeOut argument of  waittillguiexist or waittillguinotexist functions.
+* By calling guitimeout function.
+* When invoking LDTP engine, use -g option.
 
-Example 1
-export GUI_TIMEOUT=30
+*Example 1*
 
-Example 2
-waittillguiexist ('*-gedit', guiTimeOut=30)
-waittillguinotexist ('dlgOpenFiles...', guiTimeOut=30)
+.. code-block:: bash
 
-Example 3
-guitimeout (30)
+  export GUI_TIMEOUT=30
 
-Example 4
-ldtp -g 30
+*Example 2*
+
+.. code-block:: python
+
+  waittillguiexist ('*-gedit', guiTimeOut=30)
+  waittillguinotexist ('dlgOpenFiles...', guiTimeOut=30)
+
+*Example 3*
+
+.. code-block:: python
+
+  guitimeout (30)
+
+*Example 4*
+
+.. code-block:: bash
+
+  ldtp -g 30
 
 OBJ timeout
+~~~~~~~~~~~
 
 OBJ timeout, is the default timeout settings used, internally. This function will wait for the specified number of seconds, for the object inside a window to appear. Default timeout period is 5 seconds.
 
 This default timeout period that can be modified:
 
-By setting the environment variable OBJ_TIMEOUT to whatever seconds.
-By calling objtimeout function.
-When invoking LDTP engine, use -o option.
+* By setting the environment variable OBJ_TIMEOUT to whatever seconds.
+* By calling objtimeout function.
+* When invoking LDTP engine, use -o option.
 
-Example 1
-export OBJ_TIMEOUT=5
+*Example 1*
 
-Example 2
-objtimeout (5)
+.. code-block:: bash
 
-Example 3
+  export OBJ_TIMEOUT=5
+
+*Example 2*
+
+.. code-block:: python
+
+  objtimeout (5)
+
+*Example 3*
+
+.. code-block:: bash
+
 ldtp -o 5
-Generate raw keyboard events
-In some cases, the window we are trying to operate may not be accessibility enabled or we may need to generate non-printable keys (ALT, CTRL, ENTER, BACKSPACE, ESC, F1-F12, SHIFT, CAPS LOCK, TAB, PAGE UP, PAGE DOWN, HOME, END, RIGHT / LEFT / UP / DOWN ARROW KEYS, INS, DEL). We can use generatekeyevent function or enterstring function to simulate the key events, as if the user typed. Note: All the non-printable characters will be enclosed with in angular brackets.
-Example 1
-<ctrl>lwww.google.co.in<enter>
-Example 2
-<alt><f1>
-Example 3
-<control>s
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> launchapp ('gedit')
-1
->>> waittillguiexist ('*-gedit')
-1
->>> enterstring ('<alt><tab>')
-1
->>> enterstring ('*-gedit', 'txt0', '<caps>Testing enterstring API<enter>')
-1
->>> generatekeyevent ('<alt><tab>')
-1
+
+Generate raw keyboard events
+----------------------------
+
+In some cases, the window we are trying to operate may not be accessibility enabled or we may need to generate non-printable keys (ALT, CTRL, ENTER, BACKSPACE, ESC, F1-F12, SHIFT, CAPS LOCK, TAB, PAGE UP, PAGE DOWN, HOME, END, RIGHT / LEFT / UP / DOWN ARROW KEYS, INS, DEL). We can use generatekeyevent function or enterstring function to simulate the key events, as if the user typed. Note: All the non-printable characters will be enclosed with in angular brackets.
+
+*Example 1*
+
+.. code-block:: python
+
+  <ctrl>lwww.google.co.in<enter>
+
+*Example 2*
+
+.. code-block:: python
+
+  <alt><f1>
+
+*Example 3*
+
+.. code-block:: python
+
+  <control>s
+
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> launchapp ('gedit')
+  1
+  >>> waittillguiexist ('*-gedit')
+  1
+  >>> enterstring ('<alt><tab>')
+  1
+  >>> enterstring ('*-gedit', 'txt0', '<caps>Testing enterstring API<enter>')
+  1
+  >>> generatekeyevent ('<alt><tab>')
+  1
+
 Generate raw mouse events
+-------------------------
+
 To generate raw mouse events of different types like, b1c, b1d, b2c, b2d, b3c, b3d, X and Y of screen co-ordinates has to be provided. Here b is button, c is single click, d is double click.
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> generatemouseevent (100, 200) # Default is b1c
-1
->>> generatemouseevent (100, 200, 'b1d') # To generate double click
-1
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> generatemouseevent (100, 200) # Default is b1c
+  1
+  >>> generatemouseevent (100, 200, 'b1d') # To generate double click
+  1
+
 Application information
+-----------------------
+
 On calling getapplist, will get all the accessibility application name that are currently running. To get window list for which the application map's are gathered and stored in local cache, use getwindowlist. To get all the object list under a window, use getobjectlist API. To get a list of properties available under an object, use getobjectinfo. To get the property of an object, use getobjectproperty.
 
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> getapplist ()
-[u'gnome-session', u'gnome-power-manager', u'gnome-settings-daemon', u'Libbonoboui-Gtk-Module-init-info', u'nautilus', u'GnomeApplicationBrowser', u'/usr/lib/zen-updater/ZenUpdater.exe', u'gaim', u'gtk-window-decorator', u'gedit', u'xchat', u'gnome-panel', u'gnome-volume-manager', u'resapplet', u'nm-applet', u'soffice.bin']
->>> getwindowlist ()
-[u'frmUnsavedDocument1-gedit']
->>> getobjectlist ('*-gedit')
-...
->>> getobjectinfo ('*-gedit', 'btnNew')
-[u'child_index', u'class', u'description', u'parent', u'label']
->>> getobjectproperty ('*-gedit', 'btnNew', 'class')
-'New'
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> getapplist ()
+  [u'gnome-session', u'gnome-power-manager', u'gnome-settings-daemon', u'Libbonoboui-Gtk-Module-init-info', u'nautilus', u'GnomeApplicationBrowser', u'/usr/lib/zen-updater/ZenUpdater.exe', u'gaim', u'gtk-window-decorator', u'gedit', u'xchat', u'gnome-panel', u'gnome-volume-manager', u'resapplet', u'nm-applet', u'soffice.bin']
+  >>> getwindowlist ()
+  [u'frmUnsavedDocument1-gedit']
+  >>> getobjectlist ('*-gedit')
+  ...
+  >>> getobjectinfo ('*-gedit', 'btnNew')
+  [u'child_index', u'class', u'description', u'parent', u'label']
+  >>> getobjectproperty ('*-gedit', 'btnNew', 'class')
+  'New'
+
 Callback – On new window creation
+---------------------------------
+
 Register a callback event, when a window with given title is created. Glob type pattern can be given as title name.
+
 Advantage
+---------
+
 Unexpected window can be easily handled using this. For example, the password dialog box of Evolution, connection reset by peer dialog, application crash dialog, etc.
+
 Example
- from ldtp import *
- import threading
-# Thread creation
- callbackRunning = threading.Event ()
- callbackRunning.clear ()
- callbackState = threading.Event ()
- callbackState.clear ()
-# Callback definition
- def cb ():
-        callbackState.set ()
-        waittillguiexist ('dlgReplace')
-        click ('dlgReplace', 'btnClose')
-        callbackState.clear ()
-        callbackRunning.set ()
-        print 'callbackend'
-# Callback registration
- onwindowcreate ('Replace', cb)
-# General operation, which will invoke a window
- click ('*gedit', 'btnReplace')
- click ('*gedit', 'btnOpen')
- waittillguiexist ('dlgOpenFiles...')
- click ('dlgOpenFiles...', 'btnClose')
-# Wait for callback to complete, if invoked
- if callbackState.isSet ():
-        print 'Waiting for callback to complete'
-        callbackRunning.wait ()
-        print 'callbackset'
- print 'test end'
+-------
+
+.. code-block:: python
+
+  from ldtp import *
+  import threading
+  # Thread creation
+  callbackRunning = threading.Event ()
+  callbackRunning.clear ()
+  callbackState = threading.Event ()
+  callbackState.clear ()
+  # Callback definition
+  def cb ():
+      callbackState.set ()
+      waittillguiexist ('dlgReplace')
+      click ('dlgReplace', 'btnClose')
+      callbackState.clear ()
+      callbackRunning.set ()
+      print 'callbackend'
+  # Callback registration
+  onwindowcreate ('Replace', cb)
+  # General operation, which will invoke a window
+  click ('*gedit', 'btnReplace')
+  click ('*gedit', 'btnOpen')
+  waittillguiexist ('dlgOpenFiles...')
+  click ('dlgOpenFiles...', 'btnClose')
+  # Wait for callback to complete, if invoked
+  if callbackState.isSet ():
+      print 'Waiting for callback to complete'
+      callbackRunning.wait ()
+      print 'callbackset'
+   print 'test end'
 
 Logging
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> log ('test script', 'debug')
-1
->>> log ('test script', 'warning')
-1
->>> log ('test script', 'error')
-1
->>> log ('test script', 'cause')
-1
-Example script
-from ldtp import *
-from ldtputils import *
+-------
 
-try:
-	launchapp ('gedit')
-	if waittillguiexist ('*-gedit') == 0:
-		raise LdtpExecutionError ('Gedit window does not exist')
-	selectmenuitem ('*-gedit', 'mnuFile;mnuOpen')
-	if waittillguiexist ('dlgOpenFiles') == 0:
-		raise LdtpExecutionError ('Open Files dialog does not exist')
-	selectrow ('dlgOpenFiles...', 'tblFiles', fileName [0])
-	click ('dlgOpenFiles...', 'btnOpen')
-	if waittillguinotexist ('dlgOpenFiles') == 0:
-		raise LdtpExecutionError ('Open Files dialog still exist')
-except LdtpExecutionError, msg:
-	raise
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> log ('test script', 'debug')
+  1
+  >>> log ('test script', 'warning')
+  1
+  >>> log ('test script', 'error')
+  1
+  >>> log ('test script', 'cause')
+  1
+
+Example script
+==============
+
+.. code-block:: python
+
+  from ldtp import *
+  from ldtputils import *
+
+  try:
+      launchapp ('gedit')
+      if waittillguiexist ('*-gedit') == 0:
+          raise LdtpExecutionError ('Gedit window does not exist')
+      selectmenuitem ('*-gedit', 'mnuFile;mnuOpen')
+      if waittillguiexist ('dlgOpenFiles') == 0:
+          raise LdtpExecutionError ('Open Files dialog does not exist')
+      selectrow ('dlgOpenFiles...', 'tblFiles', fileName [0])
+      click ('dlgOpenFiles...', 'btnOpen')
+      if waittillguinotexist ('dlgOpenFiles') == 0:
+          raise LdtpExecutionError ('Open Files dialog still exist')
+  except LdtpExecutionError, msg:
+      raise
+
 How to execute LDTP scripts
+===========================
+
 Make sure that you have the following files in current working directory 
 You need to have test scripts to be executed 
 
 Invoking python script 
-	$ python <script file name.py>
-	Example
-		python gedit.py
+
+.. code-block:: bash
+
+  $ python <script file name.py>
+
+Example
+
+.. code-block:: python
+
+  $ python gedit.py
+
 Suggestions from LDTP team
+==========================
+
 When a new window is expected after an operation, we suggest to use waittillguiexist and on some operation, if a window is expected to close we suggest to use waittillguinotexist. In both cases, the time-out period is 30 seconds. This value can be modified – refer LDTP API reference.
+
 How to operate LDTP from a remote system
+========================================
+
 LDTP engine (Linux)
+-------------------
+
 Follow one of the options to start LDTP engine (ldtp binary) in the remote box
-Option 1
-$ldtp -s
-Option 2
+
+*Option 1*
+
+.. code-block:: bash
+
+$ldtp -p
+
+*Option 2*
+
+.. code-block:: bash
+
 $ ldtp -p <port number to start> # Default port number is 4118
+
 LDTP engine (Windows)
+
 Execute CobraWinLDTP.exe in command line
+
+
 LDTP engine (Mac OS X)
+
 Execute ldtp in command line
+
 LDTP client
+
 Follow one of the options in the client side to communicate to LDTP engine
-Option 1
+
+*Option 1*
+
+.. code-block:: bash
+
 export LDTP_SERVER_ADDR=host-name or ip address
 export LDTP_SERVER_PORT=<port number to communicate, as mentioned in LDTP engine>
 python <script file name>.py or ldtprunner test-runner.xml
-Option 2
+
+*Option 2*
+
+.. code-block:: bash
+
 export LDTP_SERVER_ADDR=host-name or ip address
 python <script file name>.py or ldtprunner test-runner.xml # This will use default port number.
+
+
 Troubleshooting LDTP
-In-case, if you want to see whats happening on executing some LDTP commands, follow the steps
+====================
 
-In a terminal
+In-case, if you want to see whats happening on executing some LDTP commands, follow these steps.
 
-$ export LDTP_DEBUG=2 # If bash shell (Linux/Mac OS X)
-C:\> set LDTP_DEBUG=1 (Microsoft Windows)
-$ ldtp # (Linux/Mac OS X) on Windows run CobraWinLDTP.exe
-Client packet len: 82
-i = 0
-Data read 82, packet-len = 82, bytes read = 82, data: <?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>
-PACKET LENGTH: 0
-Received packet [<?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>] through 15
-Node: ACTION
-action_name: 124
-Node: ID
-request_id: MainThread124
-Command: 124
-Accessible application name: Thunderbird
-Accessible application name: gnome-panel
-Accessible application name: xchat
-Accessible application name: nm-applet
-Accessible application name: nautilus
-Accessible application name: gaim
-Accessible application name: acroread
-Accessible application name: soffice.bin
-Accessible application name: gtk-window-decorator
-Accessible application name: gedit
-LIST: <?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>
-resp_len = 117
-Sending..
-538
-Response packet: <?xml version="1.0" encoding="utf-8"?><RESPONSE><ID>MainThread124</ID><STATUS><CODE>0</CODE><MESSAGE>Successfully completed</MESSAGE></STATUS><DATA><LENGTH>325</LENGTH><VALUE><![CDATA[<?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>]]></VALUE></DATA></RESPONSE>
-Msg:
-Bytes sent: 542
+In a terminal:
 
-In another terminal
+.. code-block:: bash
 
-$ export LDTP_DEBUG=2 # If bash
-nags@nags:~> python
-Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
-[GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> from ldtp import *
->>> getapplist()
-124 ( )
-Send packet <?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>
-Received packet size 538
-Received response Packet <?xml version="1.0" encoding="utf-8"?><RESPONSE><ID>MainThread124</ID><STATUS><CODE>0</CODE><MESSAGE>Successfully completed</MESSAGE></STATUS><DATA><LENGTH>325</LENGTH><VALUE><![CDATA[<?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>]]></VALUE></DATA></RESPONSE>
-[u'nautilus', u'gaim', u'gtk-window-decorator', u'gedit', u'xchat', u'gnome-panel', u'Thunderbird', u'nm-applet', u'soffice.bin', u'acroread']
->>> 
+  $ export LDTP_DEBUG=2 # If bash shell (Linux/Mac OS X)
+  C:\> set LDTP_DEBUG=1 (Microsoft Windows)
+  $ ldtp # (Linux/Mac OS X) on Windows run CobraWinLDTP.exe
+  Client packet len: 82
+  i = 0
+  Data read 82, packet-len = 82, bytes read = 82, data: <?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>
+  PACKET LENGTH: 0
+  Received packet [<?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>] through 15
+  Node: ACTION
+  action_name: 124
+  Node: ID
+  request_id: MainThread124
+  Command: 124
+  Accessible application name: Thunderbird
+  Accessible application name: gnome-panel
+  Accessible application name: xchat
+  Accessible application name: nm-applet
+  Accessible application name: nautilus
+  Accessible application name: gaim
+  Accessible application name: acroread
+  Accessible application name: soffice.bin
+  Accessible application name: gtk-window-decorator
+  Accessible application name: gedit
+  LIST: <?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>
+  resp_len = 117
+  Sending..
+  538
+  Response packet: <?xml version="1.0" encoding="utf-8"?><RESPONSE><ID>MainThread124</ID><STATUS><CODE>0</CODE><MESSAGE>Successfully completed</MESSAGE></STATUS><DATA><LENGTH>325</LENGTH><VALUE><![CDATA[<?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>]]></VALUE></DATA></RESPONSE>
+  Msg:
+  Bytes sent: 542
+
+In another terminal:
+
+.. code-block:: bash
+
+  $ export LDTP_DEBUG=2 # If bash
+
+.. code-block:: python
+
+  nags@nags:~> python
+  Python 2.5 (r25:51908, Nov 25 2006, 15:39:45)
+  [GCC 4.1.2 20061115 (prerelease) (SUSE Linux)] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ldtp import *
+  >>> getapplist()
+  124 ( )
+  Send packet <?xml version="1.0"?><REQUEST><ACTION>124</ACTION><ID>MainThread124</ID></REQUEST>
+  Received packet size 538
+  Received response Packet <?xml version="1.0" encoding="utf-8"?><RESPONSE><ID>MainThread124</ID><STATUS><CODE>0</CODE><MESSAGE>Successfully completed</MESSAGE></STATUS><DATA><LENGTH>325</LENGTH><VALUE><![CDATA[<?xml version="1.0" encoding="utf-8"?><OBJECTLIST><OBJECT>nautilus</OBJECT><OBJECT>gaim</OBJECT><OBJECT>gtk-window-decorator</OBJECT><OBJECT>gedit</OBJECT><OBJECT>xchat</OBJECT><OBJECT>gnome-panel</OBJECT><OBJECT>Thunderbird</OBJECT><OBJECT>nm-applet</OBJECT><OBJECT>soffice.bin</OBJECT><OBJECT>acroread</OBJECT></OBJECTLIST>]]></VALUE></DATA></RESPONSE>
+  [u'nautilus', u'gaim', u'gtk-window-decorator', u'gedit', u'xchat', u'gnome-panel', u'Thunderbird', u'nm-applet', u'soffice.bin', u'acroread']
+  >>> 
+
 Bibliography
+============
+
 http://en.wikipedia.org/wiki/Software_testing
+
 http://safsdev.sf.net
 
