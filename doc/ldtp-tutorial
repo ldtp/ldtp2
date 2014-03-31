@@ -220,6 +220,11 @@ Most of LDTP ideas are implemented from http://safsdev.sf.net Most of the comman
 
 Example: click ('*-Notepad*', 'btnNew') # Click operation will be performed on a window which is having *-Notepad* (regexp) and in that window object name 'New', which is of type 'push button'.
 
+.. image:: images/LDTP.png
+  :scale: 125 %
+  :alt: internals
+  :align: center
+
 Server
 ------
 
