@@ -1,4 +1,4 @@
-LDTP (http://ldtp.freedesktop.org) works on Windows/Linux/Mac/Solairs/FreeBSD/NetBSD/Palm Source, yes its Cross Platform GUI testing tool. Please share your feedback with us (nagappan@gmail.com).
+LDTP (http://ldtp.freedesktop.org) works on Windows/Linux/Mac/Solairs/FreeBSD/NetBSD/Palm Source, yes it's a Cross Platform GUI testing tool. Please share your feedback with us (nagappan@gmail.com).
 
 Mandatory requirements
 
@@ -19,7 +19,7 @@ Optional dependency packages
 
 Setting up LDTP from source in Linux environment
 
-  - check out source from with the following command: 'git clone git://anongit.freedesktop.org/git/ldtp/ldtp2.git'
+  - check out source from with the following command: 'git clone https://github.com/ldtp/ldtp2.git'
   - When prompted for password enter
   - change to the source directory with the following command: 'cd ldtp2'
   - build with 'python setup.py build'. Assuming that all the above mentioned packages are installed
@@ -36,20 +36,20 @@ LDTP works in the following platforms:
   - http://fedora.redhat.com/ Fedora Core
   - http://www.freebsd.org/ FreeBSD
 
-How to write test scripts using ldtp for your module ?
+How to write test scripts using ldtp for your module?
 
   - How to create LDTP test scripts in python - http://ldtp.freedesktop.org/wiki/LDTP_test_scripts_in_python
   - Refer existing pyautosuite test scripts - http://cgit.freedesktop.org/ldtp/pyautosuite/
   - Refer API Reference page for list of LDTP functions available - http://ldtp.freedesktop.org/user-doc/index.html
 
-How do I contact LDTP team incase of any help ?
+How do I contact LDTP team incase of any help?
 
   - Join the LDTP team on IRC for technical help, online
     Server  : irc.freenode.net
     Channel : #ldtp
   - Join the LDTP Mailing List - http://ldtp.freedesktop.org/wiki/Mailing_20list
 
-If you are interested in contributing to LDTP ?
+If you are interested in contributing to LDTP?
 
   - You are welcome to do that. Check TODO page and pitch in where ever you can contribute ;) - ping us in the mailing list
 
