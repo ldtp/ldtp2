@@ -60,7 +60,7 @@ It is assumed that the user of this document has little knowledge about UI contr
 About testing
 =============
 
-Testing is a process to identify defects in a (software) system, for more information see http://en.wikipedia.org/wiki/Software_testing. Testing an application multiple times with same steps can get rather slow and annoying; therefore automating process can do a better job.
+Testing is a process to identify defects in a (software) system, for more information see http://en.wikipedia.org/wiki/Software_testing. Testing an application multiple times with the same steps can get rather slow and annoying; therefore automating the process can do a better job.
 
 What is the complexity of GUI testing?
 
@@ -69,7 +69,7 @@ What is the complexity of GUI testing?
 * Handling of unexpected pop-up windows.
 * Keeping the test script in sync with UI changes.
 * Failures need to be verified on each operation.
-* Rendering of images / text in the display area.
+* Rendering of images/text in the display area.
 
 What type of testing can be done using LDTP?
 
@@ -184,7 +184,7 @@ Setup LDTP from scurce
 ----------------------
 
 Download the source (Linux):
-   git clone git://anongit.freedesktop.org/git/ldtp/ldtp2.git;
+   git clone https://github.com/ldtp/ldtp2;
    cd ldtp2
 
 Download the source (Windows):
@@ -216,9 +216,9 @@ LDTP Internals
 
 LDTP Clients can talk to LDTP engine with XML RPC protocol.
 
-Most of LDTP ideas are implemented from http://safsdev.sf.net Most of the commands takes at-least 2 arguments. First argument will be context (window in which we want to operate) and the second argument will be component (object in which we want to operate, based on the current context).
+Most of LDTP ideas are implemented from http://safsdev.sf.net. Most of the commands takes at-least 2 arguments. First argument will be context (window in which we want to operate) and the second argument will be component (object in which we want to operate, based on the current context).
 
-Example: click ('*-Notepad*', 'btnNew') # Click operation will be performed on a window which is having *-Notepad* (regexp) and in that window object name 'New', which is of type 'push button'.
+Example: click('\*-gedit', 'btnNew') # Click operation will be performed on a window which is having \*-gedit (regexp) and in that window object name 'New', which is of type 'push button'.
 
 .. image:: images/LDTP.png
   :scale: 125 %
@@ -228,12 +228,12 @@ Example: click ('*-Notepad*', 'btnNew') # Click operation will be performed on a
 Server
 ------
 
-When a test script is started, the LDTP client will establish a connection with the LDTP engine using AF_UNIX / AF_INET.
+When a test script is started, the LDTP client will establish a connection with the LDTP engine using AF_UNIX/AF_INET.
 
 Client Handler
 --------------
 
-When ever a command is executed from the script, the client frames the XML data and send it to the server. LDTP engine parses the command request from the client and invoke the respective Component Handler.
+Whenever a command is executed from the script, the client frames the XML data and send it to the server. LDTP engine parses the command request from the client and invoke the respective Component Handler.
 
 Component Handler
 -----------------
@@ -261,7 +261,7 @@ Appmap convention
 -----------------
 
 +---------------------------------------+------------------------------------------+
-| Class keywords                        | Convention used in appmap                |
+| *Class keywords*                      | *Convention used in appmap*              |
 +---------------------------------------+------------------------------------------+
 | ACCEL_LABEL                           |                                          |
 +---------------------------------------+------------------------------------------+
@@ -425,17 +425,17 @@ Appmap convention
 Example Applications
 ====================
 
-Examples will use Notepad++.  You can download from http://notepad-plus-plus.org/.
+Examples will use gedit.  You can download it from https://wiki.gnome.org/Apps/Gedit#Download.
 
 How to Access UI Objects from LDTP scripts
 ==========================================
 
-Two main entities to act on an object, window name, object name.
+There are two main entities to act on an object: window name and object name.
 
 Window name
 -----------
 
-To operate on a window, we need to know the window name (nothing but window title).
+To operate on a window, we need to know the window name (nothing but the window title).
 
 Different window types
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -452,13 +452,20 @@ Glob pattern support
 
 Window name can be clubbed with glob patterns (* or ?)
 
+EXAMPLE:
+    1. \*-gedit means the title has -gedit in it, BUT can have anything before it or after it.
+    2. ????-gedit means the title has -gedit in it, AND has four cractors before it.
+
+    .. NOTE:: You can use \* or ? anywhere for the title name.
+
+
 Different ways of representing window name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. Window type and window title (Ex: 'frmnew1-')
-2. Window title (Ex: 'new 1 - Notepad*')
-3. Window type, glob expression and partial window title (Ex: 'frm*-Notepad*')
-4. Glob pattern and partial window title (Ex: '*-Notepad*')
-5. Window type, partial window title and glob pattern (Ex: 'frmnew1*')
+2. Window title (Ex: 'Unsaved Document 1 - gedit\*')
+3. Window type, glob expression and partial window title (Ex: 'frm\*-gedit')
+4. Glob pattern and partial window title (Ex: '\*-gedit')
+5. Window type, partial window title and glob pattern (Ex: 'frmnew1\*')
 6. Window type, window title and index (If two windows of same title exist at same time. Ex: First window name 'dlgAppoinment', Second window name 'dlgAppoinment1')
 7. Window type and index (only if window does not have any accessible title, Ex: 'dlg0')
 
@@ -468,8 +475,8 @@ Window name formats
 If window label contains space or new line characters, they will be stripped.
 
 Example:
-    1. 'new 1 - Notepad*', will be represented as 'new1-Notepad*'
-    2. 'new 1 - Notepad*', will be represented as 'new1-Notepad*'
+    1. 'saved-doc - gedit\*', will be represented as 'saved-doc-gedit\*'
+    2. 'Unsaved Document 1 - gedit*', will be represented as 'UnsavedDocument1-gedit\*'
 
 Object name
 -----------
@@ -479,19 +486,19 @@ Object (the type of control in which we want to operate) can be identified eithe
 Label
 ~~~~~
 
-In general menu / menu item / push button / toggle button type controls can be accessed through its label.
+In general menu/menu item/push button/toggle button type controls can be accessed through its label.
 
 Example:
 
 .. code-block:: python
 
-  mnuFile (Notepad++ menu)
-  mnuNew (Notepad++ menu item)
-  btnNew (Notepad++ tool bar, push button)
-  tbtnLocation (Notepad++ Open File dialog, toggle bar control)
+  mnuFile #(gedit menu)
+  mnuNew #(gedit menu item)
+  btnNew #(gedit tool bar, push button)
+  tbtnLocation #(gedit Open File dialog, toggle bar control)
 
-Label by / Label for (associated label)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Label by/for (associated label)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In general text/tables/check box/radio button/spin button/combo box controls can be accessed using the associated label only.
 
@@ -499,14 +506,14 @@ Example:
 
 .. code-block:: python
 
-  txtLocation (Notepad++ Open File dialog, text control)
-  tblFiles (Notepad++ Open File dialog, table control)
-  cboSearchfor (Notepad++ Find dialog, combo box control)
-  chkMatchcase (Notepad++ Find dialog, check box control)
-  sbtnRightmarginatcolumn (Notepad++ Preferences dialog, spin button control)
+  txtLocation #(gedit Open File dialog, text control)
+  tblFiles #(gedit Open File dialog, table control)
+  cboSearchfor #(gedit Find dialog, combo box control)
+  chkMatchcase #(gedit Find dialog, check box control)
+  sbtnRightmarginatcolumn #(gedit Preferences dialog, spin button control)
 
-Object name with out label / associated label accessing via index
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Object name with out label/associated label accessing via index
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If a control does not have any label or associated label, then it can be accessed using index.
 
@@ -514,9 +521,10 @@ Example:
 
 .. code-block:: python
 
-  txt0 (Notepad++ text rendering region)
-  ptl0 (Notepad++ Preferences dialog, page tab list control)
-  ptl0 (In Notepad++ when more than one files are opened, a page tab list control will be available)
+  txt0 #(gedit text rendering region)
+  ptl0 #(gedit Preferences dialog, page tab list control)
+  ptl0 #(In gedit when more than one files are opened,
+       # a page tab list control will be available)
 
 Object name with index
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -527,29 +535,25 @@ Example:
 
 .. code-block:: python
 
-  btnAdd – First push button control with label Add
-  btnAdd1 – Second push button control with label Add
-  btnAdd2 – Third push button control with label Add
+  btnAdd #First push button control with label Add
+  btnAdd1 #Second push button control with label Add
+  btnAdd2 #Third push button control with label Add
 
 Object name with window id (Windows only)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Object can be identified with window id, which is unique across all the application that are currently running, even on i18n/l10n environment. Object name when passed to the API, it should start with # and then the unique number, for the widget.
 
-Example:
+Example::
 
-.. code-block:: python
-
-  #1234 – With Visual UI Verify this is represented as Automation Id
+  #1234 #With Visual UI Verify this is represented as Automation Id
 
 Object identification with object type and index
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 On a window, identify the control with index of widget type. Object name format passed should be, LDTP convention object type and object index, respective to the given object type.
 
-Example:
-
-.. code-block:: python
+Example::
 
   btn#0 – First button on the current window
   txt#1 – Second text widget on the current window
@@ -559,9 +563,7 @@ Object name formats
 
 If object label or associated label contains space, dot, colon, under score or new line characters, they will be stripped.
 
-Example:
-
-.. code-block:: python
+Example::
 
   'Search for:' will be represented as 'Searchfor'
   'File name 'a_txt' already exist.
@@ -570,7 +572,7 @@ Example:
 Accessibility library
 =====================
 
-LDTP uses accessibility libraries (at-spi) available in GNOME environment. Using accessibility we can get the information about application and its current state (property). We can be able to poke through each layer in any application, if and only if, the application is accessibility enabled.
+LDTP uses accessibility libraries (at-spi) available in GNOME environment. Using accessibility we can get the information about the application and its current state (property). We can be able to poke through each layer in any application, if and only if, the application has accessibility enabled.
 
 Enabling accessibility
 ======================
@@ -612,7 +614,7 @@ C#
 .. code-block:: C#
 
   using Ldtp;
-  Ldtp.Ldtp l = new Ldtp.Ldtp(“*-Notepad*”)
+  Ldtp.Ldtp l = new Ldtp.Ldtp(“*-gedit”)
   l.SelectMenuItem(“mnuFile;mnuNew”);
 	
 VB.NET
@@ -620,7 +622,7 @@ VB.NET
 .. code-block:: VB.NET
 
   Imports Ldtp;
-  	Dim l As New Ldtp.Ldtp(*-Notepad*)
+  	Dim l As New Ldtp.Ldtp(*-gedit)
   l.SelectMenuItem(“mnuFile;mnuNew”)
 
 Call a function to perform an operation
@@ -659,7 +661,7 @@ Edit your current opened file using:
   Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”);
   l.SetTextValue ('txt0', 'Testing editing') 
 
-This will change the window title. Note, before doing the above operation, title will be 'new 1 - Notepad++' and after editing the title will look like '*new 1 - Notepad++'. To further operate on the same window, use setcontext ('Unsaved Document 1 - gedit', '*Unsaved Document 1 - gedit') so that you can continue using the same window name, for example:
+This will change the window title. Note, before doing the above operation, title will be 'new 1 - gedit' and after editing the title will look like '*-gedit'. To further operate on the same window, use setcontext ('*-gedit', '*-gedit') so that you can continue using the same window name, for example:
 
 .. code-block:: C#
 
