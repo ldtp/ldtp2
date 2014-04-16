@@ -427,6 +427,8 @@ Example Applications
 
 Examples will use gedit.  You can download it from https://wiki.gnome.org/Apps/Gedit#Download.
 
+If you are using a linux distro, the install gedit with you package manager.
+
 How to Access UI Objects from LDTP scripts
 ==========================================
 
@@ -577,99 +579,128 @@ LDTP uses accessibility libraries (at-spi) available in GNOME environment. Using
 Enabling accessibility
 ======================
 
-In gnome-control-center, open Assistive Technology for GNOME 2.x.
+**GNOME 2.x:** Go to System > Preferences > Assistive Technologies and enable Assistive Technology.
 
-GNOME 3.x: Run the following command from command line to enable accessibility
+**GNOME 3.x:** Run the following command from command line to enable accessibility
 
-gsettings set org.gnome.desktop.interface toolkit-accessibility true
+.. code-block:: bash
 
-Microsoft Windows: No need to change any settings, as accessibility is enabled by default.
+    gsettings set org.gnome.desktop.interface toolkit-accessibility true
 
-Mac OSX: System wide accessibility must be enabled. Check the check box: System Preferences > Universal Access > Enable access for assistive devices. Failure to enable this will result in ErrorAPIDisabled exceptions during some module usage.
+**Microsoft Windows:** No need to change any settings, as accessibility is enabled by default.
+
+**Mac OSX:** System wide accessibility must be enabled. Check the check box: System Preferences > Universal Access > Enable access for assistive devices. Failure to enable this will result in ErrorAPIDisabled exceptions during some module usage.
 
 Drawing 2: Screenshot of Assisstive technology preferences dialog
 
 Importing LDTP modules
 ======================
 
-Ensure that you are referencing Ldtp.dll from C:\Program Files (x86)\VMware\CobraWinLDTP\Ldtp.dll.  If you are on windows 8 make sure the project targets .NET 4 or newer.
+We prefer to import everything, if we do we can just directly use all the ldtp functions just by calling their name. If we import the module as 'import ldtp', then we need to call the corresponding function as ldtp.<function_name>
 
-C#
+To import ldtp in python, do:
 
-.. code-block:: C#
+.. code-block:: python
 
-  using Ldtp;
-
-
-VB.NET
-
-.. code-block:: VB.NET
-
-  Imports Ldtp;
+    >>> from ldtp import *
+    >>> from ldtputils import *
+    >>> from ooldtp import *
 
 Example 1:
 
-C#
+.. code-block:: python
 
-.. code-block:: C#
+    >>> from ldtp import *
+    >>> selectmenuitem ('*-gedit', 'mnuFile;mnuNew')
 
-  using Ldtp;
-  Ldtp.Ldtp l = new Ldtp.Ldtp(“*-gedit”)
-  l.SelectMenuItem(“mnuFile;mnuNew”);
-	
-VB.NET
+Example 2:
 
-.. code-block:: VB.NET
+.. code-block:: python
 
-  Imports Ldtp;
-  	Dim l As New Ldtp.Ldtp(*-gedit)
-  l.SelectMenuItem(“mnuFile;mnuNew”)
+    #!/usr/bin/python
+
+    # The standard import stuff.
+    from ldtp import *
+    from ooldtp import context as locate
+    from time import sleep
+
+    # Here we open the app.
+    launchapp('gedit')
+
+    # Now we find it and make sure it is open.
+    gedit_win = locate('*gedit')
+    gedit_win.waittillguiexist()
+
+    # Now we type into gedit.
+    text_field = gedit_win.getchild('txt1')
+    text_field.enterstring("G'Day mate!")
+
+    # Save a picture to prove we did it.
+    imagecapture('*gedit', '/tmp/foo.png')
+
+    # Quit gedit.
+    quit = gedit_win.getchild('mnuQuit')
+    quit.selectmenuitem()
+
+    # Close without saving.
+    dont_save = locate('Question')
+    dont_save.waittillguiexist()
+
+    button = dont_save.getchild('btnClosewithoutSaving')
+    button.click()
+
+    # Wait until gedit is gone.
+    gedit_win.waittillguinotexist()
+
+**
 
 Call a function to perform an operation
 ---------------------------------------
 
-LDTP generally operates on the given object in a particular window. 
+LDTP generally operates on the given object in a particular window.
 
-To select a menu item, you need to call SelectMenuItem function. For example, to select open menu item in Notepad, call the function bellow:
+To select a menu item, you need to call the selectmenuitem function. For example, to select open menu item in gedit application, call the below function:
+.. code-block::
 
-.. code-block:: C#
+    selectmenuitem ('frmUnsavedDocument1-gedit', 'mnuFile;mnuOpen')
 
-  Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”)
-  l.SelectMenuItem (' 'mnuFile;mnuOpen');
-
-When you call the above a new dialog box will be poped up, you can verify whether the window is opened or not either by GuiExist or by WaitTillGuiExist.
-
-* GuiExist function immediately returns either 1 (window exist) or 0 (window does not exist) WaitTillGuiExist waits for the window to appear. Wait time out is by default 30 seconds. This default time out can be either increased on decreased using GUI_TIMEOUT.
-
-If you want to operate on a push button in a window, you need to call the Click function:
-
-To press 'Cancel' button in a windows Open File Selector dialog
-
-.. code-block:: C#
-
-  Ldtp.Ldtp l = new Ldtp.Ldtp(“dlgOpenFile”, “btnCancel”);
-  l.Click ('dlgOpen', 'btnCancel') 
-
-When you do the above operation the  File selector dialog disappears. To verify whether the window actually quits or not use WaitTillGuiNotExist function:
-
-If you modify any opened file in gedit, the window title will be modified. To continue operating on the window you need to change your context of operation. Reason: As you are aware that LDTP works based on individual window, the context of window will be changed, when the title changes. To over come this use SetContext function and when you don't require them use ReleaseContext.
-
-Edit your current opened file using: 
-
-.. code-block:: C#
-
-  Ldtp.Ldtp l = new Ldtp.Ldtp(“frmnew1-Notepad*”);
-  l.SetTextValue ('txt0', 'Testing editing') 
-
-This will change the window title. Note, before doing the above operation, title will be 'new 1 - gedit' and after editing the title will look like '*-gedit'. To further operate on the same window, use setcontext ('*-gedit', '*-gedit') so that you can continue using the same window name, for example:
-
-.. code-block:: C#
-
-  selectmenuitem ('frmUnsavedDocument1-gedit', 'mnuFile;mnuSaveAs') 
-
-The above function will invoke the GTK save dialog box.
-
-If any of the action releated functions (example: selectmenuitem, click, settextvalue) fail, an exception is raised. It has to be handled by the program to either continue operating on execution or just halt.
+When you call the above a new dialog box will be poped up, you can verify whether the window is opened or not either by guiexist or by waittillguiexist http://ldtp.freedesktop.org
+Linux Desktop Testing Project - LDTP
+•
+guiexist function immediately returns either 1 (window exist) or 0 (window does not exist)
+waittillguiexist waits for the window to appear. Wait time out is by default 30 seconds. This
+default time out can be either increased on decreased using GUI_TIMEOUT
+If you want to operate on a push button in a window, you need to call
+click
+function:
+To press 'Cancel' button in a GTK Open File Selector dialog
+•
+click ('dlgOpenFile', 'btnCancel')
+When you do the above operation the GTK File selector dialog disappears. To verify whether the
+window actually quits or not use
+waittillguinotexist
+function
+If you modify any opened file in gedit, the window title will be modified. To continue operating on the
+window you need to change your context of operation. Reason: As you are aware that LDTP works
+based on individual window, the context of window will be changed, when the title changes. To over
+come this use
+setcontext
+function and when you don't require them use
+releasecontext
+Edit your current opened file using:
+•
+settextvalue ('frmUnsavedDocument1-gedit', 'txt0', 'Testing editing')
+This will change the window title. Note, before doing the above operation, title will be 'Unsaved
+Document 1 - gedit' and after editing the title will look like '*Unsaved Document 1 - gedit'. To further
+operate on the same window, use
+•
+setcontext ('Unsaved Document 1 - gedit', '*Unsaved Document 1 - gedit')
+So that you can continue using the same window name, for example:
+•
+selectmenuitem ('frmUnsavedDocument1-gedit', 'mnuFile;mnuSaveAs')
+The above function will invoke the GTK save dialog box
+If any of the action releated functions (example: selectmenuitem, click, settextvalue) fail, an exception
+is raised. It has to be handled by the program to either continue operating on execution or just halt.
 
 LDTP API
 --------
