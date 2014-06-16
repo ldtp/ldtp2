@@ -466,7 +466,7 @@ class Value(Utils):
         i = 0
         flag = False
         while i < iterations:
-            if valuei.currentValue >= valuei.minimumValue:
+            if valuei.currentValue <= valuei.minimumValue:
                 raise LdtpServerException('Maximum limit reached')
             valuei.currentValue -= 1.0
             time.sleep(1.0/100)
