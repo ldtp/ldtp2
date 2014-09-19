@@ -45,11 +45,13 @@ Build LDTP on Linux
 First checkout ldtp from github and cd into ldtp2.
 
   $ git clone https://github.com/ldtp/ldtp2.git
+
   $ cd ldtp2/
 
 Then build and install.
 
   $ python setup.py build
+
   $ sudo python setup.py build
 
 Note: If your GNOME version is less than or equal to 2.24, then use LDTPv1 (1.7.x)
