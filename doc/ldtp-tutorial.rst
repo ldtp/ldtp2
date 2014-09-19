@@ -207,13 +207,16 @@ Setup LDTP from scurce
 ----------------------
 
 Download the source(Linux):
+
    git clone https://github.com/ldtp/ldtp2;
    cd ldtp2
 
 Download the source(Windows):
+
    git clone https://github.com/ldtp/cobra.git
 
 Download the source(Mac OS X):
+
    git clone https://github.com/ldtp/pyatom.git;
    cd pyatom
 
@@ -247,9 +250,11 @@ at-least 2 arguments. First argument will be context(window in which we want to
 operate) and the second argument will be component(object in which we want to
 operate, based on the current context).
 
-Example: click('\*-gedit', 'btnNew') # Click operation will be performed on a
-window which is having \*-gedit(regexp) and in that window object name 'New',
-which is of type 'push button'.
+.. code-block:: python
+
+    click('*-gedit', 'btnNew') # Click operation will be performed on a window
+    #which is having *-gedit(regexp) and in that window object name 'New', which is
+    #of type 'push button'.
 
 .. image:: images/LDTP.png
   :scale: 125 %
@@ -502,21 +507,21 @@ Glob pattern support
 Window name can be clubbed with glob patterns(* or ?)
 
 EXAMPLE:
-    1. \*-gedit means the title has -gedit in it, BUT can have anything before
+    1. *-gedit means the title has -gedit in it, BUT can have anything before
        it or after it.
     2. ????-gedit means the title has -gedit in it, AND has four cractors
        before it.
 
-    .. NOTE:: You can use \* or ? anywhere for the title name.
+    .. NOTE:: You can use * or ? anywhere for the title name.
 
 
 Different ways of representing window name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. Window type and window title(Ex: 'frmnew1-')
-2. Window title(Ex: 'Unsaved Document 1 - gedit\*')
-3. Window type, glob expression and partial window title(Ex: 'frm\*-gedit')
-4. Glob pattern and partial window title(Ex: '\*-gedit')
-5. Window type, partial window title and glob pattern(Ex: 'frmnew1\*')
+2. Window title(Ex: 'Unsaved Document 1 - gedit*')
+3. Window type, glob expression and partial window title(Ex: 'frm*-gedit')
+4. Glob pattern and partial window title(Ex: '*-gedit')
+5. Window type, partial window title and glob pattern(Ex: 'frmnew1*')
 6. Window type, window title and index(If two windows of same title exist at
    same time. Ex: First window name 'dlgAppoinment', Second window name
    'dlgAppoinment1')
@@ -529,9 +534,9 @@ Window name formats
 If window label contains space or new line characters, they will be stripped.
 
 Example:
-    1. 'saved-doc - gedit\*', will be represented as 'saved-doc-gedit\*'
+    1. 'saved-doc - gedit*', will be represented as 'saved-doc-gedit*'
     2. 'Unsaved Document 1 - gedit*', will be represented as
-       'UnsavedDocument1-gedit\*'
+       'UnsavedDocument1-gedit*'
 
 Object name
 -----------
@@ -688,7 +693,7 @@ Example 1:
 .. code-block:: python
 
     >>> from ldtp import *
-    >>> selectmenuitem('\*-gedit', 'mnuFile;mnuNew')
+    >>> selectmenuitem('*-gedit', 'mnuFile;mnuNew')
 
 
 Example 2:
@@ -706,7 +711,7 @@ Example 2:
     launchapp('gedit')
 
     # Now we find it and make sure it is open.
-    gedit_win = locate('\*gedit')
+    gedit_win = locate('*gedit')
     gedit_win.waittillguiexist()
 
     # Now we type into gedit.
@@ -714,7 +719,7 @@ Example 2:
     text_field.enterstring("G'Day mate!")
 
     # Save a picture to prove we did it.
-    imagecapture('\*gedit', '/tmp/foo.png')
+    imagecapture('*gedit', '/tmp/foo.png')
 
     # Quit gedit.
     quit = gedit_win.getchild('mnuQuit')
@@ -791,12 +796,12 @@ Edit your current opened file using:
 
 This will change the window title. Note, before doing the above operation,
 title will be 'Unsaved Document 1 - gedit' and after editing the title will
-look like '\*Unsaved Document 1 - gedit'. To further
+look like '*Unsaved Document 1 - gedit'. To further
 operate on the same window, use:
 
 .. code-block:: python
 
-    >>> setcontext('Unsaved Document 1 - gedit', '\*Unsaved Document 1 - gedit')
+    >>> setcontext('Unsaved Document 1 - gedit', '*Unsaved Document 1 - gedit')
 
 So that you can continue using the same window name, for example:
 
@@ -828,7 +833,7 @@ window title.
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> guiexist('\*-gedit')
+  >>> guiexist('*-gedit')
   1
   >>> guiexist('frmUnsavedDocument1-gedit')
   1
@@ -853,7 +858,7 @@ name(Unsaved Document 1 – gedit) and push button control(Open).
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> click('\*-gedit', 'btnOpen')
+  >>> click('*-gedit', 'btnOpen')
   1
 
 Menu item
@@ -871,7 +876,7 @@ need 'File' menu control too.
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> selectmenuitem('\*-gedit', 'mnuFile;mnuNew')
+  >>> selectmenuitem('*-gedit', 'mnuFile;mnuNew')
   1
 
 Toggle button
@@ -993,15 +998,15 @@ Pane).
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> selectmenuitem('\*-gedit', 'mnuView;mnuSidePane')
+  >>> selectmenuitem('*-gedit', 'mnuView;mnuSidePane')
   1
-  >>> menuuncheck('\*-gedit', 'mnuView;mnuSidePane')
+  >>> menuuncheck('*-gedit', 'mnuView;mnuSidePane')
   1
 
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> menucheck('\*-gedit', 'mnuView;mnuStatusbar')
+  >>> menucheck('*-gedit', 'mnuView;mnuStatusbar')
   1
 
 Radio menu item
@@ -1014,9 +1019,9 @@ name(Class1.cs – assuming that Class1.cs is currently opened).
 .. code-block:: python
 
   >>> from ldtp import *
-  >>> selectmenuitem('\*-gedit', 'mnuDocuments;mnuClass1.cs')
+  >>> selectmenuitem('*-gedit', 'mnuDocuments;mnuClass1.cs')
   1
-  >>> menucheck('\*-gedit', 'mnuDocuments;mnuClass1.cs')
+  >>> menucheck('*-gedit', 'mnuDocuments;mnuClass1.cs')
   1
 
 Combo box – Menu item
@@ -1118,7 +1123,7 @@ This default timeout period that can be modified:
 
 .. code-block:: python
 
-  waittillguiexist('\*-gedit', guiTimeOut=30)
+  waittillguiexist('*-gedit', guiTimeOut=30)
   waittillguinotexist('dlgOpenFiles...', guiTimeOut=30)
 
 *Example 3*
@@ -1199,11 +1204,11 @@ brackets.
   >>> from ldtp import *
   >>> launchapp('gedit')
   1
-  >>> waittillguiexist('\*-gedit')
+  >>> waittillguiexist('*-gedit')
   1
   >>> enterstring('<alt><tab>')
   1
-  >>> enterstring('\*-gedit', 'txt0', '<caps>Testing enterstring API<enter>')
+  >>> enterstring('*-gedit', 'txt0', '<caps>Testing enterstring API<enter>')
   1
   >>> generatekeyevent('<alt><tab>')
   1
@@ -1243,11 +1248,11 @@ use getobjectproperty.
     u'nm-applet', u'soffice.bin']
   >>> getwindowlist()
   [u'frmUnsavedDocument1-gedit']
-  >>> getobjectlist('\*-gedit')
+  >>> getobjectlist('*-gedit')
   ...
-  >>> getobjectinfo('\*-gedit', 'btnNew')
+  >>> getobjectinfo('*-gedit', 'btnNew')
   [u'child_index', u'class', u'description', u'parent', u'label']
-  >>> getobjectproperty('\*-gedit', 'btnNew', 'class')
+  >>> getobjectproperty('*-gedit', 'btnNew', 'class')
   'New'
 
 Callback – On new window creation
@@ -1286,8 +1291,8 @@ Example
     # Callback registration
     onwindowcreate('Replace', cb)
     # General operation, which will invoke a window
-    click('\*gedit', 'btnReplace')
-    click('\*gedit', 'btnOpen')
+    click('*gedit', 'btnReplace')
+    click('*gedit', 'btnOpen')
     waittillguiexist('dlgOpenFiles...')
     click('dlgOpenFiles...', 'btnClose')
     # Wait for callback to complete, if invoked
@@ -1322,9 +1327,9 @@ Example script
 
   try:
       launchapp('gedit')
-      if waittillguiexist('\*-gedit') == 0:
+      if waittillguiexist('*-gedit') == 0:
           raise LdtpExecutionError('Gedit window does not exist')
-      selectmenuitem('\*-gedit', 'mnuFile;mnuOpen')
+      selectmenuitem('*-gedit', 'mnuFile;mnuOpen')
       if waittillguiexist('dlgOpenFiles') == 0:
           raise LdtpExecutionError('Open Files dialog does not exist')
       selectrow('dlgOpenFiles...', 'tblFiles', fileName [0])
