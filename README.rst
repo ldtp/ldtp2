@@ -44,15 +44,13 @@ Build LDTP on Linux
 
 First checkout ldtp from github and cd into ldtp2.
 
-.. code-block:: none
-   git clone https://github.com/ldtp/ldtp2.git
-   cd ldtp2/
+   ``git clone https://github.com/ldtp/ldtp2.git``
+   ``cd ldtp2/``
 
 Then build and install.
 
-.. code-block:: none
-   python setup.py build
-   sudo python setup.py build
+   ``python setup.py build``
+   ``sudo python setup.py build``
 
 Note: If your GNOME version is less than or equal to 2.24, then use LDTPv1 (1.7.x)
 
@@ -61,16 +59,12 @@ Writing tests
 
 It is best to read the documentation, so first cd into the doc directory.
 
-.. code-block:: none
-   cd ldtp2/doc/
+   ``cd ldtp2/doc/``
 
 Then you can either read ldtp-tutorial.rst in you favorite text editor or build
-a pdf.
+a pdf. First install ``rst2pdf``, then run:
 
-.. code-block:: none
-   yum install rst2pdf #or
-   apt-get update; apt-get install rst2pdf
-   rst2pdf ldtp-tutorial.rst
+   ``rst2pdf ldtp-tutorial.rst``
 
 Then open the pdf in your favorite pdf viewer.
 
