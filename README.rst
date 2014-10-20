@@ -52,7 +52,7 @@ Then build and install.
 
   $ python setup.py build
 
-  $ sudo python setup.py build
+  $ sudo python setup.py install
 
 Note: If your GNOME version is less than or equal to 2.24, then use LDTPv1 (1.7.x)
 
