@@ -3,7 +3,7 @@
 LDTP v2 ldtp executable
 
 @author: Nagappan Alagappan <nagappan@gmail.com>
-@copyright: Copyright (c) 2009-13 Nagappan Alagappan
+@copyright: Copyright (c) 2009-14 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -43,9 +43,10 @@ def parse_cmd_line_option():
    if options.verbose:
       # Set verbose flag
       os.environ['LDTP_DEBUG'] = '2'
+   return options
 
-parse_cmd_line_option()
+options = parse_cmd_line_option()
 try:
-   ldtpd.main()
+   ldtpd.main(options.port)
 except KeyboardInterrupt:
    pass

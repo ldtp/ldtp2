@@ -4,7 +4,7 @@ LDTP v2 init file
 @author: Eitan Isaacson <eitan@ascender.com>
 @author: Nagappan Alagappan <nagappan@gmail.com>
 @copyright: Copyright (c) 2009 Eitan Isaacson
-@copyright: Copyright (c) 2009-12 Nagappan Alagappan
+@copyright: Copyright (c) 2009-14 Nagappan Alagappan
 @license: LGPL
 
 http://ldtp.freedesktop.org
@@ -27,13 +27,13 @@ class SignalParent:
 
     def send_later(self):
         self.reactor.callLater(1, self.send)
-    
+
     def send(self):
         import os
         import signal
-        
+
         os.kill(int(self.parentpid), signal.SIGUSR1)
-        
+
 def main(port=4118, parentpid=None):
     import os
     os.environ['NO_GAIL'] = '1'
