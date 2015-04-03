@@ -39,9 +39,9 @@ if path == "":
    path = "."
 sys.path.append(path)
 
-from ldtp import state
-from ldtp import client
-from ldtp.client_exception import LdtpExecutionError
+import state
+import client
+from client_exception import LdtpExecutionError
 
 _t = None
 _pollEvents = None
