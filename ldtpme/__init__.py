@@ -93,8 +93,8 @@ def subContext(objs=None):
     objs, rstr = __checkObjs(objs)
     r = []
     for o in objs:
-        r.append( re.sub('([^:]+::[^:]+).*',r'\1',o) )
-        # TODO : a single ':' is allowed, so that function is buged in this case
+        s=re.split('::',o)
+        r.append( s[0]+'::'+s[1] )
     return __checkR(r,rstr)
 
 
@@ -124,8 +124,7 @@ def subParent(objs=None):
     objs, rstr = __checkObjs(objs)
     r = []
     for o in objs:
-        r.append( re.sub('(.*)::[^:]*$', r'\1', o) )
-        # TODO : a single ':' is allowed, so that function is buged in this case
+        r.append( re.sub('(.*)::.*', r'\1', o) )
     return __checkR(r,rstr)
 
 
