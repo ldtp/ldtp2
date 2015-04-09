@@ -12,19 +12,9 @@ objs parameters may be a single object (a string with '::'), or a list of object
 
 @package ldtp/ldtpme
 @author: Jean-Jacques Brucker <jeanjacquesbrucker@gmail.com>
-@copyright: Copyright (c) 2015 Jean-Jacques Brucker <jeanjacquesbrucker@gmail.com>
-@license: LGPL
 
 http://ldtp.freedesktop.org
 
-This file may be distributed and/or modified under the terms of the GNU Lesser General
-Public License version 2 as published by the Free Software Foundation. This file
-is distributed without any warranty; without even the implied warranty of 
-merchantability or fitness for a particular purpose.
-
-See 'COPYING' in the source distribution for more information.
-
-Headers in this file shall remain intact.
 '''
 
 # Stuff for python3/python2 compatibility 
@@ -56,6 +46,11 @@ def getCurrentObjs():
 def setCurrentObjs(*objects):
     ''' Set the Current Objects (in CurrentObjs), used by other functions when None are specified. '''
     global CurrentObjs
+
+    if len(objects) == 1 and type(objects[0]) in (str, unicode):
+        CurrentObjs=objects[0]
+        return 1
+
     r = []
     for o in objects:
         if type(o) in (str, unicode):
@@ -65,7 +60,7 @@ def setCurrentObjs(*objects):
         else:
             raise Exception(__name__+' Error: objects should be some strings or some lists of strings')
     CurrentObjs=r
-    return CurrentObjs
+    return len(CurrentObjs)
 
 
 def __checkObjs(o):
@@ -130,8 +125,13 @@ def subParent(objs=None):
 
 def getTree(objs=None, deep=__DEEP, deepstart=0 ):
     ''' Return list of all available objects in a custom deep.
-        If objs is None, it uses CurrentObjs.
+        If objs is None, it uses CurrentObjs, else result is stored in CurrentObjs.
         deep is relative to deepstart, and deepstart may be negative.'''
+    if objs is None:
+        setCurrentObjs=False
+    else:
+        global CurrentObjs
+        setCurrentObjs=True
     objs, rstr  = __checkObjs(objs)
     while deepstart < 0 :
         objs=subParent(objs)
@@ -146,6 +146,8 @@ def getTree(objs=None, deep=__DEEP, deepstart=0 ):
         if  deepstart > 0 or o == '' or isExisting(o):
         # if deepstart > 0 or if the object is the root, no need to do the heavier isExisting() check.
             r += list(__yieldTreeObjects(o,deep,True))
+    if setCurrentObj:
+        CurrentObjs=r
     return r
 
 
@@ -188,14 +190,15 @@ def getRole(objs=None):
     objs, rstr = __checkObjs(objs)
     r = []
     for o in objs:
+        s=re.split('::',o)
         if o == '' : # This is the root
             r.append('Root')
-        elif re.match('[^:]+::[^:]+$',o) : # This is a windows
+        elif len(s) == 2 : # This is a windows
             if o in ldtp.getwindowlist() : # Check if it exist
                 r.append('Windows')
             else :
                 r.append('')
-        elif re.match('[^:]+$',o) : # This is an application
+        elif len(s) == 1 : # This is an application
             if o in ldtp.getapplist() : # Check if it exist
                 r.append('Application')
             else :
@@ -244,10 +247,10 @@ def printProperties(objs=None, deep=0, deepstart=0):
     ''' Print all Properties of all available objects in a custom deep.
         If objs is None, it uses CurrentObjs. '''
     for o in getTree(objs,deep,deepstart):
-        print( "%-80s  -> " % o , end="" )
+        print( "%-80s  -> {" % o , end="" )
         for p in ldtp.getobjectpropertieslist(subContext(o),o):
-            print( p + ":'" + ldtp.getobjectproperty(subContext(o),o,p) +"' " , end="")
-        print("")
+            print( "'"+p+"':'" + ldtp.getobjectproperty(subContext(o),o,p) +"' " , end="")
+        print("}")
 
 def getProperties(objs=None):
     ''' Return all Properties (in a dictionary) for each objects.
@@ -255,32 +258,55 @@ def getProperties(objs=None):
     objs, rstr = __checkObjs(objs)
     r = []
     for o in objs:
-        str="{"
+        dic = {}
         for p in ldtp.getobjectpropertieslist(subContext(o),o):
-            str += " '" + p + "':'" + ldtp.getobjectproperty(subContext(o),o,p) + "',"
-        r.append( eval( str + "}") )
+            dic[p]=ldtp.getobjectproperty(subContext(o),o,p)
+        r.append( dic )
     return __checkR(r,rstr)
 
-def search(basename='.*', from_='', role='.*', state='', action='', deep=__DEEP, deepstart=0, flags=0):
+def search(basename = '.*', from_ = '', role = '.*', state = [], action = [], properties = {}, deep=__DEEP, deepstart=0, flags=0):
     ''' Search from specific objects in the Tree and store result in CurrentObjs.
         *from_* parameter may be an object or a list of objects.
-        *basename* and *role* parameter are use as regular expression.
+        *basename*, *role* and properties elements are use as regular expression.
+        *state* and *action* may be a string, or a list of string. If a list is given, search for an object containing all items. 
         *flags* parameter are passed to re.search() and may be use for example to do insensitive case search. '''
     global CurrentObjs
     r = []
     for o in getTree(from_,deep,deepstart) :
-        if re.search(basename,subBaseName(o),flags) and re.search(role,ldtp.getobjectrole(subContext(o),o),flags):
-            if state and action :
-                if state in getStates(o) and action in getActions(o) :
-                    r.append(o)
-            elif action :
-                if action in getActions(o) :
-                    r.append(o)
-            elif state :
-                if state in getStates(o) :
-                    r.append(o)
-            else :
-                r.append(o)
+        if not re.search(basename,subBaseName(o),flags):
+            continue
+        if not re.search(role,ldtp.getobjectrole(subContext(o),o),flags):
+            continue
+        if state :
+            state, rstr = __checkObjs(state)
+            sto = getStates(o)
+            found = True
+            for st in state :
+                if not st in sto :
+                    found=False
+                    break
+            if not found :
+                continue
+        if action :
+            action, rstr = __checkObjs(action)
+            aco = getActions(o)
+            found = True
+            for ac in action :
+                if not ac in aco :
+                    found=False
+                    break
+            if not found :
+                continue
+        if properties :
+            pr=getProperties(o)
+            found = True
+            for key in properties.keys():
+                if not ( key in pr.keys() and re.search(properties[key],pr[key],flags) ):
+                    found=False
+                    break
+            if not found :
+                continue
+        r.append(o)
     CurrentObjs=r
     return r
 
