@@ -128,10 +128,10 @@ def getTree(objs=None, deep=__DEEP, deepstart=0 ):
         If objs is None, it uses CurrentObjs, else result is stored in CurrentObjs.
         deep is relative to deepstart, and deepstart may be negative.'''
     if objs is None:
-        setCurrentObjs=False
+        setCurObjs=False
     else:
         global CurrentObjs
-        setCurrentObjs=True
+        setCurObjs=True
     objs, rstr  = __checkObjs(objs)
     while deepstart < 0 :
         objs=subParent(objs)
@@ -146,8 +146,8 @@ def getTree(objs=None, deep=__DEEP, deepstart=0 ):
         if  deepstart > 0 or o == '' or isExisting(o):
         # if deepstart > 0 or if the object is the root, no need to do the heavier isExisting() check.
             r += list(__yieldTreeObjects(o,deep,True))
-    if setCurrentObj:
-        CurrentObjs=r
+    if setCurObjs:
+        CurrentObjs = r
     return r
 
 
