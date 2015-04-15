@@ -83,13 +83,16 @@ def __checkR(tab,rstr):
 
 
 def subContext(objs=None):
-    ''' Extract the context of an object string.
+    ''' Extract the context part of an object string.
         If objs is None, it uses CurrentObjs. '''
     objs, rstr = __checkObjs(objs)
     r = []
     for o in objs:
         s=re.split('::',o)
-        r.append( s[0]+'::'+s[1] )
+        if len(s) > 2 :
+            r.append( s[0]+'::'+s[1] )
+        else:
+            r.append(o)
     return __checkR(r,rstr)
 
 
@@ -182,7 +185,7 @@ def printRoles(objs=None, deep=0, deepstart=0):
     ''' Print role of all available objects in a custom deep.
         If objs is None, it uses CurrentObjs. '''
     for o in getTree(objs,deep,deepstart):
-        print("%-80s -> %s" %( o, ldtp.getobjectrole(subContext(o),o) ) )
+        print("%-80s -> %s" %( o, getRole(o) ) )
 
 def getRole(objs=None):
     ''' Return role of each objects.
@@ -267,7 +270,7 @@ def getProperties(objs=None):
 def search(basename = '.*', from_ = '', role = '.*', state = [], action = [], properties = {}, deep=__DEEP, deepstart=0, flags=0):
     ''' Search from specific objects in the Tree and store result in CurrentObjs.
         *from_* parameter may be an object or a list of objects.
-        *basename*, *role* and properties elements are use as regular expression.
+        *basename*, *role* and properties elements are use as regular expressions.
         *state* and *action* may be a string, or a list of string. If a list is given, search for an object containing all items. 
         *flags* parameter are passed to re.search() and may be use for example to do insensitive case search. '''
     global CurrentObjs
@@ -328,7 +331,7 @@ def click(objs=None):
 
 
 def isShowing(objs=None):
-    ''' Verify if objects are showing (visible for human eyes on screen or TS).
+    ''' Verify if object(s) are showing (visible for human eyes on screen).
         If objs is None, it uses CurrentObjs. '''
     objs, rstr = __checkObjs(objs)
     r = []
@@ -338,7 +341,7 @@ def isShowing(objs=None):
 
 
 def isExisting(objs=None):
-    ''' Verify if the obj exist
+    ''' Verify if the object(s) exist.
         If objs is None, it uses CurrentObjs. '''
     objs, rstr = __checkObjs(objs)
     r = []
@@ -350,3 +353,35 @@ def isExisting(objs=None):
             r.append(ldtp.objectexist(subContext(o),o))
     return __checkR(r,rstr)
 
+
+def selectTab(objs=None):
+    ''' select a "page tab" in a "page tab list".
+        If objs is None, it uses CurrentObjs. '''
+    objs, rstr = __checkObjs(objs)
+    r = []
+    for o in objs:
+        #if getRole(o) == 'page tab' : #...
+        r.append(ldtp.selecttab(subContext(o),subParent(o),o))
+    return __checkR(r,rstr)
+
+
+def imagecapture(window_name = '', out_file = None, x = 0, y = 0, width = -1, height = -1):
+    '''
+    Captures screenshot of the whole desktop or given window
+
+    @param window_name: Window name to look for, either full name,
+    LDTP's name convention, or a Unix glob.
+    @type window_name: string
+    @param x: x co-ordinate value
+    @type x: integer
+    @param y: y co-ordinate value
+    @type y: integer
+    @param width: width co-ordinate value
+    @type width: integer
+    @param height: height co-ordinate value
+    @type height: integer
+
+    @return: screenshot filename
+    @rtype: string
+    '''
+    return ldtp.imagecapture(window_name=window_name,out_file=out_file,x=x,y=y,width=width,height=height)
