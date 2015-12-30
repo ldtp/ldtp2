@@ -79,7 +79,7 @@ Contact LDTP
 ============
 
 We are in #ldtp on irc.freenode.net and are also available on the `LDTP mailing
-list <http://ldtp.freedesktop.org/wiki/Mailing_20list>`_
+list <https://wiki.freedesktop.org/ldtp/Mailing_List_IRC/>`_
 
 Contributing
 ============
