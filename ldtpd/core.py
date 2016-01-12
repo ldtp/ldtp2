@@ -265,6 +265,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if env:
             os.environ['GTK_MODULES']='gail:atk-bridge'
             os.environ['GNOME_ACCESSIBILITY']='1'
+            os.environ['QT_LINUX_ACCESSIBILITY_ALWAYS_ON']='1'
         if lang:
             os.environ['LANG']=lang
         try:
