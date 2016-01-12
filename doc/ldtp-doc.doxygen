@@ -5866,7 +5866,7 @@
  * launchapp('\<application binary name\>'[, argument] [,delay = 5][,
  * env = 1])
  *
- * second and third arguments are optional. environment default argument is 1. So the GTK_MODULES and GNOME_ACCESSIBILITY will be set and added to the enivronment variable.
+ * second and third arguments are optional. environment default argument is 1. So the GTK_MODULES, GNOME_ACCESSIBILITY and QT_LINUX_ACCESSIBILITY_ALWAYS_ON will be set and added to the enivronment variable.
  *
  * Delay is wait time(in seconds) after launching the application
  *
