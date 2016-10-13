@@ -36,7 +36,7 @@ class SignalParent:
 
 
 from xmlrpc_daemon import XMLRPCLdtpd
-def main(port=4118, parentpid=None, XMLRPCLdtpdFactory = lambda: XMLRPCLdtpd()):
+def main(port=4118, parentpid=None, XMLRPCLdtpdFactory=lambda: XMLRPCLdtpd()):
     import os
     os.environ['NO_GAIL'] = '1'
     os.environ['NO_AT_BRIDGE'] = '1'
