@@ -495,7 +495,7 @@ class Table(Utils):
         else:
             name = cell.name
             self._grab_focus(cell)
-        if not name:
+        if name is None:
             raise LdtpServerException('Unable to get row text')
         return name
 
