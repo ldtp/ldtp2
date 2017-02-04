@@ -5,7 +5,7 @@ install:
   # LDTP
   - sudo apt-get install python-twisted-web
   - sudo apt-get install python-wnck
-  - sudo apt-get install python-gnome
+  #- sudo apt-get install python-gnome
   # Documentation
   #- sudo apt-get install rst2pdf
 
