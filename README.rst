@@ -2,6 +2,9 @@
 LDTP
 ====
 
+.. image:: https://travis-ci.org/richelbilderbeek/ldtp2.svg?branch=master
+    :target: https://travis-ci.org/richelbilderbeek/ldtp2
+
 `LDTP <http://ldtp.freedesktop.org>`_ is the best cross platform GUI testing
 tool out there. Why? Because it works on Linux, Windows, OS X, Solaris,
 FreeBSD, NetBSD, and Palm Source. Your feedback is much appreciated, please

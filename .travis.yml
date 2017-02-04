@@ -1,0 +1,15 @@
+sudo: required
+
+install:
+  # LDTP
+  - sudo apt-get install python-twisted-web
+  - sudo apt-get install python-wnck
+  - sudo apt-get install python-gnome
+  # Documentation
+  #- sudo apt-get install rst2pdf
+
+script:
+  # Build LDTP
+  - python setup.py build
+  - sudo python setup.py install
+  # Build documentation
