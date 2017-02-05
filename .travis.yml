@@ -14,3 +14,4 @@ script:
   - python setup.py build
   - sudo python setup.py install
   # Build documentation
+  # Build and run examples
