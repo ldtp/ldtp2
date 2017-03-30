@@ -65,6 +65,8 @@ from generic import Generic
 from combo_box import ComboBox
 from page_tab_list import PageTabList
 
+import thread
+
 class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             Text, Mouse, Generic, Value):
     """
@@ -275,6 +277,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 time.sleep(int(delay))
             except ValueError:
                 time.sleep(5)
+            thread.start_new_thread(process.wait,())
         except Exception as e:
             raise LdtpServerException(str(e))
         os.environ['NO_GAIL']='1'
