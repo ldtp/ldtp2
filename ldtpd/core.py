@@ -64,6 +64,7 @@ from value import Value
 from generic import Generic
 from combo_box import ComboBox
 from page_tab_list import PageTabList
+from gi.repository import GLib
 
 import thread
 
@@ -181,6 +182,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             except LookupError:
                 # A11Y lookup error
                 continue
+            except GLib.Error as ge:
+                if "The application no longer exists" in ge:
+                    continue
+                raise
         return app_list
 
     def getwindowlist(self):
