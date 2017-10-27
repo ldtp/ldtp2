@@ -382,13 +382,13 @@ class Utils:
                 # If the window doesn't exist, remove from the cached list
                 self.cached_apps.remove(app)
 
-    def _get_geometry(self, obj):
+    def _get_geometry(self):
         """
         Get the geometry of the default root window.
         @return: Coordinates of every corner of the default root window.
         @rtype: tuple
         """
-        geometry = obj.get_geometry()
+        geometry = self._root_window.get_geometry()
         return geometry
 
     def _ldtpize_accessible(self, acc):

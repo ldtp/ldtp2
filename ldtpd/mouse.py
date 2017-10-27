@@ -152,7 +152,7 @@ class Mouse(Utils):
         @return: 1 if simulation was successful, 0 if not.
         @rtype: integer
         """
-        size = self._get_geometry(self._root_window)
+        size = self._get_geometry()
         if (source_x < size[0] or source_y < size[1] or \
                 dest_x > size[2] or dest_y > size[3]) or \
                 (source_x > size[2] or source_y > size[3] or \
