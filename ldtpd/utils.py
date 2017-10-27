@@ -29,6 +29,14 @@ import pyatspi
 import threading
 import traceback
 import logging.handlers
+try:
+  # If we have gtk3+ gobject introspection, use that
+  from gi.repository import Gdk
+  gtk3 = True
+except:
+  # No gobject introspection, use gtk2
+  import gtk
+  gtk3 = False
 from re import match as re_match
 from constants import abbreviated_roles
 from fnmatch import translate as glob_trans
@@ -205,6 +213,10 @@ class Utils:
                     self.cached_apps.append([app, True])
         if self._ldtp_debug:
             _custom_logger.setLevel(logging.DEBUG)
+        if gtk3:
+            self._root_window = Gdk.get_default_root_window()
+        else:
+            self._root_window = gtk.gdk.get_default_root_window()
 
     def _get_all_state_names(self):
         """
@@ -369,6 +381,15 @@ class Utils:
                 # In at-spi2 gi._glib.GError exception is thrown
                 # If the window doesn't exist, remove from the cached list
                 self.cached_apps.remove(app)
+
+    def _get_geometry(self, obj):
+        """
+        Get the geometry of the default root window.
+        @return: Coordinates of every corner of the default root window.
+        @rtype: tuple
+        """
+        geometry = obj.get_geometry()
+        return geometry
 
     def _ldtpize_accessible(self, acc):
         """
