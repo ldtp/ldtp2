@@ -152,11 +152,11 @@ class Mouse(Utils):
         @return: 1 if simulation was successful, 0 if not.
         @rtype: integer
         """
-        size = self._get_size(self._desktop)
-        if (source_x < size.x or source_y < size.y or \
-                dest_x > size.width or dest_y > size.height) or \
-                (source_x > size.width or source_y > size.height or \
-                     dest_x < size.x or dest_y < size.y):
+        size = self._get_geometry()
+        if (source_x < size[0] or source_y < size[1] or \
+                dest_x > size[2] or dest_y > size[3]) or \
+                (source_x > size[2] or source_y > size[3] or \
+                     dest_x < size[0] or dest_y < size[1]):
             return 0
 
         x_flag = False # Iterated x ?
