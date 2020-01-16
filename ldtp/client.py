@@ -112,9 +112,13 @@ class Transport(xmlrpclib.Transport):
         # Add to the class, only if > python 2.5
         def make_connection(self, host):
             # create a HTTP connection object from a host descriptor
-            import httplib
+            # Try to import httplib, but for newer versions of python 3 import http.client instead
+            try:
+                import httplib as http_client
+            except ImportError:
+                import http.client as http_client
             host, extra_headers, x509 = self.get_host_info(host)
-            return httplib.HTTPConnection(host)
+            return http_client.HTTPConnection(host)
     ##
     # Send a complete request, and parse the response.
     #
