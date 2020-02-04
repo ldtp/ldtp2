@@ -20,7 +20,7 @@ See 'COPYING' in the source distribution for more information.
 Headers in this file shall remain intact.
 """
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(name="ldtp",
       version="3.5.1",
@@ -29,6 +29,7 @@ setup(name="ldtp",
       maintainer_email="nagappan@gmail.com",
       url="http://ldtp.freesktop.org",
       license="GNU Lesser General Public License (LGPL)",
+      install_requires=["twisted"],
       packages=["ldtp", "ldtpd", "ooldtp", "ldtputils", "ldtpme"],
       long_description="Linux Desktop Testing Project is aimed at producing " \
           "high quality cross platform GUI test automation framework and cutting-edge tools that " \

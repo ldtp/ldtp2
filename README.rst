@@ -2,8 +2,11 @@
 LDTP
 ====
 
+.. image:: https://travis-ci.org/ldtp/ldtp2.svg?branch=master
+    :target: https://travis-ci.org/ldtp/ldtp2
+
 `LDTP <http://ldtp.freedesktop.org>`_ is the best cross platform GUI testing
-tool out there. Why? Because it works on Linux, Windows, OS X, Solairs,
+tool out there. Why? Because it works on Linux, Windows, OS X, Solaris,
 FreeBSD, NetBSD, and Palm Source. Your feedback is much appreciated, please
 send an email to `Nagappan <nagappan@gmail.com>`_.
 
@@ -79,7 +82,7 @@ Contact LDTP
 ============
 
 We are in #ldtp on irc.freenode.net and are also available on the `LDTP mailing
-list <http://ldtp.freedesktop.org/wiki/Mailing_20list>`_
+list <https://wiki.freedesktop.org/ldtp/Mailing_List_IRC/>`_
 
 Contributing
 ============

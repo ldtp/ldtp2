@@ -34,7 +34,9 @@ class SignalParent:
 
         os.kill(int(self.parentpid), signal.SIGUSR1)
 
-def main(port=4118, parentpid=None):
+
+from xmlrpc_daemon import XMLRPCLdtpd
+def main(port=4118, parentpid=None, XMLRPCLdtpdFactory=lambda: XMLRPCLdtpd()):
     import os
     os.environ['NO_GAIL'] = '1'
     os.environ['NO_AT_BRIDGE'] = '1'
@@ -61,7 +63,6 @@ def main(port=4118, parentpid=None):
             pass
     from twisted.internet import reactor
     from twisted.web import server, xmlrpc
-    from xmlrpc_daemon import XMLRPCLdtpd
     import twisted.internet
     import socket
     import pyatspi
@@ -72,7 +73,7 @@ def main(port=4118, parentpid=None):
 
     try:
         pyatspi.setCacheLevel(pyatspi.CACHE_PROPERTIES)
-        r = XMLRPCLdtpd()
+        r = XMLRPCLdtpdFactory()
         xmlrpc.addIntrospection(r)
         if parentpid:
             reactor.callWhenRunning(SignalParent(parentpid).send_later)

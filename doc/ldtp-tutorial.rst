@@ -46,7 +46,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 About LDTP
 ==========
 
-Linux Desktop Testing Project(LDTP) is aimed at producing a high quality
+The Linux Desktop Testing Project (LDTP) is aimed at producing a high quality
 automated testing framework and cutting-edge tools that can be used to test
 GNU/Linux Desktop to improve it. It uses the Accessibility libraries to poke
 through the application's user interface. This idea has been extended to
@@ -54,11 +54,11 @@ Microsoft Windows as Cobra and Mac OS X as ATOMac. With this we can proudly
 say; we have implemented a cross platform GUI testing tool. LDTP is now known
 to work on Windows, Mac, Linux, Palm Source, Solaris, NetBSD and FreeBSD.
 
-The LDTP core framework uses Appmap(application map) and written test-cases to
+The LDTP core framework uses Appmap (application map) and written test-cases to
 test an application and gives the status of each test-case as the output. LDTP
-can test any .NET/GNOME/KDE(QT >= 4.8) application which is accessibility
-enabled, Mozilla, Open Office/Libre Office, and any Java application(should
-have a UI based on swing).
+can test any .NET/GNOME/KDE (QT >= 4.8) application which is accessibility
+enabled, Mozilla, Open Office/Libre Office, and any Java application (should
+have a UI based on Swing).
 
 We encourage you to join the project and help us to create a robust, reliable
 and stable test framework for Windows/Unix Desktops. Thanks to the Microsoft,
@@ -71,20 +71,20 @@ Audience
 
 It is assumed that the user of this document has little knowledge about UI
 controls in any GUI application and minimal Windows/Mac OS X/Linux or
-Unix(Solaris/BSD) knowledge.
+Unix (Solaris/BSD) knowledge.
 
 About testing
 =============
 
-Testing is a process to identify defects in a(software) system, for more
+Testing is a process to identify defects in a (software) system, for more
 information see http://en.wikipedia.org/wiki/Software_testing. Testing an
 application multiple times with the same steps can get rather slow and
 annoying; therefore automating the process can do a better job.
 
 What is the complexity of GUI testing?
 
-* Identification of object in a window(push button, menu item).
-* Should be context sensitive(Window specific operation).
+* Identification of object in a window (push button, menu item).
+* Should be context sensitive (Window specific operation).
 * Handling of unexpected pop-up windows.
 * Keeping the test script in sync with UI changes.
 * Failures need to be verified on each operation.
@@ -98,7 +98,7 @@ application.
 Advantage of accessibility based testing.
 
 * Accessibility libraries provide applications property, state, its child items etc.
-* No need to work in toolkit(GTK, AWT, QT) level
+* No need to work in toolkit (GTK, AWT, QT) level
 
 Disadvantage of accessibility based testing.
 
@@ -107,7 +107,7 @@ Disadvantage of accessibility based testing.
 What applications can be tested?
 
 As of now, LDTP can test any .NET, GNOME applications which are accessibility
-enabled, Mozilla, OpenOffice.org/Libreoffice, any Java application(should have
+enabled, Mozilla, OpenOffice.org/Libreoffice, any Java application (should have
 swing UI) and KDE applications based on QT 4.8.
 
 
@@ -126,9 +126,9 @@ Supported platforms
 * CentOS
 * FreeBSD
 * NetBSD
-* Windows(XP SP3/Vista SP2/7 SP1/8)
-* Mac OS X(>=10.6)
-* Embedded Platform(Palm Source/Access Company)
+* Windows (XP SP3/Vista SP2/7 SP1/8)
+* Mac OS X (>=10.6)
+* Embedded Platform (Palm Source/Access Company)
 
 
 Supported languages
@@ -147,7 +147,7 @@ LDTP Features
 =============
 
 * LDTP concepts are derived from Software Automation Framework Support.
-* LDTP supports verification of actions performed(guiexist(), verifystate, etc).
+* LDTP supports verification of actions performed (guiexist(), verifystate, etc).
 * Writing test scripts is very easy, and the script writer doesn't need to know
   about the object hierarchy.
 * CPU/Memory performance monitoring of application-under-test can be measured.
@@ -182,22 +182,22 @@ Install LDTP
 Disk space requirements
 -----------------------
 
-Less than 450 KB(Linux), 5 MB(Windows) and 450 KB(Mac OS X)
+Less than 450 KB (Linux), 5 MB (Windows) and 450 KB (Mac OS X)
 
 Software requirements
 ---------------------
 
-Install the following dependency packages(Linux)
+Install the following dependency packages (Linux)
 
 * python-atspi or relevant name in your distribution.
 * twisted-web or relevant name in your distribution.
 * python-gnome or relevant name in your distribution.
 
-Install the following dependency packages(Mac OS X)
+Install the following dependency packages (Mac OS X)
 
 * Xcode, if you plan to compile the software, else use egg from pypi.
 
-Optional packages(Linux)
+Optional packages (Linux)
 
 * Import tool of ImageMagick - To capture a screenshot.
 * Python Imaging Library - Compare images, black out a region in an image.
@@ -206,16 +206,16 @@ Optional packages(Linux)
 Setup LDTP from scurce
 ----------------------
 
-Download the source(Linux):
+Download the source (Linux):
 
    git clone https://github.com/ldtp/ldtp2;
    cd ldtp2
 
-Download the source(Windows):
+Download the source (Windows):
 
    git clone https://github.com/ldtp/cobra.git
 
-Download the source(Mac OS X):
+Download the source (Mac OS X):
 
    git clone https://github.com/ldtp/pyatom.git;
    cd pyatom
@@ -238,7 +238,7 @@ LDTP Overall Architecture
 
 Test scripts uses LDTP API interface, which in-turn communicate to LDTP engine
 either by UNIX socket or by TCP socket. LDTP engine talks to Application under
-test(AUT) using AT-SPI library.
+test (AUT) using AT-SPI library.
 
 LDTP Internals
 --------------
@@ -246,8 +246,8 @@ LDTP Internals
 LDTP Clients can talk to LDTP engine with XML RPC protocol.
 
 Most of LDTP ideas are implemented from http://safsdev.sf.net. Most commands
-at-least 2 arguments. First argument will be context(window in which we want to
-operate) and the second argument will be component(object in which we want to
+at-least 2 arguments. First argument will be context (window in which we want to
+operate) and the second argument will be component (object in which we want to
 operate, based on the current context).
 
 .. code-block:: python
@@ -279,14 +279,14 @@ Component Handler
 
 Each individual component handlers uses the AT-SPI libraries to communicate to
 the respective application. Based on the execution status, success or failure
-will be notified as a response(in XML format) to the client. In few cases the
+will be notified as a response (in XML format) to the client. In few cases the
 requested data from the respective component will be returned to the client,
-based on the request(example: gettextvalue).
+based on the request (example: gettextvalue).
 
 Event Handler
 -------------
 
-For unexpected windows(example: connection reset by peer /connection timed out
+For unexpected windows (example: connection reset by peer /connection timed out
 dialogs) can be handled by registering a callback function and the respective
 callback function will be called, whenever the registered window with the title
 appears and even this window could be based on regular expression.
@@ -299,7 +299,7 @@ Appmap
 
 'Appmap' [Application Map in short] is a text based representation of the GUI
 which is under testing. Each and every UI control viz., Button, Text Box etc.,
-are represented using predefined conventions(which are listed in the table
+are represented using predefined conventions (which are listed in the table
 below) along with their parent UI object information. At runtime, a particular
 UI control is accessed by using the Appmap generated for the GUI under testing.
 
@@ -488,23 +488,23 @@ There are two main entities to act on an object: window name and object name.
 Window name
 -----------
 
-To operate on a window, we need to know the window name(nothing but the window title).
+To operate on a window, we need to know the window name (nothing but the window title).
 
 Different window types
 ~~~~~~~~~~~~~~~~~~~~~~
 
-1. Frame(frm)
-2. Dialog(dlg)
-3. Alert(dlg)
-4. Font Chooser(dlg)
-5. File Chooser(dlg)
-6. Window(This type in general does not have any associated title, so we need
-   to represent them using index - dlg)
+1. Frame (frm)
+2. Dialog (dlg)
+3. Alert (dlg)
+4. Font Chooser (dlg)
+5. File Chooser (dlg)
+6. Window (This type in general does not have any associated title,
+   so we need to represent them using index - dlg)
 
 Glob pattern support
 ~~~~~~~~~~~~~~~~~~~~
 
-Window name can be clubbed with glob patterns(* or ?)
+Window name can be clubbed with glob patterns (* or ?)
 
 EXAMPLE:
     1. *-gedit means the title has -gedit in it, BUT can have anything before
@@ -517,16 +517,16 @@ EXAMPLE:
 
 Different ways of representing window name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-1. Window type and window title(Ex: 'frmnew1-')
-2. Window title(Ex: 'Unsaved Document 1 - gedit*')
-3. Window type, glob expression and partial window title(Ex: 'frm*-gedit')
-4. Glob pattern and partial window title(Ex: '*-gedit')
-5. Window type, partial window title and glob pattern(Ex: 'frmnew1*')
-6. Window type, window title and index(If two windows of same title exist at
+1. Window type and window title (Ex: 'frmnew1-')
+2. Window title (Ex: 'Unsaved Document 1 - gedit*')
+3. Window type, glob expression and partial window title (Ex: 'frm*-gedit')
+4. Glob pattern and partial window title (Ex: '*-gedit')
+5. Window type, partial window title and glob pattern (Ex: 'frmnew1*')
+6. Window type, window title and index (If two windows of same title exist at
    same time. Ex: First window name 'dlgAppoinment', Second window name
    'dlgAppoinment1')
-7. Window type and index(only if window does not have any accessible title, Ex:
-   'dlg0')
+7. Window type and index (only if window does not have any accessible title,
+   Ex: 'dlg0')
 
 Window name formats
 ~~~~~~~~~~~~~~~~~~~
@@ -541,7 +541,7 @@ Example:
 Object name
 -----------
 
-Object(the type of control in which we want to operate) can be identified
+Object (the type of control in which we want to operate) can be identified
 either with a label or by an associated label.
 
 Label
@@ -554,12 +554,12 @@ Example:
 
 .. code-block:: python
 
-  mnuFile #(gedit menu)
-  mnuNew #(gedit menu item)
-  btnNew #(gedit tool bar, push button)
-  tbtnLocation #(gedit Open File dialog, toggle bar control)
+  mnuFile # (gedit menu)
+  mnuNew # (gedit menu item)
+  btnNew # (gedit tool bar, push button)
+  tbtnLocation # (gedit Open File dialog, toggle bar control)
 
-Label by/for(associated label)
+Label by/for (associated label)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In general text/tables/check box/radio button/spin button/combo box controls
@@ -569,11 +569,11 @@ Example:
 
 .. code-block:: python
 
-  txtLocation #(gedit Open File dialog, text control)
-  tblFiles #(gedit Open File dialog, table control)
-  cboSearchfor #(gedit Find dialog, combo box control)
-  chkMatchcase #(gedit Find dialog, check box control)
-  sbtnRightmarginatcolumn #(gedit Preferences dialog, spin button control)
+  txtLocation # (gedit Open File dialog, text control)
+  tblFiles # (gedit Open File dialog, table control)
+  cboSearchfor # (gedit Find dialog, combo box control)
+  chkMatchcase # (gedit Find dialog, check box control)
+  sbtnRightmarginatcolumn # (gedit Preferences dialog, spin button control)
 
 Object name with out label/associated label accessing via index
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -585,9 +585,9 @@ Example:
 
 .. code-block:: python
 
-  txt0 #(gedit text rendering region)
-  ptl0 #(gedit Preferences dialog, page tab list control)
-  ptl0 #(In gedit when more than one files are opened,
+  txt0 # (gedit text rendering region)
+  ptl0 # (gedit Preferences dialog, page tab list control)
+  ptl0 # (In gedit when more than one files are opened,
        # a page tab list control will be available)
 
 Object name with index
@@ -607,7 +607,7 @@ Example:
   btnAdd1 #Second push button control with label Add
   btnAdd2 #Third push button control with label Add
 
-Object name with window id(Windows only)
+Object name with window id (Windows only)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Object can be identified with window id, which is unique across all the
@@ -646,9 +646,9 @@ Example::
 Accessibility library
 =====================
 
-LDTP uses accessibility libraries(at-spi) available in GNOME environment. Using
+LDTP uses accessibility libraries (at-spi) available in GNOME environment. Using
 accessibility we can get the information about the application and its current
-state(property). We can be able to poke through each layer in any application,
+state (property). We can be able to poke through each layer in any application,
 if and only if, the application has accessibility enabled.
 
 Enabling accessibility
@@ -753,8 +753,8 @@ When you call the above a new dialog box will be poped up, you can verify
 whether the window is opened or not either by guiexist() or by
 waittillguiexist().
 
-.. NOTE:: The guiexist() function immediately returns either 1(window exist) or
-          0(window does not exist), waittillguiexist() waits for the window to
+.. NOTE:: The guiexist() function immediately returns either 1 (window exists) or
+          0 (window does not exist), waittillguiexist() waits for the window to
           appear.  Wait time out is by default 30 seconds. This default time
           out can be either increased on decreased using GUI_TIMEOUT.
 
@@ -810,7 +810,7 @@ So that you can continue using the same window name, for example:
     >>> selectmenuitem('frmUnsavedDocument1-gedit', 'mnuFile;mnuSaveAs')
 
 The above function will invoke the GTK save dialog box. If any of the action
-releated functions(example: selectmenuitem, click, settextvalue) fail, an
+releated functions (example: selectmenuitem, click, settextvalue) fail, an
 exception is raised. It has to be handled by the program to either continue
 operating on execution or just halt.
 
@@ -853,7 +853,7 @@ information.
 To click on open push button in gedit tool bar control, we need to use click
 API with window name as first argument and object name as second argument. The
 above command does the click operation. Information to be gathered is Window
-name(Unsaved Document 1 – gedit) and push button control(Open).
+name (Unsaved Document 1 – gedit) and push button control (Open).
 
 .. code-block:: python
 
@@ -867,8 +867,8 @@ Menu item
 To select a menu item under a menu in a window we need to use selectmenuitem
 API.
 
-Informations to be gathered: Window name(Unsaved Document 1 – gedit), menu
-control(File), menu item control(New).
+Informations to be gathered: Window name (Unsaved Document 1 – gedit), menu
+control (File), menu item control (New).
 
 Incase of menu, we handle them in hierarchy. So, to access 'New' menu item, we
 need 'File' menu control too.
@@ -883,7 +883,7 @@ Toggle button
 -------------
 
 To operate on a toggle button with a click action, information required are
-window name(Open Files...) toggle button control(Type a file name).
+window name (Open Files...) toggle button control (Type a file name).
 
 .. code-block:: python
 
@@ -894,9 +894,9 @@ window name(Open Files...) toggle button control(Type a file name).
 Text control
 ------------
 
-To set a text value in a text box, information like window name(Open Files...),
-text controls associated label(Location:) and the actual text to be
-placed(Class1.cs).
+To set a text value in a text box, information like window name (Open Files...),
+text controls associated label (Location:) and the actual text to be
+placed (Class1.cs).
 
 .. code-block:: python
 
@@ -908,8 +908,8 @@ Table control
 -------------
 
 To select a row from the table of GTK open file selector, we need to collect
-information like, Window name(Open Files...), table name(Files – circled with
-blue color), row to be selected(Class1.cs).
+information like, Window name (Open Files...), table name (Files – circled with
+blue color), row to be selected (Class1.cs).
 
 .. code-block:: python
 
@@ -922,7 +922,7 @@ Push button
 
 After selecting the file name, to open the file contents, we need to click on
 Open push button control. For doing this operation we need to gather
-informations like Window name(Open Files...), push button label name(Open).
+informations like Window name (Open Files...), push button label name (Open).
 
 .. code-block:: python
 
@@ -934,7 +934,7 @@ Check box
 ---------
 
 To click on a check box control, we need to collect informations like window
-name(gedit Preferences), check box associated label name(Display line numbers).
+name (gedit Preferences), check box associated label name (Display line numbers).
 
 .. code-block:: python
 
@@ -958,7 +958,7 @@ Spin button
 -----------
 
 To operate on a spin button, we need to collect information like Window
-name(gedit Preferences), spin button control name(Right margin at column).
+name (gedit Preferences), spin button control name (Right margin at column).
 
 .. code-block:: python
 
@@ -974,7 +974,7 @@ Page tab
 --------
 
 To operate on a page tab list, we need to collect information like window
-name(gedit Preferences), page tab list name(ptl0 in this case, as there are no
+name (gedit Preferences), page tab list name (ptl0 in this case, as there are no
 label or associated label with this page tab list control), page tab name or
 index starting from 0.
 
@@ -992,8 +992,8 @@ Check menu item
 ---------------
 
 To operate on check menu item, we need to gather information like window
-name(Unsaved Document 1 – gedit), menu name(View), check menu item name(Side
-Pane).
+name (Unsaved Document 1 – gedit), menu name (View), check menu item name
+(Side Pane).
 
 .. code-block:: python
 
@@ -1013,8 +1013,8 @@ Radio menu item
 ---------------
 
 To operate on a radio menu item control, we need to gather informations like
-window name(Unsaved Document 1 – gedit), menu name(Documents), menu item
-name(Class1.cs – assuming that Class1.cs is currently opened).
+window name (Unsaved Document 1 – gedit), menu name (Documents), menu item
+name (Class1.cs – assuming that Class1.cs is currently opened).
 
 .. code-block:: python
 
@@ -1028,8 +1028,8 @@ Combo box – Menu item
 ---------------------
 
 To select a menu item under a combo box, we need to gather informations like
-window name(Open Files...), combo box name(Character Coding), menu item
-name(Current Locale).
+window name (Open Files...), combo box name (Character Coding), menu item
+name (Current Locale).
 
 .. code-block:: python
 
@@ -1041,9 +1041,9 @@ Combo box – List item
 ---------------------
 
 To operate on list item under a combo box control, we need to gather
-informations like window name(Find), Combo box control name(Search for), list
+informations like window name (Find), Combo box control name (Search for), list
 item existing content or list item index or new item
-name(OdbcMetaDataCollectionName.cs)
+name (OdbcMetaDataCollectionName.cs)
 
 .. code-block:: python
 
@@ -1071,10 +1071,10 @@ Application to be tested can be launched using LDTP API launchapp.
 GUI exist
 ---------
 
-To check a GUI(window) exist, you can use this guiexist() API. Also it has
+To check if a GUI (window) exists, you can use this guiexist() API. Also it has
 different flavors like waittillguiexist(), waittillguinotexist().
 
-guiexist() function checks whether the given window exists or not. If exist
+The guiexist() function checks whether the given window exists or not. If it exists
 returns 1, else returns 0.
 
 waittillguiexist() function will wait for the given window to appear. If
@@ -1174,7 +1174,7 @@ Generate raw keyboard events
 ----------------------------
 
 In some cases, the window we are trying to operate may not be accessibility
-enabled or we may need to generate non-printable keys(ALT, CTRL, ENTER,
+enabled or we may need to generate non-printable keys (ALT, CTRL, ENTER,
 BACKSPACE, ESC, F1-F12, SHIFT, CAPS LOCK, TAB, PAGE UP, PAGE DOWN, HOME, END,
 RIGHT / LEFT / UP / DOWN ARROW KEYS, INS, DEL). We can use generatekeyevent
 function or enterstring function to simulate the key events, as if the user
@@ -1368,10 +1368,10 @@ seconds. This value can be modified – refer LDTP API reference.
 How to operate LDTP from a remote system
 ========================================
 
-LDTP engine(Linux)
+LDTP engine (Linux)
 -------------------
 
-Follow one of the options to start LDTP engine(ldtp binary) in the remote box
+Follow one of the options to start LDTP engine (ldtp binary) in the remote box
 
 *Option 1*
 
@@ -1385,11 +1385,11 @@ Follow one of the options to start LDTP engine(ldtp binary) in the remote box
 
     $ ldtp -p <port number to start> # Default port number is 4118
 
-LDTP engine(Windows)
+LDTP engine (Windows)
 
 Execute CobraWinLDTP.exe in command line
 
-LDTP engine(Mac OS X)
+LDTP engine (Mac OS X)
 
 Execute ldtp in command line
 
@@ -1423,9 +1423,9 @@ In a terminal:
 
 .. code-block:: bash
 
-  $ export LDTP_DEBUG=2 # If bash shell(Linux/Mac OS X)
-  C:\> set LDTP_DEBUG=1(Microsoft Windows)
-  $ ldtp #(Linux/Mac OS X) on Windows run CobraWinLDTP.exe
+  $ export LDTP_DEBUG=2 # If bash shell (Linux/Mac OS X)
+  C:\> set LDTP_DEBUG=1 (Microsoft Windows)
+  $ ldtp # (Linux/Mac OS X) on Windows run CobraWinLDTP.exe
   Client packet len: 82
   i = 0
   Data read 82, packet-len = 82, bytes read = 82, data: <?xml version="1.0"?><REQUEST>

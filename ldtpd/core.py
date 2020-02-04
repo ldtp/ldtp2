@@ -64,6 +64,9 @@ from value import Value
 from generic import Generic
 from combo_box import ComboBox
 from page_tab_list import PageTabList
+from gi.repository import GLib
+
+import thread
 
 class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             Text, Mouse, Generic, Value):
@@ -179,6 +182,10 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
             except LookupError:
                 # A11Y lookup error
                 continue
+            except GLib.Error as ge:
+                if "The application no longer exists" in ge:
+                    continue
+                raise
         return app_list
 
     def getwindowlist(self):
@@ -265,6 +272,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
         if env:
             os.environ['GTK_MODULES']='gail:atk-bridge'
             os.environ['GNOME_ACCESSIBILITY']='1'
+            os.environ['QT_LINUX_ACCESSIBILITY_ALWAYS_ON']='1'
         if lang:
             os.environ['LANG']=lang
         try:
@@ -274,6 +282,7 @@ class Ldtpd(Utils, ComboBox, Table, Menu, PageTabList,
                 time.sleep(int(delay))
             except ValueError:
                 time.sleep(5)
+            thread.start_new_thread(process.wait,())
         except Exception as e:
             raise LdtpServerException(str(e))
         os.environ['NO_GAIL']='1'
