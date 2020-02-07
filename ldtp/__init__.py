@@ -39,9 +39,9 @@ if path == "":
    path = "."
 sys.path.append(path)
 
-from ldtp import state
-from ldtp import client
-from ldtp.client_exception import LdtpExecutionError
+import state
+import client
+from client_exception import LdtpExecutionError
 
 _t = None
 _pollEvents = None
@@ -386,18 +386,18 @@ def imagecapture(window_name = None, out_file = None, x = 0, y = 0,
     else:
         out_file = os.path.expanduser(out_file)
 
-    ### Windows compatibility
-    if _ldtp_windows_env:
-        if width == None:
-            width = -1
-        if height == None:
-            height = -1
-        if window_name == None:
-            window_name = ''
-    ### Windows compatibility - End
+    if width == None:
+        width = -1
+    if height == None:
+        height = -1
+    if window_name == None:
+        window_name = ''
     data = _remote_imagecapture(window_name, x, y, width, height)
     f = open(out_file, 'wb')
-    f.write(b64decode(data))
+    try:
+        f.write(b64decode(data)) # Python 2
+    except TypeError:
+        f.write(b64decode(bytes(data,'utf-8'))) # Python 3
     f.close()
 
     return out_file

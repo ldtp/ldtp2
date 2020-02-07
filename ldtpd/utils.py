@@ -673,10 +673,7 @@ class Utils:
             ldtpized_name = '%s%d' % (ldtpized_name_base,
                                       self.ldtpized_obj_index[abbrev_role])
         else:
-            try:
-               ldtpized_name_base = u'%s%s' % (abbrev_role, abbrev_name)
-            except UnicodeDecodeError:
-               ldtpized_name_base = u'%s%s' % (abbrev_role, abbrev_name.decode('utf-8'))
+            ldtpized_name_base = '%s%s' % (abbrev_role, abbrev_name)
             ldtpized_name = ldtpized_name_base
         i = 0
         while ldtpized_name in self.ldtpized_list:
@@ -685,7 +682,7 @@ class Utils:
         if parent in self.ldtpized_list:
             _current_children = self.ldtpized_list[parent]['children']
             if _current_children:
-                _current_children = u'%s %s' % (_current_children, ldtpized_name)
+                _current_children = '%s %s' % (_current_children, ldtpized_name)
             else:
                 _current_children = ldtpized_name
             self.ldtpized_list[parent]['children'] = _current_children
